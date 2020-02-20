@@ -1,0 +1,61 @@
+﻿@model EmployerModules.DAL.EmployerDetail
+
+
+@{
+    ViewBag.Title = "Details";
+}
+
+
+<div class="welcome">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="content">
+                    <h2>Employer Dashboard</h2>
+                    <p>@Model.EmployerName  <small>@Model.Recno</small></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="welcome">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="content table-div">
+                    <dl class="dl-horizontal">
+
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Address)
+                        </dt>
+
+
+                        <dd>
+                            @Html.DisplayFor(model => model.Address)
+                        </dd>
+
+                        <dt>
+                            Total Employee
+                        </dt>
+
+
+                        <dd>
+                            <a href="@Url.Action("Member", "Employer")" style="color: darkred">@ViewBag.Members</a> Members
+
+                        </dd>
+
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+@*<p>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>*@

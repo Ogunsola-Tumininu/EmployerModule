@@ -1,0 +1,621 @@
+﻿@model EmployerModules.ViewModel.PFAList
+
+@{
+    ViewBag.Title = "PaymentSummary";
+}
+
+@{
+
+    decimal ARMEmployeeContribution = 0;
+    decimal ARMEmployerContribution = 0;
+    decimal ARMVoluntaryContribution = 0;
+    decimal ARMTotalContribution = 0;
+    if (Model.ARM != null)
+    {
+        ARMEmployeeContribution = (decimal)Model.ARM.Sum(x => x.EmployeeContribution);
+        ARMEmployerContribution = (decimal)Model.ARM.Sum(x => x.EmployerContribution);
+        ARMVoluntaryContribution = (decimal)Model.ARM.Sum(x => x.VoluntaryContribution);
+        ARMTotalContribution = (decimal)Model.ARM.Sum(x => x.TotalContribution);
+    }
+
+
+    decimal AIICOEmployeeContribution = 0;
+    decimal AIICOEmployerContribution = 0;
+    decimal AIICOVoluntaryContribution = 0;
+    decimal AIICOTotalContribution = 0;
+    if (Model.AIICO != null)
+    {
+        AIICOEmployeeContribution = (decimal)Model.AIICO.Sum(x => x.EmployeeContribution);
+        AIICOEmployerContribution = (decimal)Model.AIICO.Sum(x => x.EmployerContribution);
+        AIICOVoluntaryContribution = (decimal)Model.AIICO.Sum(x => x.VoluntaryContribution);
+        AIICOTotalContribution = (decimal)Model.AIICO.Sum(x => x.TotalContribution);
+    }
+
+    decimal APTEmployeeContribution = 0;
+    decimal APTEmployerContribution = 0;
+    decimal APTVoluntaryContribution = 0;
+    decimal APTTotalContribution = 0;
+    if (Model.APT != null)
+    {
+        APTEmployeeContribution = (decimal)Model.APT.Sum(x => x.EmployeeContribution);
+        APTEmployerContribution = (decimal)Model.APT.Sum(x => x.EmployerContribution);
+        APTVoluntaryContribution = (decimal)Model.APT.Sum(x => x.VoluntaryContribution);
+        APTTotalContribution = (decimal)Model.APT.Sum(x => x.TotalContribution);
+    }
+
+    decimal CrusaderSterlingEmployeeContribution = 0;
+    decimal CrusaderSterlingEmployerContribution = 0;
+    decimal CrusaderSterlingVoluntaryContribution = 0;
+    decimal CrusaderSterlingTotalContribution = 0;
+
+    if (Model.CrusaderSterling != null)
+    {
+        CrusaderSterlingEmployeeContribution = (decimal)Model.CrusaderSterling.Sum(x => x.EmployeeContribution);
+        CrusaderSterlingEmployerContribution = (decimal)Model.CrusaderSterling.Sum(x => x.EmployerContribution);
+        CrusaderSterlingVoluntaryContribution = (decimal)Model.CrusaderSterling.Sum(x => x.VoluntaryContribution);
+        CrusaderSterlingTotalContribution = (decimal)Model.CrusaderSterling.Sum(x => x.TotalContribution);
+    }
+
+    decimal FidelityEmployeeContribution = 0;
+    decimal FidelityEmployerContribution = 0;
+    decimal FidelityVoluntaryContribution = 0;
+    decimal FidelityTotalContribution = 0;
+
+
+    if (Model.Fidelity != null)
+    {
+        FidelityEmployeeContribution = (decimal)Model.Fidelity.Sum(x => x.EmployeeContribution);
+        FidelityEmployerContribution = (decimal)Model.Fidelity.Sum(x => x.EmployerContribution);
+        FidelityVoluntaryContribution = (decimal)Model.Fidelity.Sum(x => x.VoluntaryContribution);
+        FidelityTotalContribution = (decimal)Model.Fidelity.Sum(x => x.TotalContribution);
+    }
+
+    decimal FirstGuaranteeEmployeeContribution = 0;
+    decimal FirstGuaranteeEmployerContribution = 0;
+    decimal FirstGuaranteeVoluntaryContribution = 0;
+    decimal FirstGuaranteeTotalContribution = 0;
+    if (Model.FirstGuarantee != null)
+    {
+        FirstGuaranteeEmployeeContribution = (decimal)Model.FirstGuarantee.Sum(x => x.EmployeeContribution);
+        FirstGuaranteeEmployerContribution = (decimal)Model.FirstGuarantee.Sum(x => x.EmployerContribution);
+        FirstGuaranteeVoluntaryContribution = (decimal)Model.FirstGuarantee.Sum(x => x.VoluntaryContribution);
+        FirstGuaranteeTotalContribution = (decimal)Model.FirstGuarantee.Sum(x => x.TotalContribution);
+    }
+
+    decimal InvestmentOneEmployeeContribution = 0;
+    decimal InvestmentOneEmployerContribution = 0;
+    decimal InvestmentOneVoluntaryContribution = 0;
+    decimal InvestmentOneTotalContribution = 0;
+    if (Model.InvestmentOne != null)
+    {
+        InvestmentOneEmployeeContribution = (decimal)Model.InvestmentOne.Sum(x => x.EmployeeContribution);
+        InvestmentOneEmployerContribution = (decimal)Model.InvestmentOne.Sum(x => x.EmployerContribution);
+        InvestmentOneVoluntaryContribution = (decimal)Model.InvestmentOne.Sum(x => x.VoluntaryContribution);
+        InvestmentOneTotalContribution = (decimal)Model.InvestmentOne.Sum(x => x.TotalContribution);
+    }
+
+    decimal IEIAnchorEmployeeContribution = 0;
+    decimal IEIAnchorEmployerContribution = 0;
+    decimal IEIAnchorVoluntaryContribution = 0;
+    decimal IEIAnchorTotalContribution = 0;
+    if (Model.IEIAnchor != null)
+    {
+        IEIAnchorEmployeeContribution = (decimal)Model.IEIAnchor.Sum(x => x.EmployeeContribution);
+        IEIAnchorEmployerContribution = (decimal)Model.IEIAnchor.Sum(x => x.EmployerContribution);
+        IEIAnchorVoluntaryContribution = (decimal)Model.IEIAnchor.Sum(x => x.VoluntaryContribution);
+        IEIAnchorTotalContribution = (decimal)Model.IEIAnchor.Sum(x => x.TotalContribution);
+    }
+
+    //if (Model.IGI.Count > 0)
+    //{
+    //    decimal IGIEmployeeContribution = (decimal)Model.IGI.Sum(x => x.EmployeeContribution);
+    //    decimal IGIEmployerContribution = (decimal)Model.IGI.Sum(x => x.EmployerContribution);
+    //    decimal IGIVoluntaryContribution = (decimal)Model.IGI.Sum(x => x.VoluntaryContribution);
+    //    decimal IGITotalContribution = (decimal)Model.IGI.Sum(x => x.TotalContribution);
+    //}
+
+
+    decimal LeadwayEmployeeContribution = 0;
+    decimal LeadwayEmployerContribution = 0;
+    decimal LeadwayVoluntaryContribution = 0;
+    decimal LeadwayTotalContribution = 0;
+    if (Model.Leadway != null)
+    {
+        LeadwayEmployeeContribution = (decimal)Model.Leadway.Sum(x => x.EmployeeContribution);
+        LeadwayEmployerContribution = (decimal)Model.Leadway.Sum(x => x.EmployerContribution);
+        LeadwayVoluntaryContribution = (decimal)Model.Leadway.Sum(x => x.VoluntaryContribution);
+        LeadwayTotalContribution = (decimal)Model.Leadway.Sum(x => x.TotalContribution);
+    }
+
+    //if (Model.Legacy.Count > 0)
+    //{
+    //    decimal LegacyEmployeeContribution = (decimal)Model.Legacy.Sum(x => x.EmployeeContribution);
+    //    decimal LegacyEmployerContribution = (decimal)Model.Legacy.Sum(x => x.EmployerContribution);
+    //    decimal LegacyVoluntaryContribution = (decimal)Model.Legacy.Sum(x => x.VoluntaryContribution);
+    //    decimal LegacyTotalContribution = (decimal)Model.Legacy.Sum(x => x.TotalContribution);
+    //}
+
+
+    decimal NPLCEmployeeContribution = 0;
+    decimal NPLCEmployerContribution = 0;
+    decimal NPLCVoluntaryContribution = 0;
+    decimal NPLCTotalContribution = 0;
+
+    if (Model.NPLC != null)
+    {
+        NPLCEmployeeContribution = (decimal)Model.NPLC.Sum(x => x.EmployeeContribution);
+        NPLCEmployerContribution = (decimal)Model.NPLC.Sum(x => x.EmployerContribution);
+        NPLCVoluntaryContribution = (decimal)Model.NPLC.Sum(x => x.VoluntaryContribution);
+        NPLCTotalContribution = (decimal)Model.NPLC.Sum(x => x.TotalContribution);
+    }
+
+    decimal NPFEmployeeContribution = 0;
+    decimal NPFEmployerContribution = 0;
+    decimal NPFVoluntaryContribution = 0;
+    decimal NPFTotalContribution = 0;
+    if (Model.NPF != null)
+    {
+        NPFEmployeeContribution = (decimal)Model.NPF.Sum(x => x.EmployeeContribution);
+        NPFEmployerContribution = (decimal)Model.NPF.Sum(x => x.EmployerContribution);
+        NPFVoluntaryContribution = (decimal)Model.NPF.Sum(x => x.VoluntaryContribution);
+        NPFTotalContribution = (decimal)Model.NPF.Sum(x => x.TotalContribution);
+    }
+
+    decimal OAKEmployeeContribution = 0;
+    decimal OAKEmployerContribution = 0;
+    decimal OAKVoluntaryContribution = 0;
+    decimal OAKTotalContribution = 0;
+
+    if (Model.OAK != null)
+    {
+        OAKEmployeeContribution = (decimal)Model.OAK.Sum(x => x.EmployeeContribution);
+        OAKEmployerContribution = (decimal)Model.OAK.Sum(x => x.EmployerContribution);
+        OAKVoluntaryContribution = (decimal)Model.OAK.Sum(x => x.VoluntaryContribution);
+        OAKTotalContribution = (decimal)Model.OAK.Sum(x => x.TotalContribution);
+    }
+
+    decimal PALEmployeeContribution = 0;
+    decimal PALEmployerContribution = 0;
+    decimal PALVoluntaryContribution = 0;
+    decimal PALTotalContribution = 0;
+
+    if (Model.PAL != null)
+    {
+
+        PALEmployeeContribution = (decimal)Model.PAL.Sum(x => x.EmployeeContribution);
+        PALEmployerContribution = (decimal)Model.PAL.Sum(x => x.EmployerContribution);
+        PALVoluntaryContribution = (decimal)Model.PAL.Sum(x => x.VoluntaryContribution);
+        PALTotalContribution = (decimal)Model.PAL.Sum(x => x.TotalContribution);
+    }
+
+
+    decimal PremiumEmployeeContribution = 0;
+    decimal PremiumEmployerContribution = 0;
+    decimal PremiumVoluntaryContribution = 0;
+    decimal PremiumTotalContribution = 0;
+
+    if (Model.Premium != null)
+    {
+        PremiumEmployeeContribution = (decimal)Model.Premium.Sum(x => x.EmployeeContribution);
+        PremiumEmployerContribution = (decimal)Model.Premium.Sum(x => x.EmployerContribution);
+        PremiumVoluntaryContribution = (decimal)Model.Premium.Sum(x => x.VoluntaryContribution);
+        PremiumTotalContribution = (decimal)Model.Premium.Sum(x => x.TotalContribution);
+    }
+
+    decimal SigmaEmployeeContribution = 0;
+    decimal SigmaEmployerContribution = 0;
+    decimal SigmaVoluntaryContribution = 0;
+    decimal SigmaTotalContribution = 0;
+    if (Model.Sigma != null)
+    {
+        SigmaEmployeeContribution = (decimal)Model.Sigma.Sum(x => x.EmployeeContribution);
+        SigmaEmployerContribution = (decimal)Model.Sigma.Sum(x => x.EmployerContribution);
+        SigmaVoluntaryContribution = (decimal)Model.Sigma.Sum(x => x.VoluntaryContribution);
+        SigmaTotalContribution = (decimal)Model.Sigma.Sum(x => x.TotalContribution);
+    }
+
+    decimal StanbicIBTCEmployeeContribution = 0;
+    decimal StanbicIBTCEmployerContribution = 0;
+    decimal StanbicIBTCVoluntaryContribution = 0;
+    decimal StanbicIBTCTotalContribution = 0;
+
+    if (Model.StanbicIBTC != null)
+    {
+        StanbicIBTCEmployeeContribution = (decimal)Model.StanbicIBTC.Sum(x => x.EmployeeContribution);
+        StanbicIBTCEmployerContribution = (decimal)Model.StanbicIBTC.Sum(x => x.EmployerContribution);
+        StanbicIBTCVoluntaryContribution = (decimal)Model.StanbicIBTC.Sum(x => x.VoluntaryContribution);
+        StanbicIBTCTotalContribution = (decimal)Model.StanbicIBTC.Sum(x => x.TotalContribution);
+    }
+
+    decimal TrustFundEmployeeContribution = 0;
+    decimal TrustFundEmployerContribution = 0;
+    decimal TrustFundVoluntaryContribution = 0;
+    decimal TrustFundTotalContribution = 0;
+    if (Model.TrustFund != null)
+    {
+        TrustFundEmployeeContribution = (decimal)Model.TrustFund.Sum(x => x.EmployeeContribution);
+        TrustFundEmployerContribution = (decimal)Model.TrustFund.Sum(x => x.EmployerContribution);
+        TrustFundVoluntaryContribution = (decimal)Model.TrustFund.Sum(x => x.VoluntaryContribution);
+        TrustFundTotalContribution = (decimal)Model.TrustFund.Sum(x => x.TotalContribution);
+    }
+
+    decimal AXAEmployeeContribution = 0;
+    decimal AXAEmployerContribution = 0;
+    decimal AXAVoluntaryContribution = 0;
+    decimal AXATotalContribution = 0;
+
+    if (Model.AXA != null)
+    {
+        AXAEmployeeContribution = (decimal)Model.AXA.Sum(x => x.EmployeeContribution);
+        AXAEmployerContribution = (decimal)Model.AXA.Sum(x => x.EmployerContribution);
+        AXAVoluntaryContribution = (decimal)Model.AXA.Sum(x => x.VoluntaryContribution);
+        AXATotalContribution = (decimal)Model.AXA.Sum(x => x.TotalContribution);
+    }
+
+    decimal FCMBEmployeeContribution = 0;
+    decimal FCMBEmployerContribution = 0;
+    decimal FCMBVoluntaryContribution = 0;
+    decimal FCMBTotalContribution = 0;
+    if (Model.FCMB != null)
+    {
+        FCMBEmployeeContribution = (decimal)Model.FCMB.Sum(x => x.EmployeeContribution);
+        FCMBEmployerContribution = (decimal)Model.FCMB.Sum(x => x.EmployerContribution);
+        FCMBVoluntaryContribution = (decimal)Model.FCMB.Sum(x => x.VoluntaryContribution);
+        FCMBTotalContribution = (decimal)Model.FCMB.Sum(x => x.TotalContribution);
+    }
+
+    decimal NigeriaUniversityEmployeeContribution = 0;
+    decimal NigeriaUniversityEmployerContribution = 0;
+    decimal NigeriaUniversityVoluntaryContribution = 0;
+    decimal NigeriaUniversityTotalContribution = 0;
+    if (Model.NigeriaUniversity != null)
+    {
+        NigeriaUniversityEmployeeContribution = (decimal)Model.NigeriaUniversity.Sum(x => x.EmployeeContribution);
+        NigeriaUniversityEmployerContribution = (decimal)Model.NigeriaUniversity.Sum(x => x.EmployerContribution);
+        NigeriaUniversityVoluntaryContribution = (decimal)Model.NigeriaUniversity.Sum(x => x.VoluntaryContribution);
+        NigeriaUniversityTotalContribution = (decimal)Model.NigeriaUniversity.Sum(x => x.TotalContribution);
+    }
+
+    decimal RadixEmployeeContribution = 0;
+    decimal RadixEmployerContribution = 0;
+    decimal RadixVoluntaryContribution = 0;
+    decimal RadixTotalContribution = 0;
+    if (Model.Radix != null)
+    {
+        RadixEmployeeContribution = (decimal)Model.Radix.Sum(x => x.EmployeeContribution);
+        RadixEmployerContribution = (decimal)Model.Radix.Sum(x => x.EmployerContribution);
+        RadixVoluntaryContribution = (decimal)Model.Radix.Sum(x => x.VoluntaryContribution);
+        RadixTotalContribution = (decimal)Model.Radix.Sum(x => x.TotalContribution);
+    }
+
+    decimal VeritiasEmployeeContribution = 0;
+    decimal VeritiasEmployerContribution = 0;
+    decimal VeritiasVoluntaryContribution = 0;
+    decimal VeritiasTotalContribution = 0;
+    if (Model.Veritias != null)
+    {
+        VeritiasEmployeeContribution = (decimal)Model.Veritias.Sum(x => x.EmployeeContribution);
+        VeritiasEmployerContribution = (decimal)Model.Veritias.Sum(x => x.EmployerContribution);
+        VeritiasVoluntaryContribution = (decimal)Model.Veritias.Sum(x => x.VoluntaryContribution);
+        VeritiasTotalContribution = (decimal)Model.Veritias.Sum(x => x.TotalContribution);
+    }
+
+
+
+
+    decimal TotalPFAEmployeeContribution = (decimal)Model.Total.Sum(x => x.EmployeeContribution);
+    decimal TotalPFAEmployerContribution = (decimal)Model.Total.Sum(x => x.EmployerContribution);
+    decimal TotalPFAVoluntaryContribution = (decimal)Model.Total.Sum(x => x.VoluntaryContribution);
+    decimal TotalPFATotalContribution = (decimal)Model.Total.Sum(x => x.TotalContribution);
+
+}
+
+<div class="row">
+    <div class="col-md-3">
+        @Html.Partial("_Sidenav");
+        @*@Html.Partial("_Sidenav", null, new ViewDataDictionary { { "employerId", @ViewBag.employerId } })*@
+    </div>
+    <div class="col-md-9 main-content">
+
+        <h4>PaymentSummary </h4>
+        <hr />
+
+        <table class="table  table-striped table-hover" style="border: 1px solid black">
+            <thead>
+                <tr>
+                    <th>PFA</th>
+                    <th>Employee Contributions(₦)</th>
+                    <th>Employer Contributions(₦) </th>
+                    <th>Voluntary Contributions (₦)</th>
+                    <th>Total Employee</th>
+                    <th>Total Contribution (₦)</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.PAL.Count > 0)
+            {
+                <tr>
+                    <td>PAL Pensions</td>
+                    <td>@PALEmployeeContribution</td>
+                    <td>@PALEmployerContribution </td>
+                    <td>@PALVoluntaryContribution</td>
+                    <td>@Model.PAL.Count</td>
+                    <td>@PALTotalContribution </td>
+                </tr>
+        }
+
+
+
+                @if (Model.ARM.Count > 0)
+            {
+                <tr>
+                    <td>ARM</td>
+                    <td>@ARMEmployeeContribution</td>
+                    <td>@ARMEmployerContribution </td>
+                    <td>@ARMVoluntaryContribution</td>
+                    <td>@Model.ARM.Count</td>
+                    <td>@ARMTotalContribution </td>
+                </tr>
+        }
+
+                @if (Model.AIICO.Count > 0)
+            {
+                <tr>
+                    <td>AIICO Pensions</td>
+                    <td>@AIICOEmployeeContribution</td>
+                    <td>@AIICOEmployerContribution </td>
+                    <td>@AIICOVoluntaryContribution</td>
+                    <td>@Model.AIICO.Count</td>
+                    <td>@AIICOTotalContribution </td>
+                </tr>
+        }
+
+                @if (Model.APT.Count > 0)
+            {
+                <tr>
+                    <td>APT pensions</td>
+                    <td>@APTEmployeeContribution</td>
+                    <td>@APTEmployerContribution </td>
+                    <td>@APTVoluntaryContribution</td>
+                    <td>@Model.APT.Count</td>
+                    <td>@APTTotalContribution </td>
+                </tr>
+        }
+                @if (Model.CrusaderSterling.Count > 0)
+            {
+                <tr>
+                    <td>Crusader Sterling pensions</td>
+                    <td>@CrusaderSterlingEmployeeContribution</td>
+                    <td>@CrusaderSterlingEmployerContribution </td>
+                    <td>@CrusaderSterlingVoluntaryContribution</td>
+                    <td>@Model.CrusaderSterling.Count</td>
+                    <td>@CrusaderSterlingTotalContribution </td>
+                </tr>
+        }
+
+                @if (Model.Fidelity.Count > 0)
+            {
+                <tr>
+                    <td>Fidelity Pensions</td>
+                    <td>@FidelityEmployeeContribution</td>
+                    <td>@FidelityEmployerContribution </td>
+                    <td>@FidelityVoluntaryContribution</td>
+                    <td>@Model.Fidelity.Count</td>
+                    <td>@FidelityTotalContribution </td>
+                </tr>
+        }
+
+                @if (Model.FirstGuarantee.Count > 0)
+            {
+                <tr>
+                    <td>First Guarantee Pensions</td>
+                    <td>@FirstGuaranteeEmployeeContribution</td>
+                    <td>@FirstGuaranteeEmployerContribution </td>
+                    <td>@FirstGuaranteeVoluntaryContribution</td>
+                    <td>@Model.FirstGuarantee.Count</td>
+                    <td>@FirstGuaranteeTotalContribution </td>
+                </tr>
+        }
+
+
+                @if (Model.InvestmentOne.Count > 0)
+            {
+                <tr>
+                    <td> Investment One</td>
+                    <td>@InvestmentOneEmployeeContribution</td>
+                    <td>@InvestmentOneEmployerContribution </td>
+                    <td>@InvestmentOneVoluntaryContribution</td>
+                    <td>@Model.InvestmentOne.Count</td>
+                    <td>@InvestmentOneTotalContribution </td>
+                </tr>
+        }
+
+
+                @if (Model.IEIAnchor.Count > 0)
+            {
+                <tr>
+                    <td> IEI Anchor Pensions</td>
+                    <td>@IEIAnchorEmployeeContribution</td>
+                    <td>@IEIAnchorEmployerContribution </td>
+                    <td>@IEIAnchorVoluntaryContribution</td>
+                    <td>@Model.IEIAnchor.Count</td>
+                    <td>@IEIAnchorTotalContribution </td>
+                </tr>
+        }
+
+                @if (Model.Leadway.Count > 0)
+            {
+                <tr>
+                    <td>Leadway Pensions</td>
+                    <td>@LeadwayEmployeeContribution</td>
+                    <td>@LeadwayEmployerContribution </td>
+                    <td>@LeadwayVoluntaryContribution</td>
+                    <td>@Model.Leadway.Count</td>
+                    <td>@LeadwayTotalContribution </td>
+                </tr>
+        }
+
+                @if (Model.NPLC.Count > 0)
+            {
+                <tr>
+                    <td>NPLC Pensions</td>
+                    <td>@NPLCEmployeeContribution</td>
+                    <td>@NPLCEmployerContribution </td>
+                    <td>@NPLCVoluntaryContribution</td>
+                    <td>@Model.NPLC.Count</td>
+                    <td>@NPLCTotalContribution </td>
+                </tr>
+        }
+
+                @if (Model.NPF.Count > 0)
+            {
+                <tr>
+                    <td>NPF pensions</td>
+                    <td>@NPFEmployeeContribution</td>
+                    <td>@NPFEmployerContribution </td>
+                    <td>@NPFVoluntaryContribution</td>
+                    <td>@Model.NPF.Count</td>
+                    <td>@NPFTotalContribution </td>
+                </tr>
+        }
+
+                @if (Model.OAK.Count > 0)
+            {
+                <tr>
+                    <td>OAK Pensions</td>
+                    <td>@OAKEmployeeContribution</td>
+                    <td>@OAKEmployerContribution </td>
+                    <td>@OAKVoluntaryContribution</td>
+                    <td>@Model.OAK.Count</td>
+                    <td>@OAKTotalContribution </td>
+                </tr>
+        }
+
+                @if (Model.Premium.Count > 0)
+            {
+                <tr>
+                    <td>Premium Pensions</td>
+                    <td>@PremiumEmployeeContribution</td>
+                    <td>@PremiumEmployerContribution </td>
+                    <td>@PremiumVoluntaryContribution</td>
+                    <td>@Model.Premium.Count</td>
+                    <td>@PremiumTotalContribution </td>
+                </tr>
+        }
+
+                @if (Model.Sigma.Count > 0)
+            {
+                <tr>
+                    <td>Sigma Pensions</td>
+                    <td>@SigmaEmployeeContribution</td>
+                    <td>@SigmaEmployerContribution </td>
+                    <td>@SigmaVoluntaryContribution</td>
+                    <td>@Model.Sigma.Count</td>
+                    <td>@SigmaTotalContribution </td>
+                </tr>
+        }
+                @if (Model.StanbicIBTC.Count > 0)
+            {
+                <tr>
+                    <td>StanbicIBTC</td>
+                    <td>@StanbicIBTCEmployeeContribution</td>
+                    <td>@StanbicIBTCEmployerContribution </td>
+                    <td>@StanbicIBTCVoluntaryContribution</td>
+                    <td>@Model.StanbicIBTC.Count</td>
+                    <td>@StanbicIBTCTotalContribution </td>
+                </tr>
+        }
+                @if (Model.TrustFund.Count > 0)
+            {
+                <tr>
+                    <td>TrustFund Pensions</td>
+                    <td>@TrustFundEmployeeContribution</td>
+                    <td>@TrustFundEmployerContribution </td>
+                    <td>@TrustFundVoluntaryContribution</td>
+                    <td>@Model.TrustFund.Count</td>
+                    <td>@TrustFundTotalContribution </td>
+                </tr>
+        }
+                @if (Model.AXA.Count > 0)
+            {
+                <tr>
+                    <td>AXA Mansard Pensions</td>
+                    <td>@AXAEmployeeContribution</td>
+                    <td>@AXAEmployerContribution </td>
+                    <td>@AXAVoluntaryContribution</td>
+                    <td>@Model.AXA.Count</td>
+                    <td>@AXATotalContribution </td>
+                </tr>
+        }
+
+                @if (Model.FCMB.Count > 0)
+            {
+                <tr>
+                    <td>FCMB Pensions</td>
+                    <td>@FCMBEmployeeContribution</td>
+                    <td>@FCMBEmployerContribution </td>
+                    <td>@FCMBVoluntaryContribution</td>
+                    <td>@Model.FCMB.Count</td>
+                    <td>@FCMBTotalContribution </td>
+                </tr>
+        }
+
+                @if (Model.NigeriaUniversity.Count > 0)
+            {
+                <tr>
+                    <td>Nigeria University.F</td>
+                    <td>@NigeriaUniversityEmployeeContribution</td>
+                    <td>@NigeriaUniversityEmployerContribution </td>
+                    <td>@NigeriaUniversityVoluntaryContribution</td>
+                    <td>@Model.NigeriaUniversity.Count</td>
+                    <td>@NigeriaUniversityTotalContribution </td>
+                </tr>
+        }
+
+                @if (Model.Radix.Count > 0)
+            {
+                <tr>
+                    <td>Radix Pension</td>
+                    <td>@RadixEmployeeContribution</td>
+                    <td>@RadixEmployerContribution </td>
+                    <td>@RadixVoluntaryContribution</td>
+                    <td>@Model.Radix.Count</td>
+                    <td>@RadixTotalContribution </td>
+                </tr>
+        }
+
+
+                @if (Model.Veritias.Count > 0)
+            {
+                <tr>
+                    <td>Veritias Pensions</td>
+                    <td>@VeritiasEmployeeContribution</td>
+                    <td>@VeritiasEmployerContribution </td>
+                    <td>@VeritiasVoluntaryContribution</td>
+                    <td>@Model.Veritias.Count</td>
+                    <td>@VeritiasTotalContribution </td>
+                </tr>
+        }
+
+
+            </tbody>
+            <tfoot>
+                @if (Model.Total != null)
+            {
+                <tr>
+                    <th>Total</th>
+                    <th>@TotalPFAEmployeeContribution </th>
+                    <th>@TotalPFAEmployerContribution </th>
+                    <th>@TotalPFAVoluntaryContribution</th>
+                    <td>@Model.Total.Count</td>
+                    <th>@TotalPFATotalContribution </th>
+                </tr>
+        }
+            </tfoot>
+        </table>
+        <a href="@Url.Action("Payment", "Employer")" class="btn btn-primary pull-right">Make Payment</a>
+
+    </div>
+</div>
+
+

@@ -1,0 +1,85 @@
+﻿@model EmployerModules.DAL.Feedback
+
+@{
+    ViewBag.Title = "ViewMessage";
+}
+
+<div class="welcome">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="content">
+                    <h2>Feedback</h2>
+                    @*<p>@Model.EmployerName  <small>@Model.Recno</small></p>*@
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="welcome">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="content">
+                    <p> <b>Sent Feedback</b></p>
+                    <p style="width: 100%">
+                        @Html.DisplayFor(model => model.Message)
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="welcome">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="content ">
+                    <p> <b>Remarks: </b> </p>
+                    <p class="col-md-12">
+                        @foreach (var remark in ViewBag.Remarks)
+                        {
+                            if (remark.IsAdminRemark)
+                            {
+                                <div class="comment admin" style="color: black">
+                                    @remark.Comment<br />
+                                    <small style="color: gray"> Sent by @Model.Modifiedby </small>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="comment" style="color: black">
+                                    @remark.Comment <br />
+                                    <small style="color: gray">Sent by @Model.Createdby </small>
+                                </div>
+                            }
+
+                        }
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="welcome">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="content" style="min-height: 190px">
+                    @using (Html.BeginForm("ViewMessage", "Employer", new { Id = Model.Id }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+
+                        <textarea class="form-control" placeholder="Enter Comments here.." rows="5" name="Comment" id="Comment"></textarea>
+                        <br />
+                        <input type="submit" class="btn btn-success pull-left" value="Send" />
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

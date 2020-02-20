@@ -1,0 +1,396 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+</head>
+<body style="position: relative">
+    <div id="loading" style="height:100%; width:100%; background-color: black; opacity: 0.7; position : absolute; z-index: 10000; display: none">
+        <img src="~/Content/images/loading.gif" style="position: fixed; top: 0%; width: 100%;" />
+    </div>
+    @*<div class="row">
+            <div class="col-md-12 nav-top hidden-xs">
+                <div class="container">
+                    <i class="fa fa-twitter top-icon"></i>
+                    <i class="fa fa-facebook top-icon"></i>
+                    <i class="fa fa-linkedin top-icon"></i>
+                    <i class="fa fa-instagram top-icon"></i>
+                </div>
+            </div>
+            <div class="col-md-12 logo-div hidden-xs">
+                <div class="col-md-3 col-md-offset-1">
+                    <img src="~/Content/images/pal-logo.PNG" alt="PAL Pension Logo" />
+                </div>
+                <div class="col-md-4" style="margin-top: 15px">
+                    <h4><i class="fa fa-phone" style="color: #6091ba"></i> Call us today 01- 2776900, 0800 PALPENSIONS</h4>
+                </div>
+                <div class="col-md-4" style="margin-top: 15px">
+                    <h4><i class="fa fa-envelope-o" style="color: #6091ba"></i> info@palpensions.com</h4>
+                </div>
+            </div>
+        </div>*@
+
+    @*<div class="navbar navbar-default " style="margin-top:20px; background-color: steelblue">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <img class="visible-xs" src="~/Content/images/pal-logo.PNG" alt="PAL Pension Logo" />
+
+                </div>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        @if (Request.IsAuthenticated)
+                        {
+                            if (ViewContext.HttpContext.User.IsInRole("EmpAdmin") || ViewContext.HttpContext.User.IsInRole("Employer"))
+                            {
+                                <li>@Html.ActionLink("Dashboard", "Index", "Employer")</li>
+
+                                <li>@Html.ActionLink("Transaction", "Transaction", "Employer")</li>
+                                <li>@Html.ActionLink("Recent Schedule", "RecentTransaction", "Employer")</li>
+                                <li>@Html.ActionLink("Upload Schedule", "UploadSchedule", "Employer")</li>
+                                <li>@Html.ActionLink("Verify PIN", "VerifyPin", "Employer")</li>
+                                <li>@Html.ActionLink("Feedback", "Feedback", "Employer")</li>
+                                if (ViewContext.HttpContext.User.IsInRole("EmpAdmin"))
+                                {
+                                    <li>@Html.ActionLink("Add User", "RegisterEmployer", "Account")</li>
+                                }
+
+                            }
+                            else
+                            {
+                                <li>@Html.ActionLink("Schedule", "Index", "admin")</li>
+                                <li class="dropdown">
+                                    <a class="dropdown-toggle" data-toggle="dropdown" href="@Url.Action("Feedbacks", "Admin")">
+                                        Feedbacks
+                                        <span style="background-color: white" class="caret"></span>
+                                    </a>
+                                    <ul style="background-color: #6091ba" class="dropdown-menu">
+                                        <li><a href="@Url.Action("Feedbacks", "Admin")">All Feedbacks</a></li>
+                                        <li><a href="@Url.Action("PendingFeedbacks", "Admin")">Pending Feedbacks</a></li>
+                                        <li><a href="@Url.Action("InProgressFeedbacks", "Admin")">In Progress FeedBacks</a></li>
+                                        <li><a href="@Url.Action("CompletedFeedbacks", "Admin")">Completed feedbacks</a></li>
+                                    </ul>
+                                </li>
+                                <li>@Html.ActionLink("Add Admin User", "AddAdmin", "Admin")</li>
+                                <li>@Html.ActionLink("Add Employer", "SearchEmployer", "Admin", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+                            }
+
+                        }
+                    </ul>
+
+                    @Html.Partial("_LoginPartial")
+                </div>
+            </div>
+        </div>*@
+
+    @*<div class="container body-content">
+            <div style="min-height: 70vh">
+                @RenderBody()
+            </div>
+            <hr />
+            <footer>
+                <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+            </footer>
+        </div>*@
+
+
+    <aside class="side-nav" id="show-side-navigation1">
+        <i class="fa fa-bars close-aside hidden-sm hidden-md hidden-lg" data-close="show-side-navigation1"></i>
+        <div class="heading">
+            <img src="~/Content/images/pal-logo.PNG" alt="PAL Pension Logo" />
+            <div class="info">
+                <p><i class="fa fa-phone"></i> 01- 2776900, 0800 PALPENSIONS</p>
+                <p><i class="fa fa-envelope-o"></i> info@palpensions.com</p>
+            </div>
+        </div>
+
+
+        <ul class="categories">
+            @if (Request.IsAuthenticated)
+            {
+                if (ViewContext.HttpContext.User.IsInRole("EmpAdmin") || ViewContext.HttpContext.User.IsInRole("Employer"))
+                {
+                    <li>
+                        <i class="fa fa-dashboard "></i> <a href="@Url.Action("Index", "Employer")"> Dashboard</a>
+                    </li>
+                    if (ViewContext.HttpContext.User.IsInRole("EmpAdmin"))
+                    {
+                        <li>
+                            <i class="fa fa-user "></i> <a href="#"> User</a>
+                            <ul class="side-nav-dropdown">
+                                <li><a href="@Url.Action("RegisterEmployer", "Account")">Add User</a></li>
+                                <li><a href="@Url.Action("AllEmployerUsers", "Employer")">All User</a></li>
+                            </ul>
+                        </li>
+                    }
+                    <li>
+                        <i class="fa fa-group "></i> <a style="color: white" href="@Url.Action("Member", "Employer")"> Members</a>
+                    </li>
+                    <li>
+                        <i class="fa fa-money "></i> <a href="@Url.Action("Transaction", "Employer")"> Transactions History</a>
+                    </li>
+                    <li>
+                        <i class="fa fa-money "></i> <a href="@Url.Action("RecentTransaction", "Employer")"> Recent Schedule</a>
+                    </li>
+                    <li>
+                        <i class="fa fa-clock-o "></i> <a href="@Url.Action("UploadSchedule", "Employer")"> Upload Schedule</a>
+                    </li>
+                    <li>
+                        <i class="fa fa-check-square"></i><a href="@Url.Action("Verifypin", "Employer")"> Verify PINs</a>
+                    </li>
+                    <li>
+                        <i class="fa fa-envelope-o "> </i> <a href="@Url.Action("Feedback", "Employer")"> Feedback</a>
+                    </li>
+                    @*<li>
+                            <i class="fa fa-support fa-fw"></i><a href="#"> Subscribe us</a>
+                            <ul class="side-nav-dropdown">
+                                <li><a href="#">Lorem ipsum</a></li>
+                                <li><a href="#">ipsum dolor</a></li>
+                                <li><a href="#">dolor ipsum</a></li>
+                                <li><a href="#">amet consectetur</a></li>
+                                <li><a href="#">ipsum dolor sit</a></li>
+                            </ul>
+                        </li>*@
+                }
+
+                else
+                {
+                    <li>
+                        <i class="fa fa-clock-o "></i> <a style="color: white" href="@Url.Action("Index", "admin")"> Schedule</a>
+                    </li>
+                    <li>
+                        <i class="fa fa-envelope-o "></i> <a style="color: white" href="#"> Feedbacks</a>
+                        <ul class="side-nav-dropdown">
+                            <li><a href="@Url.Action("Feedbacks", "Admin")">All Feedbacks</a></li>
+                            <li><a href="@Url.Action("PendingFeedbacks", "Admin")">Pending Feedbacks</a></li>
+                            <li><a href="@Url.Action("InProgressFeedbacks", "Admin")">In Progress FeedBacks</a></li>
+                            <li><a href="@Url.Action("CompletedFeedbacks", "Admin")">Completed feedbacks</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <i class="fa fa-group "></i> <a style="color: white" href="@Url.Action("AddAdmin", "Admin")"> Add Admin</a>
+                    </li>
+                    <li>
+                        <i class="fa fa-user "></i> <a style="color: white" href="@Url.Action("SearchEmployer", "admin")"> Add employer</a>
+                    </li>
+
+                    @*<li>@Html.ActionLink("Schedule", "Index", "admin")</li>
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="@Url.Action("Feedbacks", "Admin")">
+                                Feedbacks
+                                <span style="background-color: white" class="caret"></span>
+                            </a>
+                            <ul style="background-color: #6091ba" class="dropdown-menu">
+                                <li><a href="@Url.Action("Feedbacks", "Admin")">All Feedbacks</a></li>
+                                <li><a href="@Url.Action("PendingFeedbacks", "Admin")">Pending Feedbacks</a></li>
+                                <li><a href="@Url.Action("InProgressFeedbacks", "Admin")">In Progress FeedBacks</a></li>
+                                <li><a href="@Url.Action("CompletedFeedbacks", "Admin")">Completed feedbacks</a></li>
+                            </ul>
+                        </li>
+                        <li>@Html.ActionLink("Add Admin User", "AddAdmin", "Admin")</li>
+                        <li>@Html.ActionLink("Add Employer", "SearchEmployer", "Admin", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>*@
+                }
+            }
+        </ul>
+    </aside>
+
+    <section id="contents" style="position:relative">
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header" style="margin-left: 25px">
+                    @*<a class="navbar-brand" href="#">my<span class="main-color">Dashboard</span></a>*@
+
+                    <ul class="nav navbar-nav navbar-right visible-xs">
+                        <li>
+                            @Html.Partial("_LoginPartial")
+                        </li>
+                        @*<li class="dropdown">
+
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">My profile <span class="caret"></span></a>
+
+                                    <ul class="dropdown-menu">
+                                        @if (Request.IsAuthenticated)
+                                        {
+                                            if (ViewContext.HttpContext.User.IsInRole("EmpAdmin") || ViewContext.HttpContext.User.IsInRole("Employer"))
+                                            {
+                                                <li>@Html.ActionLink("Dashboard", "Index", "Employer")</li>
+                                                <li>@Html.ActionLink("Transaction", "Transaction", "Employer")</li>
+                                                <li>@Html.ActionLink("Recent Schedule", "RecentTransaction", "Employer")</li>
+                                                <li>@Html.ActionLink("Upload Schedule", "UploadSchedule", "Employer")</li>
+                                                <li>@Html.ActionLink("Verify PIN", "VerifyPin", "Employer")</li>
+                                                <li>@Html.ActionLink("Feedback", "Feedback", "Employer")</li>
+                                                if (ViewContext.HttpContext.User.IsInRole("EmpAdmin"))
+                                                {
+                                                    <li>@Html.ActionLink("Add User", "RegisterEmployer", "Account")</li>
+                                                }
+
+                                            }
+                                            else
+                                            {
+                                                <li>@Html.ActionLink("Schedule", "Index", "admin")</li>
+                                                <li class="dropdown">
+                                                    <a class="dropdown-toggle" data-toggle="dropdown" href="@Url.Action("Feedbacks", "Admin")">
+                                                        Feedbacks
+                                                        <span style="background-color: white" class="caret"></span>
+                                                    </a>
+                                                    <ul style="background-color: #6091ba" class="dropdown-menu">
+                                                        <li><a href="@Url.Action("Feedbacks", "Admin")">All Feedbacks</a></li>
+                                                        <li><a href="@Url.Action("PendingFeedbacks", "Admin")">Pending Feedbacks</a></li>
+                                                        <li><a href="@Url.Action("InProgressFeedbacks", "Admin")">In Progress FeedBacks</a></li>
+                                                        <li><a href="@Url.Action("CompletedFeedbacks", "Admin")">Completed feedbacks</a></li>
+                                                    </ul>
+                                                </li>
+                                                <li>@Html.ActionLink("Add Admin User", "AddAdmin", "Admin")</li>
+                                                <li>@Html.ActionLink("Add Employer", "SearchEmployer", "Admin", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+                                            }
+
+                                        }
+                                        <li role="separator" class="divider"></li>
+                                        <li><a href="#"><i class="fa fa-sign-out"></i> Log out</a></li>
+                                    </ul>
+
+
+                                </li>
+                                <li><a href="#"><i class="fa fa-comments"></i><span>23</span></a></li>
+                                <li><a href="#"><i class="fa fa-bell-o"></i><span>98</span></a></li>
+                            <li><a href="#"><i data-show="show-side-navigation1" class="fa fa-bars show-side-btn"></i></a></li>*@
+                    </ul>
+                </div>
+                <div class="collapse navbar-collapse navbar-right" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav">
+                        <li>
+                            @Html.Partial("_LoginPartial")
+                        </li>
+
+                        @*<li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">My profile <span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#"><i class="fa fa-user-o fw"></i> My account</a></li>
+                                    <li><a href="#"><i class="fa fa-envelope-o fw"></i> My inbox</a></li>
+                                    <li><a href="#"><i class="fa fa-question-circle-o fw"></i> Help</a></li>
+                                    <li role="separator" class="divider"></li>
+                                    <li><a href="#"><i class="fa fa-sign-out"></i> Log out</a></li>
+                                </ul>
+                            </li>*@
+                        <li><a href="#"><i class="fa fa-comments"></i><span>23</span></a></li>
+                        <li><a href="#"><i class="fa fa-bell-o"></i><span>98</span></a></li>
+                        <li><a href="#"><i data-show="show-side-navigation1" class="fa fa-bars show-side-btn"></i></a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div style="width:100%; padding: 20px; padding-top: 0">
+            @RenderBody()
+        </div>
+
+
+        <hr />
+        <footer class="footer-div">
+            <p style="text-align: center">
+                &copy; @DateTime.Now.Year - PAL Pensions &nbsp;&nbsp;&nbsp; <i class="fa fa-twitter top-icon"></i>
+                <i class="fa fa-facebook top-icon"></i>
+                <i class="fa fa-linkedin top-icon"></i>
+                <i class="fa fa-instagram top-icon"></i>
+            </p>
+
+        </footer>
+        <br> <br>
+    </section>
+
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+  
+    @RenderSection("scripts", required: false)
+    <script>
+        $(document).ready(function () {
+            $("#alert").ready(function () {
+                setTimeout(function () {
+                    $(".alert").hide();
+                }, 20000);
+            })
+        })
+
+        $(function () {
+
+            'use strict';
+
+            (function () {
+
+                var aside = $('.side-nav'),
+
+                    showAsideBtn = $('.show-side-btn'),
+
+                    contents = $('#contents');
+
+                showAsideBtn.on("click", function () {
+
+                    $("#" + $(this).data('show')).toggleClass('show-side-nav');
+
+                    contents.toggleClass('margin');
+
+                });
+
+                if ($(window).width() <= 767) {
+
+                    aside.addClass('show-side-nav');
+
+                }
+                $(window).on('resize', function () {
+
+                    if ($(window).width() > 767) {
+
+                        aside.removeClass('show-side-nav');
+
+                    }
+
+                });
+
+                // dropdown menu in the side nav
+                var slideNavDropdown = $('.side-nav-dropdown');
+
+                $('.side-nav .categories li').on('click', function () {
+
+                    $(this).toggleClass('opend').siblings().removeClass('opend');
+
+                    if ($(this).hasClass('opend')) {
+
+                        $(this).find('.side-nav-dropdown').slideToggle('fast');
+
+                        $(this).siblings().find('.side-nav-dropdown').slideUp('fast');
+
+                    } else {
+
+                        $(this).find('.side-nav-dropdown').slideUp('fast');
+
+                    }
+
+                });
+
+                $('.side-nav .close-aside').on('click', function () {
+
+                    $('#' + $(this).data('close')).addClass('show-side-nav');
+
+                    contents.removeClass('margin');
+
+                });
+
+            }());
+
+
+
+        });
+    </script>
+</body>
+</html>

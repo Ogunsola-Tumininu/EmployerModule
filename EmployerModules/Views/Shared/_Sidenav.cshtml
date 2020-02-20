@@ -1,0 +1,31 @@
+﻿@{ 
+//int employerId = (int) this.ViewBag.employerId;
+//int employerId = (int) this.TempData["employerId"];
+    }
+
+<div class="side-nav" style="background-color: #f5f3f3">
+    <a href="@Url.Action("Index", "Employer")" class="side-nav-link"><h4><i class="fa fa-dashboard icn" ></i> Dashboard</h4></a>
+</div>
+
+<div class="side-nav" style="background-color: #f5f3f3">
+    <a href="@Url.Action("Member", "Employer")" class="side-nav-link"><h4><i class="fa fa-group icn"></i> Members</h4></a>
+</div>
+
+@*<div class="side-nav" style="background-color: #f5f3f3">
+    <a href="@Url.Action("Create", "Member", new { EmployerId = employerId })" class="side-nav-link"><h4><i class="fa fa-dashboard"></i> Member</h4></a>
+</div>*@
+
+<div class="side-nav" style="background-color: #f5f3f3">
+    <a href="@Url.Action("Transaction", "Employer")" class="side-nav-link"><h4><i class="fa fa-money icn"></i> Transactions History</h4></a>
+</div>
+
+<div class="side-nav" style="background-color: #f5f3f3">
+    <a href="@Url.Action("UploadSchedule", "Employer")" class="side-nav-link"><h4><i class="fa fa-clock-o icn"></i>Upload Schedule</h4></a>
+</div>
+
+<div class="side-nav" style="background-color: #f5f3f3">
+    <a href="@Url.Action("Verifypin", "Employer")" class="side-nav-link"><h4><i class="fa fa-check-square icn"></i>Verify PINs</h4></a>
+</div>
+<div class="side-nav" style="background-color: #f5f3f3">
+    <a href="@Url.Action("Feedback", "Employer")" class="side-nav-link"><h4><i class="fa fa-envelope-o icn"></i>Feedback</h4></a>
+</div>

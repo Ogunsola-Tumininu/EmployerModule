@@ -1,0 +1,223 @@
+﻿@model IEnumerable<EmployerModules.DAL.ScheduleHeaderTemp>
+
+@{
+    ViewBag.Title = "UploadSchedule";
+}
+
+
+
+<div class="welcome">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="content">
+                    <h2>Upload Schedule <small>Use the header below</small></h2>
+                    @*<p>@Model.EmployerName  <small>@Model.Recno</small></p>*@
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="welcome">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="content">
+                    @if (ViewBag.ErrorMessage != null)
+                    {
+                        <p class="alert alert-danger" style="color: black">@ViewBag.ErrorMessage</p>
+                    }
+                    @if (ViewBag.Success != null)
+                    {
+                        <p class="alert alert-success" style="color: black">@ViewBag.Success</p>
+                    }
+                    <span>Click @Html.ActionLink("here", "DownloadFile", null, new { @class = "" }) to download excel template</span>
+
+                    @using (Html.BeginForm("UploadSchedule", "Employer", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-inline" }))
+                    {
+                        <div class="form-group">
+                            <label for="file">Total:</label>
+                            <input class="form-control" type="file" name="UploadedFile" id="file" />
+                        </div>
+                        <div class="form-group">
+                            <label for="total">Total:</label>
+                            <input name="total" class="form-control" type="number" id="total" step=".01" placeholder="Total" />
+                        </div>
+                        <div class="form-group">
+                            <label for="period">Period:</label>
+                            <input name="u_period" id="period" class="form-control" type="month" />
+                        </div>
+
+                        <button type="submit" id="upload" class="btn btn-primary" name="Submit" style="margin-bottom: -20px">Upload Excel</button>
+
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="welcome">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="content table-div">
+                    @if (Model.Count() > 0)
+                    {
+                        <table class="table table-hover" id="table_id">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Pension Fund Admininstrator
+                                        @*@Html.DisplayNameFor(model => model.PFA)*@
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.TotalAmount)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.TotalEmployee)
+                                    </th>
+                                    @*<th>
+                                        @Html.DisplayNameFor(model => model.TransactionId)
+                                    </th>*@
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.PaymentStatus)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.PaymentState)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.SchedulePeriod)
+                                    </th>
+                                    @*<th>
+                                        @Html.DisplayNameFor(model => model.ExpiryDate)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Paymentdate)
+                                    </th>*@
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.UploadAdded)
+                                    </th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+
+
+                            <tbody>
+
+                                @foreach (var item in Model)
+                                {
+
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.PFA)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.TotalAmount)
+                                        </td>
+                                        <td>
+                                            <a href="@Url.Action("EmployeeList", "Employer", new { pfa = item.PFACode })">
+                                                @Html.DisplayFor(modelItem => item.TotalEmployee)
+                                            </a>
+
+                                        </td>
+                                        @*<td>
+                                            @Html.DisplayFor(modelItem => item.TransactionId)
+                                        </td>*@
+                                        <td>
+                                            <span class="label label-warning">@Html.DisplayFor(modelItem => item.PaymentStatus)</span>
+                                        </td>
+                                        <td>
+                                            <span class="label label-danger">@Html.DisplayFor(modelItem => item.PaymentState)</span>
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.SchedulePeriod)
+                                        </td>
+                                        @*<td>
+                                            @Html.DisplayFor(modelItem => item.ExpiryDate)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Paymentdate)
+                                        </td>*@
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.UploadAdded)
+                                        </td>
+                                        <td>
+                                            <a href="@Url.Action("Export", "Employer", new { pfa = item.PFACode })" class="text-success">
+                                                <i class="fa fa-download"></i>
+                                            </a>
+
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table><br />
+
+                        @*<a href="@Url.Action("PaymentSummary", "Employer")" class="btn btn-primary ">Payment Summary</a>*@
+                        <a href="@Url.Action("Payment", "Employer")" class="btn btn-primary">Make Payment</a>
+                        <button type="button" data-toggle="modal" data-target="#myModal" class="btn btn-danger pull-right">Clear Table</button>
+
+                        <div id="myModal" class="modal fade" role="dialog">
+                            <div class="modal-dialog">
+
+                                <!-- Modal content-->
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                        <h4 class="modal-title" style="color: black">Delete Uploaded Schedule</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p style="color: black">Do you want to delete the uploaded schedule?</p>
+                                        <a href="@Url.Action("ClearUpload", "Employer")" class="btn btn-danger">Yes</a>
+                                        <button class="btn btn-primary" type="button" data-dismiss="modal">No</button>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<link href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
+@section Scripts{
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#table_id').DataTable({
+                "scrollX": true
+            });
+
+            $("#upload").click(function () {
+                $("#loading").show();
+            })
+        });
+    </script>
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,95 @@
+﻿@model EmployerModules.DAL.Feedback
+@{
+    ViewBag.Title = "Reply";
+}
+
+<div class="welcome">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="content">
+                    <h2>@Model.FeedbackType.ToUpper() From @Model.Createdby    <small style="color: white">( @Model.Email  )</small></h2>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="welcome">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="content">
+                    @if (ViewBag.ErrorMessage != null)
+                    {
+                        <p class="alert alert-danger">@ViewBag.ErrorMessage</p>
+                    }
+
+                        <div class="comment" style="color: black">
+                            @Html.DisplayFor(model => model.Message) <br />
+                            <small style="color: gray">Sent by @Model.Createdby</small>
+                        </div>
+
+                    @foreach (var remark in ViewBag.Remarks)
+                    {
+                        if (remark.IsAdminRemark)
+                        {
+                            <div class="comment admin" style="color: black">
+                                @remark.Comment<br />
+                                <small style="color: gray"> Sent by Admin </small>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="comment" style="color: black">
+                                @remark.Comment <br />
+                                <small style="color: gray">Sent by @Model.Createdby </small>
+                            </div>
+                        }
+
+
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="welcome">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="content">
+                    @using (Html.BeginForm("Reply", "Admin", new { Id = Model.Id }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+
+                        <label for="Remarks">Remarks</label>
+                        @*@Html.TextAreaFor(m => m.Remarks, new { @class = "form-control", @rows = "5", @placeholder = "Enter Remark  Here ..." })*@
+                        <textarea class="form-control" placeholder="Enter Comments here.." rows="5" name="Comment" id="Comment"></textarea>
+                        <br /><br />
+                        <fieldset class="well the-fieldset">
+                            <legend class="the-legend">Status:</legend>
+                            <div style="color: black">
+                                <div class="col-md-3">
+                                    <span>Pending:  @Html.RadioButtonFor(m => m.Status, "pending")</span>
+                                </div>
+                                <div class="col-md-3">
+                                    <span>In Progress: @Html.RadioButtonFor(m => m.Status, "in-progress") </span>
+                                </div>
+                                <div class="col-md-3">
+                                    <span>Complete: @Html.RadioButtonFor(m => m.Status, "complete")</span>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <br />
+                        <input type="submit" class="btn btn-primary pull-left" value="Send" />
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+

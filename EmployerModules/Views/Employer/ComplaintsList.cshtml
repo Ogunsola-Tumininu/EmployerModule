@@ -1,0 +1,102 @@
+﻿@model IEnumerable<EmployerModules.DAL.Feedback>
+
+<div class="welcome">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="content">
+                    <h2>Complaints History</h2>
+                    @*<p>@Model.EmployerName  <small>@Model.Recno</small></p>*@
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="welcome">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="content table-div">
+                    @if (Model.Count() > 0)
+                    {
+                        <table class="table table-hover" id="table_id">
+                            <thead>
+                                <tr>
+
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Message)
+                                    </th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            @if (item.Message.Length > 60)
+                                            {
+                                                <span>@item.Message.Substring(0, 60) ...</span>
+                                            }
+                                            else
+                                            {
+                                                @item.Message
+                                            }
+
+                                        </td>
+                                        <td>
+                                            @if (item.Remarks != null)
+                                            {
+                                                <a href="@Url.Action("ViewMessage", "Employer", new { Id = item.Id})">View Remark</a>
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (item.Status == "pending")
+                                            {
+                                                <span class="label label-primary">Pending</span>
+                                            }
+                                            @if (item.Status == "in-progress")
+                                            {
+                                                <span class="label label-warning">In Progress</span>
+                                            }
+                                            @if (item.Status == "complete")
+                                            {
+                                                <span class="label label-success">Complete</span>
+                                            }
+                                        </td>
+
+                                    </tr>
+                                }
+                            </tbody>
+
+                        </table>
+
+                    }
+                    else
+                    {
+                        <P>You have no feedback message</P>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<link href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
+@section Scripts{
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#table_id').DataTable({
+                
+                "ordering": false
+            });
+        });
+    </script>
+}
+
+

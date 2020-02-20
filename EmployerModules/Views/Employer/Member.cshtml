@@ -1,0 +1,97 @@
+﻿@model IEnumerable<EmployerModules.DAL.Employee>
+
+@*@using PagedList;
+    @using PagedList.Mvc;*@
+
+@{
+    ViewBag.Title = "Member";
+}
+
+<div class="welcome">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="content">
+                    <h2>MemberList <span class="badge" style="background-color: darkred">@Model.Count()</span></h2>
+                    @*<p>@Model.EmployerName  <small>@Model.Recno</small></p>*@
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="welcome">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="content table-div">
+                    <table class="table table-hover" id="table_id">
+                        <thead>
+                            <tr>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Pin)
+                                </th>
+
+                                <th>
+                                    @Html.DisplayNameFor(model => model.FirstName)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Surname)
+                                </th>
+
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Gender)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.MobileNumber)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Email)
+                                </th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        <a href="@Url.Action("MemberDetails", "Employer", new { pin = item.Pin })">@Html.DisplayFor(modelItem => item.Pin)</a>
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.FirstName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Surname)
+                                    </td>
+
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Gender)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.MobileNumber)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Email)
+                                    </td>
+
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<link href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
+@section Scripts{
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#table_id').DataTable();
+        });
+    </script>
+}

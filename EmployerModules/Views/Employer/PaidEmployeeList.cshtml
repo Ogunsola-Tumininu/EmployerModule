@@ -1,0 +1,149 @@
+﻿@model IEnumerable<EmployerModules.DAL.ScheduleUpload>
+
+@{
+    ViewBag.Title = "PaidEmployeeList";
+}
+
+
+<div class="welcome">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="content">
+                    <h2>Employee List</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="welcome">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="content table-div">
+                    <table class="table table-hover" id="table_id">
+                        <thead>
+                            <tr>
+                                @*<th>
+                        @Html.DisplayNameFor(model => model.EmployerCode)
+                    </th>*@
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Period)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Pin)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.PinValid)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Surname)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.FirstName)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.OtherName)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.PFACode)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.EmployeeContribution)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.EmployerContribution)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.VoluntaryContribution)
+                                </th>
+
+                                <th>
+                                    @Html.DisplayNameFor(model => model.TotalContribution)
+                                </th>
+
+                            </tr>
+                        </thead>
+
+                        @{
+            decimal total = (decimal)Model.Sum(x => x.TotalContribution);
+                        }
+
+                        <tbody>
+
+                            @foreach (var item in Model)
+            {
+
+                <tr>
+                    @*<td>
+            @item.EmployerCode
+            @Html.DisplayFor(modelItem => item.EmployerCode)
+        </td>*@
+
+                    <td>
+
+                        @Html.DisplayFor(modelItem => item.Period)
+                    </td>
+                    <td>
+                        @item.Pin
+                        @*@Html.DisplayFor(modelItem => item.Pin)*@
+                    </td>
+                    <td>
+
+                        @Html.DisplayFor(modelItem => item.PinValid)
+                    </td>
+                    <td>
+                        @item.Surname
+                        @*@Html.DisplayFor(modelItem => item.Surname)*@
+                    </td>
+                    <td>
+                        @item.FirstName
+                        @*@Html.DisplayFor(modelItem => item.FirstName)*@
+                    </td>
+                    <td>
+                        @item.OtherName
+                        @*@Html.DisplayFor(modelItem => item.OtherName)*@
+                    </td>
+                    <td>
+                        @item.PFACode
+                        @*@Html.DisplayFor(modelItem => item.OtherName)*@
+                    </td>
+                    <td>
+                        @item.EmployeeContribution
+                        @*@Html.DisplayFor(modelItem => item.EmployeeContribution)*@
+                    </td>
+                    <td>
+                        @item.EmployerContribution
+                        @*@Html.DisplayFor(modelItem => item.EmployerContribution)*@
+                    </td>
+                    <td>
+                        @item.VoluntaryContribution
+                        @*@Html.DisplayFor(modelItem => item.VoluntaryContribution)*@
+                    </td>
+                    <td>
+                        @item.TotalContribution
+                        @*@Html.DisplayFor(modelItem => item.TotalContribution)*@
+                    </td>
+
+                </tr>
+}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<link href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
+@section Scripts{
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#table_id').DataTable({
+                "scrollX": true
+            });
+        });
+    </script>
+}

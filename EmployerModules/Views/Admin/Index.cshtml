@@ -1,0 +1,130 @@
+﻿@model IEnumerable<EmployerModules.DAL.ScheduleHeader>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="welcome">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="content">
+                    <h2>Recently Paid Schedule</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="welcome">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="content">
+                    <table class="table table-hover" id="table_id">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Pension Fund Admininstrator
+                                    @*@Html.DisplayNameFor(model => model.PFA)*@
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.TotalAmount)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.TotalEmployee)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.TransactionId)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.PaymentStatus)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.PaymentState)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.SchedulePeriod)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.ExpiryDate)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.PaymentDate)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.UploadAdded)
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+
+
+                        <tbody>
+
+                            @foreach (var item in Model)
+        {
+
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PFA)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TotalAmount)
+                        </td>
+                        <td>
+                            <a href="@Url.Action("PaidEmployeeList", "Employer", new { pfa = item.PFACode})">
+                                @Html.DisplayFor(modelItem => item.TotalEmployee)
+                            </a>
+
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TransactionId)
+                        </td>
+                        <td>
+                            <span class="label label-success">@Html.DisplayFor(modelItem => item.PaymentStatus)</span>
+                        </td>
+                        <td>
+                            <span class="label label-success">@Html.DisplayFor(modelItem => item.PaymentState)</span>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.SchedulePeriod)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ExpiryDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PaymentDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.UploadAdded)
+                        </td>
+                        <td>
+                            <a href="@Url.Action("Export", "Employer", new { pfa = item.PFACode })" class="text-success">
+                                <i class="fa fa-download"></i>
+                            </a>
+
+                        </td>
+                    </tr>
+}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+<link href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
+@section Scripts{
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#table_id').DataTable({
+                "scrollX": true;
+                "ordering": false
+            });
+        });
+    </script>
+}

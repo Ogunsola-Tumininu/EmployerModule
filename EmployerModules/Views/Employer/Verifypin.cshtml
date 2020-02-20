@@ -1,0 +1,124 @@
+﻿@model IEnumerable<EmployerModules.DAL.Employee>
+@{
+    ViewBag.Title = "Verifypin";
+}
+
+
+<div class="welcome">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="content">
+                    <h2>Verify Pin</h2>
+                    @*<p>@Model.EmployerName  <small>@Model.Recno</small></p>*@
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="welcome">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="content table-div">
+                    @if (ViewBag.ErrorMessage != null)
+                    {
+                        <p class="alert alert-danger" style="color: black">@ViewBag.ErrorMessage</p>
+                    }
+                    @using (Html.BeginForm("Verifypin", "Employer", FormMethod.Get))
+                    {
+                        <input type="search" class="form-control" style="width: 280px; display: inline-block" name="searchedPin" placeholder="Enter PIN .." />
+                        <input type="submit" class="btn btn-success" value="Search" />
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@if (Model.Count() == 1)
+{
+    <div class="welcome">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="content table-div">
+
+                        <table class="table table-hover">
+                            <tr>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Pin)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Employer_name)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.FirstName)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Surname)
+                                </th>
+
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Gender)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.MobileNumber)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Email)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.LGACode)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.ClientStatus)
+                                </th>
+
+                            </tr>
+
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        <a href="@Url.Action("MemberDetails", "Employer", new { pin = item.Pin })">@Html.DisplayFor(modelItem => item.Pin)</a>
+                                    </td>
+                                    <td>
+                                        @*@Html.DisplayFor(modelItem => item.Employer_name)*@
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.FirstName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Surname)
+                                    </td>
+
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Gender)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.MobileNumber)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Email)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.LGACode)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ClientStatus)
+                                    </td>
+
+                                </tr>
+                            }
+
+                        </table>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+

@@ -1,0 +1,157 @@
+﻿@model EmployerModules.Models.RegisterViewModel
+@{
+    ViewBag.Title = "Register";
+}
+
+<div class="welcome">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="content">
+                    <h2> Register Employer</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="welcome">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="content" style="height: auto">
+                    <div class="col-md-12" style="padding: 0">
+                        @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "", role = "form" }))
+    {
+                    @Html.AntiForgeryToken()
+
+                    @Html.ValidationSummary("", new { @class = "text-danger" })
+                    <div class="row">
+                        <div class="form-group  col-md-12">
+                            <div class="col-md-12">
+                                @Html.LabelFor(m => m.EmployerName, new { @class = "control-label " })
+                            </div>
+                            <div class="col-md-12" style="margin-right: 0">
+                                @Html.TextBoxFor(m => m.EmployerName, new { @class = "form-control", @readonly = "readonly", Value = ViewBag.EmployerName })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <div class="col-md-12">
+                                @*@Html.LabelFor(m => m.UserName, new { @class = "control-label signin-label" })*@
+                                <label for="UserName" class="signin-label ">Employer Code</label>
+                            </div>
+                            <div class="col-md-12">
+                                @Html.TextBoxFor(m => m.UserName, new { @class = "form-control ", @readonly = "readonly", Value = ViewBag.EmployerCode })
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <div class="col-md-12">
+                                @Html.LabelFor(m => m.Email, new { @class = "signin-label " })
+                            </div>
+                            <div class="col-md-12">
+                                @Html.TextBoxFor(m => m.Email, new { @class = "form-control ", @placeholder = "Enter Contact Email" })
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            <div class="col-md-12">
+                                @Html.LabelFor(m => m.ContactPerson, new { @class = "signin-label" })
+                            </div>
+                            <div class="col-md-12">
+                                @Html.TextBoxFor(m => m.ContactPerson, new { @class = "form-control", @placeholder = "Enter contact Person" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group col-md-6">
+                                <div>
+                                    @Html.LabelFor(m => m.Designation, new { @class = "control-label" })
+
+                                </div>
+                                <div style="margin-right: 0">
+                                    @Html.TextBoxFor(m => m.Designation, new { @class = "form-control", @placeholder = "Enter Contact Person Designation" })
+                                </div>
+                            </div>
+
+                            <div class="form-group col-md-6">
+                                <div>
+                                    @Html.LabelFor(m => m.Department, new { @class = "control-label " })
+                                </div>
+                                <div>
+                                    @Html.TextBoxFor(m => m.Department, new { @class = "form-control ", @placeholder = "Enter Contact Person Department" })
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group col-md-4">
+                                <div>
+                                    @Html.LabelFor(m => m.Password, new { @class = "signin-label" })
+                                </div>
+                                <div>
+                                    @Html.PasswordFor(m => m.Password, new { @class = "form-control ", @placeholder = "Enter password" })
+                                </div>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <div>
+                                    @Html.LabelFor(m => m.ConfirmPassword, new { @class = "signin-label " })
+                                </div>
+                                <div>
+                                    @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control ", @placeholder = "Enter Confirm Password" })
+                                </div>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <div>
+                                    @Html.LabelFor(m => m.PhoneNo, new { @class = "signin-label " })
+                                </div>
+                                <div>
+                                    @Html.TextBoxFor(m => m.PhoneNo, new { @class = "form-control ", @placeholder = "Enter Contact Person Phone no" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            <div class="col-md-12">
+                                @Html.LabelFor(m => m.Address, new { @class = "signin-label" })
+                            </div>
+                            <div class="col-md-12">
+                                @Html.TextBoxFor(m => m.Address, new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-12">
+                            <div class=" col-md-10" style="margin-bottom: 10px">
+                                <input type="submit" class="btn btn-primary" value="Register" />
+                            </div>
+                        </div>
+                    </div>
+
+}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

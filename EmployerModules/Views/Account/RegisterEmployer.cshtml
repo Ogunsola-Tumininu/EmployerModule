@@ -1,0 +1,104 @@
+﻿@model EmployerModules.Models.RegisterEmployerModel
+@{
+    ViewBag.Title = "RegisterEmployer";
+}
+
+
+<div class="welcome">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="content">
+                    <h2>Add User</h2>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="welcome">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="content table-div" style="height: 600px">
+                    <div class="col-md-6 col-md-offset-2">
+                        @using (Html.BeginForm("RegisterEmployer", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+                    @Html.AntiForgeryToken()
+
+                    @Html.ValidationSummary("", new { @class = "text-danger" })
+                    <input type="hidden" name="EmployerCode" value="@ViewBag.EmployerCode" id="EmployerCode" />
+                    <input type="hidden" name="EmployerName" value="@ViewBag.EmployerName" id="EmployerName" />
+                    <div class="form-group">
+                        <label class="control-label col-md-4">User Role</label>
+                        <div class="col-md-8">
+                            <div class=" col-xs-5">
+                                <label> @Html.RadioButtonFor(m => m.Role, "Employer", true )Employer</label>
+                            </div>
+                            <div class=" col-xs-7 ">
+                                <label> @Html.RadioButtonFor(m => m.Role, "EmpAdmin") Employer Admin</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Email, new { @class = "col-md-4 control-label" })
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.PhoneNo, new { @class = "col-md-4 control-label" })
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m => m.PhoneNo, new { @class = "form-control" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Designation, new { @class = "col-md-4 control-label" })
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m => m.Designation, new { @class = "form-control" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Department, new { @class = "col-md-4 control-label" })
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m => m.Department, new { @class = "form-control" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Password, new { @class = "col-md-4 control-label" })
+                        <div class="col-md-8">
+                            @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-4 control-label" })
+                        <div class="col-md-8">
+                            @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="submit" class="btn btn-primary" value="Add User" />
+                        </div>
+                    </div>
+}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+
+
+
