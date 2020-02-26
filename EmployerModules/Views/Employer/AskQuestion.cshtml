@@ -1,0 +1,31 @@
+﻿@{
+    ViewBag.Title = "AskQuestion";
+}
+
+<div class="welcome">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="content">
+                    <h2>Delete Uploaded Employee</h2>
+                    <p></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="welcome">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="content table-div">
+                    <h4>Do you really want to delete the employee?</h4>
+                    <a href="@Url.Action("DeleteMember", "Employer", new { Pin = ViewBag.Pin, Code=ViewBag.Code})" class="btn btn-danger">Yes</a>
+                    <a href="@Url.Action("EmployeeList", "Employer", new { pfa=ViewBag.Code})" class="btn btn-default">No</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

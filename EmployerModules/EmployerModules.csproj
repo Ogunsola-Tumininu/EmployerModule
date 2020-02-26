@@ -367,6 +367,7 @@
     <Content Include="Content\images\quickteller.png" />
     <Content Include="Content\loading.GIF" />
     <Content Include="Content\PagedList.css" />
+    <Content Include="Content\please-wait-gif.gif" />
     <Content Include="DAL\PALSiteDBEntities.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>PALSiteDBEntities.edmx</DependentUpon>
@@ -401,6 +402,8 @@
     <Content Include="DAL\PALSiteDBEntities.edmx.diagram">
       <DependentUpon>PALSiteDBEntities.edmx</DependentUpon>
     </Content>
+    <Content Include="Content\template\schedulesTemplate.xlsx" />
+    <Content Include="Content\200.webp" />
     <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
@@ -413,7 +416,7 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
-    <Content Include="Scripts\script.js" />
+    <Content Include="Scripts\payment.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -480,6 +483,9 @@
     <Content Include="Views\Admin\InProgressFeedbacks.cshtml" />
     <Content Include="Views\Admin\PendingFeedbacks.cshtml" />
     <Content Include="Views\Employer\AllEmployerUsers.cshtml" />
+    <Content Include="Views\Employer\AskQuestion.cshtml" />
+    <Content Include="Views\Employer\UpdateMember.cshtml" />
+    <Content Include="Views\Employer\InvalidPALEmployeeList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -13,6 +13,7 @@ using Newtonsoft.Json;
 
 using System.IO;
 using System.Data;
+using System.Data.Entity;
 using ClosedXML.Excel;
 using System.Security.Claims;
 using System.Configuration;
@@ -53,7 +54,6 @@ namespace EmployerModules.Controllers
             return View(emp);
         }
 
-
         // GET: Employers/Member
         public ActionResult Member()
         {
@@ -65,6 +65,85 @@ namespace EmployerModules.Controllers
             return View(members);
         }
 
+        public ActionResult DeleteMember(string Pin, string Code)
+        {
+            var emp = db.ScheduleUploadTemps.Where(e => e.Pin == Pin).FirstOrDefault();
+           
+
+            var userId = User.Identity.GetUserId();
+            string employerCode = db.AspNetUsers.Find(userId).EmployerCode;
+            var sch = db.ScheduleHeaderTemps.Where(s => s.EmployerId == employerCode && s.PFACode == Code).FirstOrDefault();
+            if (sch != null)
+            {
+                sch.TotalEmployee = sch.TotalEmployee - 1;
+                sch.TotalAmount = sch.TotalAmount - emp.TotalContribution;
+            }
+
+            db.ScheduleUploadTemps.Remove(emp);
+            db.SaveChanges();
+
+            return RedirectToAction("UploadSchedule");
+        }
+
+        public ActionResult AskQuestion(string Pin, string Code) {
+            ViewBag.Pin = Pin;
+            ViewBag.Code = Code;
+            return View();
+        }
+        public ActionResult UpdateMember(string Pin)
+        {
+            var member = db.ScheduleUploadTemps.Where(m => m.Pin == Pin).FirstOrDefault();
+            if(member != null)
+            {
+                return View(member);
+            }
+            return RedirectToAction("EmployeeList", "Employer", new { pfa = "25" });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult UpdateMember([Bind(Include = "Id,Period,Pin,Surname,FirstName,OtherName,EmployeeContribution,VoluntaryContribution,EmployerContribution,TotalContribution")] ScheduleUploadTemp Member)
+        {
+            if (ModelState.IsValid)
+            {
+                var member = db.ScheduleUploadTemps.Where(m => m.Pin == Member.Pin).FirstOrDefault();
+
+                if(member.TotalContribution != Member.TotalContribution)
+                {
+                    var pfaContribution = db.ScheduleHeaderTemps.Where(p => p.PFACode == "25").FirstOrDefault();
+                    decimal totalDiff = (decimal)Member.TotalContribution - (decimal)member.TotalContribution;
+                    decimal employerDiff = (decimal)Member.EmployerContribution - (decimal)member.EmployerContribution;
+                    decimal employeeDiff = (decimal)Member.EmployeeContribution - (decimal)member.EmployeeContribution;
+                    decimal voluntaryDiff = (decimal)Member.VoluntaryContribution - (decimal)member.VoluntaryContribution;
+                    if (totalDiff > 0)
+                    {
+                        member.TotalContribution = member.TotalContribution + totalDiff;
+                        member.EmployerContribution = member.EmployerContribution + employerDiff;
+                        member.EmployeeContribution = member.EmployeeContribution + employeeDiff;
+                        member.VoluntaryContribution = member.VoluntaryContribution + voluntaryDiff;
+                    }
+                    else
+                    {
+                        member.TotalContribution = member.TotalContribution - totalDiff;
+                        member.EmployerContribution = member.EmployerContribution - employerDiff;
+                        member.EmployeeContribution = member.EmployeeContribution - employeeDiff;
+                        member.VoluntaryContribution = member.VoluntaryContribution - voluntaryDiff;
+                    }
+                }
+                member.Period = Member.Period;
+                member.Surname = Member.Surname;
+                member.FirstName = Member.FirstName;
+                member.OtherName = Member.OtherName;
+                member.EmployeeContribution = Member.EmployeeContribution;
+                member.EmployerContribution = Member.EmployerContribution;
+                member.VoluntaryContribution = Member.VoluntaryContribution;
+                member.TotalContribution = Member.TotalContribution;
+               
+                db.SaveChanges();
+                return RedirectToAction("EmployeeList", "Employer", new { pfa = "25"});
+            }
+            return View(Member);
+        }
 
         // GET: Employers/MemberDetails/PEN1000004848
         [Route("Employer/MemberDetails/{pin}")]
@@ -114,6 +193,7 @@ namespace EmployerModules.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult FeedbackForm(Feedback feedback)
         {
             var userId = User.Identity.GetUserId();
@@ -165,6 +245,7 @@ namespace EmployerModules.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult EnquiryForm(Feedback feedback)
         {
             var userId = User.Identity.GetUserId();
@@ -212,6 +293,7 @@ namespace EmployerModules.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult ComplaintsForm(Feedback feedback)
         {
             var userId = User.Identity.GetUserId();
@@ -319,7 +401,10 @@ namespace EmployerModules.Controllers
             var userId = User.Identity.GetUserId();
             string employerCode = db.AspNetUsers.Find(userId).EmployerCode;
             var latestSchedule = db.ScheduleHeaderTemps.Where(s => s.EmployerId == employerCode).ToList();
-           
+            var invalidPinMember = db.ScheduleUploadTemps.Where(s => s.EmployerCode == employerCode && s.PFACode == "25" && s.PinValid == false).Count();
+            
+            ViewBag.Invalid = invalidPinMember;
+
             return View(latestSchedule);
         }
 
@@ -559,9 +644,11 @@ namespace EmployerModules.Controllers
                             db.SaveChanges();
                         
                             var latestSummary = db.ScheduleHeaderTemps.Where(s => s.EmployerId == employerCode).ToList();
+                            var invalidPinMember = db.ScheduleUploadTemps.Where(s => s.EmployerCode == employerCode && s.PFACode == "25" && s.PinValid == false).Count();
 
                             ViewBag.Success = "Excel Uploaded Successfully";
                             ViewBag.UploadList = uploadList;
+                            ViewBag.Invalid = invalidPinMember;
                             return View(latestSummary);
                         }
                         
@@ -718,6 +805,15 @@ namespace EmployerModules.Controllers
             return View(employeeList);
         }
 
+        public ActionResult InvalidPALEmployeeList()
+        {
+            var userId = User.Identity.GetUserId();
+            string employerCode = db.AspNetUsers.Find(userId).EmployerCode;
+            var employeeList = db.ScheduleUploadTemps.Where(s => s.EmployerCode == employerCode && s.PFACode == "25" && s.PinValid == false).ToList();
+
+            return View(employeeList);
+        }
+
         public ActionResult PaidEmployeeList(string pfa)
         {
             var userId = User.Identity.GetUserId();
@@ -778,7 +874,7 @@ namespace EmployerModules.Controllers
             var userId = User.Identity.GetUserId();
             var emp = db.AspNetUsers.Find(userId);
             string empName = db.EmployerDetails.Where(e => e.Recno == emp.EmployerCode).FirstOrDefault().EmployerName;
-            var totalSchedules = db.ScheduleUploadTemps.Where(s => s.EmployerCode == emp.EmployerCode).ToList();
+            var totalPALSchedules = db.ScheduleUploadTemps.Where(s => s.EmployerCode == emp.EmployerCode && s.PFACode == "25").ToList();
             ViewBag.Paystack_Pk = "pk_test_e0d7d4d6fd56f59e254a03634d3e2970bcf78933";
             ViewBag.Paystack_Sk = "sk_test_283ffe5211516393d9812e240e6c86110ef7fd89";
 
@@ -788,7 +884,7 @@ namespace EmployerModules.Controllers
             ViewBag.Flutterwave_Sk = "FLWSECK_TEST-bd7e15166caee0fab2b2e735d6986d18-X";
             ViewBag.FlutterwaveRefId = "PAL" + DateTime.Now.ToString("ddMMyyyy") + randNum.ToString();
 
-            ViewBag.TotalPayment = totalSchedules.Sum(t => t.TotalContribution);
+            ViewBag.TotalPayment = totalPALSchedules.Sum(t => t.TotalContribution);
             ViewBag.EmployerId = emp.EmployerCode;
             ViewBag.EmployerEmail = emp.Email;
             ViewBag.EmployerName = empName;
@@ -1020,6 +1116,7 @@ namespace EmployerModules.Controllers
             var client = new HttpClient();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             var responseMessage = client.PutAsJsonAsync("https://ravesandboxapi.flutterwave.com/flwv3-pug/getpaidx/api/xrequery", data).Result;
+
 
             var responseStr = responseMessage.Content.ReadAsStringAsync().Result;
             var response = Newtonsoft.Json.JsonConvert.DeserializeObject<ResponseData>(responseStr);

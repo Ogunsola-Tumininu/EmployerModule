@@ -62,9 +62,14 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
-                <div class="content table-div">
-                    @if (Model.Count() > 0)
-                    {
+                @if (Model.Count() > 0)
+                {
+                    <div class="content table-div">
+                        @if(ViewBag.Invalid > 0)
+                        {
+                        <h4 class="text-danger">You have @ViewBag.InValid employee with invalid PIN. please click <a href="@Url.Action("InvalidPALEmployeeList", "Employer")">here to view</a></h4>
+                        }
+
                         <table class="table table-hover" id="table_id">
                             <thead>
                                 <tr>
@@ -79,8 +84,8 @@
                                         @Html.DisplayNameFor(model => model.TotalEmployee)
                                     </th>
                                     @*<th>
-                                        @Html.DisplayNameFor(model => model.TransactionId)
-                                    </th>*@
+                                            @Html.DisplayNameFor(model => model.TransactionId)
+                                        </th>*@
                                     <th>
                                         @Html.DisplayNameFor(model => model.PaymentStatus)
                                     </th>
@@ -91,11 +96,11 @@
                                         @Html.DisplayNameFor(model => model.SchedulePeriod)
                                     </th>
                                     @*<th>
-                                        @Html.DisplayNameFor(model => model.ExpiryDate)
-                                    </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.Paymentdate)
-                                    </th>*@
+                                            @Html.DisplayNameFor(model => model.ExpiryDate)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.Paymentdate)
+                                        </th>*@
                                     <th>
                                         @Html.DisplayNameFor(model => model.UploadAdded)
                                     </th>
@@ -123,8 +128,8 @@
 
                                         </td>
                                         @*<td>
-                                            @Html.DisplayFor(modelItem => item.TransactionId)
-                                        </td>*@
+                                                @Html.DisplayFor(modelItem => item.TransactionId)
+                                            </td>*@
                                         <td>
                                             <span class="label label-warning">@Html.DisplayFor(modelItem => item.PaymentStatus)</span>
                                         </td>
@@ -135,11 +140,11 @@
                                             @Html.DisplayFor(modelItem => item.SchedulePeriod)
                                         </td>
                                         @*<td>
-                                            @Html.DisplayFor(modelItem => item.ExpiryDate)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Paymentdate)
-                                        </td>*@
+                                                @Html.DisplayFor(modelItem => item.ExpiryDate)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Paymentdate)
+                                            </td>*@
                                         <td>
                                             @Html.DisplayFor(modelItem => item.UploadAdded)
                                         </td>
@@ -155,7 +160,7 @@
                         </table><br />
 
                         @*<a href="@Url.Action("PaymentSummary", "Employer")" class="btn btn-primary ">Payment Summary</a>*@
-                        <a href="@Url.Action("Payment", "Employer")" class="btn btn-primary">Make Payment</a>
+                        <a href="@Url.Action("Payment", "Employer")" class="btn btn-primary">Make Payment for PAL</a>
                         <button type="button" data-toggle="modal" data-target="#myModal" class="btn btn-danger pull-right">Clear Table</button>
 
                         <div id="myModal" class="modal fade" role="dialog">
@@ -178,8 +183,9 @@
                             </div>
                         </div>
 
-                    }
-                </div>
+
+                    </div>
+                }
             </div>
         </div>
     </div>

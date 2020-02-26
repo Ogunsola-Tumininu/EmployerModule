@@ -60,7 +60,7 @@
                     <img src="~/Content/images/quickteller.png" class="img-responsive" style="width: 250px; display:inline-block; margin-bottom:20px; margin-left: 25px;" alt="Alternate Text" />
 
                     <a href="#">
-                        <img src="~/Content/images/paystack.png" class="img-responsive" style="width: 250px; display:inline-block; margin-left: 25px;margin-bottom:20px" alt="Paystack" id="payNowButton" />
+                        <img src="~/Content/images/paystack.png" class="img-responsive" style="width: 250px; display:inline-block; margin-left: 25px;margin-bottom:20px" alt="Paystack" id="serverPaystack" />
                     </a>
 
                     <img src="~/Content/images/banktransfer.png" class="img-responsive" style="width: 250px; display:inline-block; margin-left: 25px; margin-bottom:20px" alt="Alternate Text" />
@@ -76,7 +76,7 @@
 @section Scripts{
 
 
-    <script>
+    @*<script>
         
 
         const total_payment = $("#t-payment").val();
@@ -249,8 +249,8 @@
                     ) {
                         // redirect to a success page
                         console.log("txref is", txref);
-                        //window.location.replace("/Employer/Validate?TransactionId=" + txref);
-                        var check = verifyFlutterWavePayment(txref);
+                        window.location.replace("/Employer/Validate?TransactionId=" + txref);
+                        //var check = verifyFlutterWavePayment(txref);
            
                         //alert("Successful")
                         
@@ -313,7 +313,7 @@
 
 
 
-    </script>
+    </script>*@
 }
 
 

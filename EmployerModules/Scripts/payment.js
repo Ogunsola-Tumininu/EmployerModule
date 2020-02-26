@@ -13,7 +13,7 @@
         key: $("#ps_pk").val(),
             email: employerEmail,
             amount: Number(total_payment) * 100,
-            //amount: parseInt(1900) * 100,
+            //amount: parseInt(40000) * 100,
             //plan: "PLN_code",
             //ref: "UNIQUE TRANSACTION REFERENCE HERE",
           metadata: {
@@ -70,7 +70,8 @@
 
         function updateTables() {
         $.ajax({
-            url: '@Url.Action("PaymentConfirmed", "Employer", new { paymentType="paystack"})',
+            //url: '@Url.Action("PaymentConfirmed", "Employer", new { paymentType="paystack"})',
+            url: '/Employer/PaymentConfirmed?paymentType="paystack"',
             type: 'GET',
             dataType: 'json',
             cache: false,
@@ -94,35 +95,40 @@
         function InitTransaction(data) {
             return $.ajax({
                 type: "POST",
-                url: "@Url.Action("InitializePayment", "Employer", new { area=""})",
+                //url: "@Url.Action("InitializePayment", "Employer", new { area=""})",
+                url: '/Employer/InitializePayment?area=""',
                 data: data,
                 dataType: 'json',
                 contentType: 'application/json;charset=utf-8'
             });
         }
 
-          $("#payNowButton").click(function (e) {
-        $(".redirect-message").show();
-    e.preventDefault();
+                $("#serverPaystack").click(function (e) {
+                
+                    console.log("I was clicked")
+                $(".redirect-message").show();
+                e.preventDefault();
 
-               var data = JSON.stringify({
-        EmployerName: $("#empName").val(),
+                var data = JSON.stringify({
+                EmployerName: $("#empName").val(),
                 employerId: $("#empId").val(),
                 email: $("#empEmail").val(),
                 phone: employerPhoneNo,
+                //amount: 18703833
                 amount: Number(total_payment) * 100,
-              });
-            $.when(InitTransaction(data)).then(function (response) {
-                if (response.error == false) {
-        window.location.href = response.result.data.authorization_url;
-    console.log(response.result.data.authorization_url);
-                } else {
-        $(".redirect-message").hide();
-    }
-            }).fail(function () {
-        $(".redirect-message").hide()
-    });
-        });
+                 });
+                    $.when(InitTransaction(data)).then(function (response) {
+                        console.log(response)
+                        if (response.error == false) {
+                window.location.href = response.result.data.authorization_url;
+                console.log(response.result.data.authorization_url);
+                        } else {
+                $(".redirect-message").hide();
+            }
+                    }).fail(function () {
+                $(".redirect-message").hide()
+            });
+                });
         });
 
 
@@ -138,27 +144,27 @@
 
         function payWithRave() {
             var x = getpaidSetup({
-        PBFPubKey: API_publicKey,
+            PBFPubKey: API_publicKey,
                 customer_email: employerEmail,
-                //amount: Number(total_payment),
-                amount: 40958,
+                amount: Number(total_payment),
+                //amount: 40000,
                 customer_phone: employerPhoneNo,
                 txref: $("#txref").val(),
                 currency: "NGN",
                 meta: [
                     {
-        metaname: "EmployerID",
-                    metavalue: employerId
-                    },
-                    {
-        metaname: "EmployerName",
-                        metavalue: employerName
-                    },
-                    {
-        metaname: "Description",
-                        metavalue: "Payment for " + period + " by " + employerName + "with  Employer Id" + employerId
-                    }
-                ],
+                    metaname: "EmployerID",
+                                metavalue: employerId
+                                },
+                                {
+                    metaname: "EmployerName",
+                                    metavalue: employerName
+                                },
+                                {
+                    metaname: "Description",
+                                    metavalue: "Payment for " + period + " by " + employerName + "with  Employer Id" + employerId
+                                }
+                            ],
                 onclose: function () {},
                 callback: function (response) {
                     var txref = response.tx.txRef; // collect txRef returned and pass to a server page to complete status check.
@@ -213,19 +219,20 @@
 
     }
 
-        function updateFlutterTables() {
-        $.ajax({
-            url: '@Url.Action("PaymentConfirmed", "Employer", new { paymentType="flutterwave"})',
-            type: 'GET',
-            dataType: 'json',
-            cache: false,
-            success: function (results) {
-                window.open("http://localhost:61383/Employer/RecentTransaction", "_self")
-            },
-            error: function (err) {
-                alert('Error occured while updating tables');
-                console.log(err)
-            }
-        });
+function updateFlutterTables() {
+    $.ajax({
+        //url: '@Url.Action("PaymentConfirmed", "Employer", new { paymentType="flutterwave"})',
+        url: '/Employer/PaymentConfirmed?paymentType="paystack"',
+        type: 'GET',
+        dataType: 'json',
+        cache: false,
+        success: function (results) {
+            window.open("http://localhost:61383/Employer/RecentTransaction", "_self")
+        },
+        error: function (err) {
+            alert('Error occured while updating tables');
+            console.log(err)
+        }
+    });
 
-    
+}
