@@ -30,12 +30,21 @@ namespace EmployerModules.Controllers
     {
         //private ApplicationDbContext db = new ApplicationDbContext();
         private PALSiteDBEntities db = new PALSiteDBEntities();
+        
 
         // GET: Employers
         public ActionResult Index()
         {
             var userId = User.Identity.GetUserId();
-            string employerCode = db.AspNetUsers.Find(userId).EmployerCode;
+            var employer = db.AspNetUsers.Find(userId);
+
+            var loggedIn = employer.HasLoggedIn;
+            if(loggedIn == null)
+            {
+                return RedirectToAction( "ChangePassword", "Manage");
+            }
+
+            string employerCode = employer.EmployerCode;
             var emp = db.EmployerDetails.Where(c => c.Recno == employerCode).FirstOrDefault();
             var members = db.Employees.Where(e => e.Employer_Recno == employerCode).ToList().Count();
             var transactions = db.ScheduleHeaders.Where(e => e.EmployerId == employerCode).ToList();

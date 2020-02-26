@@ -37,6 +37,7 @@ namespace EmployerModules.DAL
         public string EmployerCode { get; set; }
         public string Designation { get; set; }
         public string Department { get; set; }
+        public Nullable<bool> HasLoggedIn { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AspNetUserClaim> AspNetUserClaims { get; set; }

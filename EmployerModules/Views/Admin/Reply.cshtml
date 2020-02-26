@@ -19,7 +19,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
-                <div class="content">
+                <div class="content table-div">
                     @if (ViewBag.ErrorMessage != null)
                     {
                         <p class="alert alert-danger">@ViewBag.ErrorMessage</p>
@@ -43,7 +43,7 @@
                         {
                             <div class="comment" style="color: black">
                                 @remark.Comment <br />
-                                <small style="color: gray">Sent by @Model.Createdby </small>
+                                                <small style="color: gray">Sent by @Model.Createdby @Model.Email  </small>
                             </div>
                         }
 
@@ -59,7 +59,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
-                <div class="content">
+                <div class="content table-div">
                     @using (Html.BeginForm("Reply", "Admin", new { Id = Model.Id }, FormMethod.Post, new { enctype = "multipart/form-data" }))
                     {
 
@@ -68,7 +68,7 @@
                         <textarea class="form-control" placeholder="Enter Comments here.." rows="5" name="Comment" id="Comment"></textarea>
                         <br /><br />
                         <fieldset class="well the-fieldset">
-                            <legend class="the-legend">Status:</legend>
+                            <legend class="the-legend" style="background-color: #03b2ac; color: white">Status:</legend>
                             <div style="color: black">
                                 <div class="col-md-3">
                                     <span>Pending:  @Html.RadioButtonFor(m => m.Status, "pending")</span>

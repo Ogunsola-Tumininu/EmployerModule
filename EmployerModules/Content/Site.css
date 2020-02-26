@@ -758,4 +758,11 @@ div.table-div {
     background-color: #065eab;
     color: white
 }
+
+@media (min-width: 767px) {
+    .footer-div {
+        margin-left: -170px
+;    }
+ }
+
   

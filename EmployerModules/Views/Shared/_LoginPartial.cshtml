@@ -10,20 +10,27 @@
     {
         @Html.AntiForgeryToken()
 
-<ul class="nav navbar-nav cus-nav">
-    <li>
-        @Html.ActionLink("Hello " + name + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
-    </li>
-    <li><a href="javascript:document.getElementById('logoutForm').submit()">Log out</a></li>
-    <li class="visible-xs"><a href="#"><i data-show="show-side-navigation1" class="fa fa-bars show-side-btn"></i></a></li>
-</ul>
+        <ul class="nav navbar-nav cus-nav">
+            <li>
+                @*@Html.ActionLink("Hello " + name + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage", @class = "down" })*@
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Hello @name <span class="caret" style="color: white"></span></a>
+                <ul class="dropdown-menu">
+                    <li><a href="@Url.Action("ChangePassword", "Manage")" style="color: black"><i class="fa fa-user-o fw"></i> Change Password</a></li>
+
+                    <li role="separator" class="divider"></li>
+                    <li><a href="javascript:document.getElementById('logoutForm').submit()" style="color: black"><i class="fa fa-sign-out"></i> Log out</a></li>
+                </ul>
+            </li>
+            <li><a href="javascript:document.getElementById('logoutForm').submit()">Log out</a></li>
+            <li class="visible-xs"><a href="#"><i data-show="show-side-navigation1" class="fa fa-bars show-side-btn"></i></a></li>
+        </ul>
     }
 }
 else
 {
-        <ul class="nav navbar-nav cus-nav ">
-            @*<li>@Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>*@
-            <li>@Html.ActionLink("SIGN IN", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
-            
-        </ul>
+    <ul class="nav navbar-nav cus-nav ">
+        @*<li>@Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>*@
+        <li>@Html.ActionLink("SIGN IN", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+
+    </ul>
 }

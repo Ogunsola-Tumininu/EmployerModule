@@ -7,6 +7,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using EmployerModules.Models;
+using EmployerModules.DAL;
 
 namespace EmployerModules.Controllers
 {
@@ -15,6 +16,7 @@ namespace EmployerModules.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        private PALSiteDBEntities db = new PALSiteDBEntities();
 
         public ManageController()
         {
@@ -238,6 +240,12 @@ namespace EmployerModules.Controllers
                 {
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
                 }
+
+                // Add that a user has logged in
+                var LoggedInUser = db.AspNetUsers.Find(user.Id);
+                LoggedInUser.HasLoggedIn = true;
+                db.SaveChanges();
+
                 return RedirectToAction("Index", new { Message = ManageMessageId.ChangePasswordSuccess });
             }
             AddErrors(result);

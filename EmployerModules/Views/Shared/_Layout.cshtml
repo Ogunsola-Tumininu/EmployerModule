@@ -14,95 +14,6 @@
     <div id="loading" style="height:100%; width:100%; background-color: black; opacity: 0.7; position : absolute; z-index: 10000; display: none">
         <img src="~/Content/images/loading.gif" style="position: fixed; top: 0%; width: 100%;" />
     </div>
-    @*<div class="row">
-            <div class="col-md-12 nav-top hidden-xs">
-                <div class="container">
-                    <i class="fa fa-twitter top-icon"></i>
-                    <i class="fa fa-facebook top-icon"></i>
-                    <i class="fa fa-linkedin top-icon"></i>
-                    <i class="fa fa-instagram top-icon"></i>
-                </div>
-            </div>
-            <div class="col-md-12 logo-div hidden-xs">
-                <div class="col-md-3 col-md-offset-1">
-                    <img src="~/Content/images/pal-logo.PNG" alt="PAL Pension Logo" />
-                </div>
-                <div class="col-md-4" style="margin-top: 15px">
-                    <h4><i class="fa fa-phone" style="color: #6091ba"></i> Call us today 01- 2776900, 0800 PALPENSIONS</h4>
-                </div>
-                <div class="col-md-4" style="margin-top: 15px">
-                    <h4><i class="fa fa-envelope-o" style="color: #6091ba"></i> info@palpensions.com</h4>
-                </div>
-            </div>
-        </div>*@
-
-    @*<div class="navbar navbar-default " style="margin-top:20px; background-color: steelblue">
-            <div class="container">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <img class="visible-xs" src="~/Content/images/pal-logo.PNG" alt="PAL Pension Logo" />
-
-                </div>
-                <div class="navbar-collapse collapse">
-                    <ul class="nav navbar-nav">
-                        @if (Request.IsAuthenticated)
-                        {
-                            if (ViewContext.HttpContext.User.IsInRole("EmpAdmin") || ViewContext.HttpContext.User.IsInRole("Employer"))
-                            {
-                                <li>@Html.ActionLink("Dashboard", "Index", "Employer")</li>
-
-                                <li>@Html.ActionLink("Transaction", "Transaction", "Employer")</li>
-                                <li>@Html.ActionLink("Recent Schedule", "RecentTransaction", "Employer")</li>
-                                <li>@Html.ActionLink("Upload Schedule", "UploadSchedule", "Employer")</li>
-                                <li>@Html.ActionLink("Verify PIN", "VerifyPin", "Employer")</li>
-                                <li>@Html.ActionLink("Feedback", "Feedback", "Employer")</li>
-                                if (ViewContext.HttpContext.User.IsInRole("EmpAdmin"))
-                                {
-                                    <li>@Html.ActionLink("Add User", "RegisterEmployer", "Account")</li>
-                                }
-
-                            }
-                            else
-                            {
-                                <li>@Html.ActionLink("Schedule", "Index", "admin")</li>
-                                <li class="dropdown">
-                                    <a class="dropdown-toggle" data-toggle="dropdown" href="@Url.Action("Feedbacks", "Admin")">
-                                        Feedbacks
-                                        <span style="background-color: white" class="caret"></span>
-                                    </a>
-                                    <ul style="background-color: #6091ba" class="dropdown-menu">
-                                        <li><a href="@Url.Action("Feedbacks", "Admin")">All Feedbacks</a></li>
-                                        <li><a href="@Url.Action("PendingFeedbacks", "Admin")">Pending Feedbacks</a></li>
-                                        <li><a href="@Url.Action("InProgressFeedbacks", "Admin")">In Progress FeedBacks</a></li>
-                                        <li><a href="@Url.Action("CompletedFeedbacks", "Admin")">Completed feedbacks</a></li>
-                                    </ul>
-                                </li>
-                                <li>@Html.ActionLink("Add Admin User", "AddAdmin", "Admin")</li>
-                                <li>@Html.ActionLink("Add Employer", "SearchEmployer", "Admin", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
-                            }
-
-                        }
-                    </ul>
-
-                    @Html.Partial("_LoginPartial")
-                </div>
-            </div>
-        </div>*@
-
-    @*<div class="container body-content">
-            <div style="min-height: 70vh">
-                @RenderBody()
-            </div>
-            <hr />
-            <footer>
-                <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
-            </footer>
-        </div>*@
-
 
     <aside class="side-nav" id="show-side-navigation1">
         <i class="fa fa-bars close-aside hidden-sm hidden-md hidden-lg" data-close="show-side-navigation1"></i>
@@ -183,22 +94,6 @@
                     <li>
                         <i class="fa fa-user "></i> <a style="color: white" href="@Url.Action("SearchEmployer", "admin")"> Add employer</a>
                     </li>
-
-                    @*<li>@Html.ActionLink("Schedule", "Index", "admin")</li>
-                        <li class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="@Url.Action("Feedbacks", "Admin")">
-                                Feedbacks
-                                <span style="background-color: white" class="caret"></span>
-                            </a>
-                            <ul style="background-color: #6091ba" class="dropdown-menu">
-                                <li><a href="@Url.Action("Feedbacks", "Admin")">All Feedbacks</a></li>
-                                <li><a href="@Url.Action("PendingFeedbacks", "Admin")">Pending Feedbacks</a></li>
-                                <li><a href="@Url.Action("InProgressFeedbacks", "Admin")">In Progress FeedBacks</a></li>
-                                <li><a href="@Url.Action("CompletedFeedbacks", "Admin")">Completed feedbacks</a></li>
-                            </ul>
-                        </li>
-                        <li>@Html.ActionLink("Add Admin User", "AddAdmin", "Admin")</li>
-                        <li>@Html.ActionLink("Add Employer", "SearchEmployer", "Admin", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>*@
                 }
             }
         </ul>
@@ -214,56 +109,7 @@
                         <li>
                             @Html.Partial("_LoginPartial")
                         </li>
-                        @*<li class="dropdown">
-
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">My profile <span class="caret"></span></a>
-
-                                    <ul class="dropdown-menu">
-                                        @if (Request.IsAuthenticated)
-                                        {
-                                            if (ViewContext.HttpContext.User.IsInRole("EmpAdmin") || ViewContext.HttpContext.User.IsInRole("Employer"))
-                                            {
-                                                <li>@Html.ActionLink("Dashboard", "Index", "Employer")</li>
-                                                <li>@Html.ActionLink("Transaction", "Transaction", "Employer")</li>
-                                                <li>@Html.ActionLink("Recent Schedule", "RecentTransaction", "Employer")</li>
-                                                <li>@Html.ActionLink("Upload Schedule", "UploadSchedule", "Employer")</li>
-                                                <li>@Html.ActionLink("Verify PIN", "VerifyPin", "Employer")</li>
-                                                <li>@Html.ActionLink("Feedback", "Feedback", "Employer")</li>
-                                                if (ViewContext.HttpContext.User.IsInRole("EmpAdmin"))
-                                                {
-                                                    <li>@Html.ActionLink("Add User", "RegisterEmployer", "Account")</li>
-                                                }
-
-                                            }
-                                            else
-                                            {
-                                                <li>@Html.ActionLink("Schedule", "Index", "admin")</li>
-                                                <li class="dropdown">
-                                                    <a class="dropdown-toggle" data-toggle="dropdown" href="@Url.Action("Feedbacks", "Admin")">
-                                                        Feedbacks
-                                                        <span style="background-color: white" class="caret"></span>
-                                                    </a>
-                                                    <ul style="background-color: #6091ba" class="dropdown-menu">
-                                                        <li><a href="@Url.Action("Feedbacks", "Admin")">All Feedbacks</a></li>
-                                                        <li><a href="@Url.Action("PendingFeedbacks", "Admin")">Pending Feedbacks</a></li>
-                                                        <li><a href="@Url.Action("InProgressFeedbacks", "Admin")">In Progress FeedBacks</a></li>
-                                                        <li><a href="@Url.Action("CompletedFeedbacks", "Admin")">Completed feedbacks</a></li>
-                                                    </ul>
-                                                </li>
-                                                <li>@Html.ActionLink("Add Admin User", "AddAdmin", "Admin")</li>
-                                                <li>@Html.ActionLink("Add Employer", "SearchEmployer", "Admin", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
-                                            }
-
-                                        }
-                                        <li role="separator" class="divider"></li>
-                                        <li><a href="#"><i class="fa fa-sign-out"></i> Log out</a></li>
-                                    </ul>
-
-
-                                </li>
-                                <li><a href="#"><i class="fa fa-comments"></i><span>23</span></a></li>
-                                <li><a href="#"><i class="fa fa-bell-o"></i><span>98</span></a></li>
-                            <li><a href="#"><i data-show="show-side-navigation1" class="fa fa-bars show-side-btn"></i></a></li>*@
+                       
                     </ul>
                 </div>
                 <div class="collapse navbar-collapse navbar-right" id="bs-example-navbar-collapse-1">

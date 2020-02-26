@@ -11,7 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 
-    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <title>Login Page - PAL Pensions</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 
@@ -50,6 +50,11 @@
                     <br />
                     <h3>Login To Your Account</h3>
                 </div>
+                @if(ViewBag.EmailNotConfirmed != null)
+                {
+                    <div class="alert alert-danger">@ViewBag.EmailNotConfirmed</div>
+                }
+                
 
                 @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "", role = "form" }))
     {
@@ -90,7 +95,6 @@
                     <button type="submit" class="btn btn-primary btn-block ">Sign in</button>
                 </div>
             </div>
-            @*<input type="submit" value="Sign in" class="btn btn-primary signin " />*@
 }
 
 
@@ -98,52 +102,10 @@
                     <span class="text">Forgot Password? Please Click</span><br>
                     @Html.ActionLink("here", "ForgotPassword")
                 </div>
-                </
+                
             </div>
         </div>
     </div>
-
-    @*<div class="row">
-            <div class="col-md-6 col-md-offset-3 login-div">
-                <p class="col-md-12 login-header"><i class="fa fa-lock"></i> Please signin to continue</p>
-                @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-                {
-                    @Html.AntiForgeryToken()
-                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-
-
-                    <div class="form-group input ">
-                        <div class="col-md-12">
-                            @Html.LabelFor(m => m.Email, new { @class = "control-label signin-label" })
-                        </div>
-                        <div class="col-md-12">
-                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control login-input", id = "email" })
-                            @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="form-group input ">
-                        <div class="col-md-12">
-                            @Html.LabelFor(m => m.Password, new { @class = "control-label signin-label" })
-                        </div>
-                        <div class="col-md-12">
-                            @Html.PasswordFor(m => m.Password, new { @class = "form-control login-input" })
-                            @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary signin">Sign in</button>
-                }
-
-                <p class="col-md-12 login-footer">
-                    Forgot Password? Please Click
-                    @Html.ActionLink("here", "ForgotPassword")
-                </p>
-
-
-            </div>
-
-        </div>*@
 
 
     @section Scripts {

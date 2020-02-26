@@ -77,7 +77,31 @@ namespace EmployerModules.Controllers
                 return View(model);
             }
 
-           
+            // Check if a user email is confirmed
+            var userid = UserManager.FindByEmail(model.Email).Id;
+            if (!UserManager.IsEmailConfirmed(userid))
+            {
+                string code = await UserManager.GenerateEmailConfirmationTokenAsync(userid);
+                var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = userid, code = code }, protocol: Request.Url.Scheme);
+                await UserManager.SendEmailAsync(userid, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                var msg = PalLibrary.Messaging.SendEmail(model.Email, "helpdesk@palpensions.com", "Confirm your account", $@"
+
+                    <p>Hello {model.Email},
+ 
+                    <p>Please confirm your account by clicking <a href={callbackUrl}>here</a></p><br />
+                  
+                    <hr />   
+                     
+                    <p>For a list of feedback,request or complaints, please visit https://pallite.palpensions.com/Staff/SupportLogs </p> 
+   
+                    <p>Regards<br/>
+ 
+                    PAL Pensions</p>");
+                ViewBag.EmailNotConfirmed = "Your email is not confirmed. Please check your registered email inbox or spam for the confirmation email.";
+                return View(model);
+            }
+
+
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
             var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
@@ -196,9 +220,22 @@ namespace EmployerModules.Controllers
 
                     // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link
-                    //string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    //var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                    string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+                    var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                     //await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                    var msg = PalLibrary.Messaging.SendEmail(model.Email, "helpdesk@palpensions.com", "Confirm your account", $@"
+
+                    <p>Hello {model.Email},
+ 
+                    <p>Please confirm your account by clicking <a href={callbackUrl}>here</a></p><br />
+                  
+                    <hr />   
+                     
+                    <p>For a list of feedback,request or complaints, please visit https://pallite.palpensions.com/Staff/SupportLogs </p> 
+   
+                    <p>Regards<br/>
+ 
+                    PAL Pensions</p>");
 
                     var service = new EmployerService(HttpContext.GetOwinContext().
                         Get<ApplicationDbContext>());
@@ -231,7 +268,11 @@ namespace EmployerModules.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> RegisterEmployer(RegisterEmployerModel model)
         {
-            if(model.Role == null)
+            var identity = (ClaimsIdentity)User.Identity;
+            var name = identity.FindFirstValue(ClaimTypes.GivenName);
+            var userId = User.Identity.GetUserId();
+            var emp = db.AspNetUsers.Find(userId);
+            if (model.Role == null)
             {
                 ModelState.AddModelError("", "Please select a role for the user");
             }
@@ -243,28 +284,40 @@ namespace EmployerModules.Controllers
                 {
                     var db = new PALSiteDBEntities();
                     var newUser = db.AspNetUsers.Find(user.Id);
-                    newUser.EmployerCode = model.EmployerCode;
+                    newUser.EmployerCode = emp.EmployerCode;
                     newUser.PhoneNumber = model.PhoneNo;
                     newUser.Designation = model.Designation;
                     newUser.Department = model.Department;
                     db.SaveChanges();
 
-                    UserManager.AddClaim(user.Id, new Claim(ClaimTypes.GivenName, model.EmployerName));
+                    UserManager.AddClaim(user.Id, new Claim(ClaimTypes.GivenName, name));
 
                     //await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
                     await this.UserManager.AddToRoleAsync(user.Id, model.Role);
 
                     // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link
-                    // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                    string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+                    var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                    //await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                    var msg = PalLibrary.Messaging.SendEmail(model.Email, "helpdesk@palpensions.com", "Confirm your account", $@"
 
+                    <p>Hello {model.Email},
+ 
+                    <p>Please confirm your account by clicking <a href={callbackUrl}>here</a></p><br />
+                  
+                    <hr />   
+                     
+                    <p>For a list of feedback,request or complaints, please visit https://pallite.palpensions.com/Staff/SupportLogs </p> 
+   
+                    <p>Regards<br/>
+ 
+                    PAL Pensions</p>");
                     //var service = new EmployerService(HttpContext.GetOwinContext().
                     //    Get<ApplicationDbContext>());
                     //service.CreateEmployer(model.EmployerName, model.Address, user.Id);
 
-                    return RedirectToAction("Index", "Employer");
+                    return RedirectToAction("AllEmployerUsers", "Employer");
                 }
                 AddErrors(result);
             }
@@ -312,10 +365,24 @@ namespace EmployerModules.Controllers
 
                 // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
                 // Send an email with this link
-                // string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-                // var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);		
-                // await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
-                // return RedirectToAction("ForgotPasswordConfirmation", "Account");
+                string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
+                var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                //await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                var msg = PalLibrary.Messaging.SendEmail(model.Email, "helpdesk@palpensions.com", "Reset Password", $@"
+
+                    <p>Hello {model.Email},
+ 
+                    <p>Please reset your password by clicking <a href={callbackUrl}>here</a></p><br />
+                  
+                    <hr />   
+                     
+                    <p>For a list of feedback,request or complaints, please visit https://pallite.palpensions.com/Staff/SupportLogs </p> 
+   
+                    <p>Regards<br/>
+ 
+                    PAL Pensions</p>");
+
+                return RedirectToAction("ForgotPasswordConfirmation", "Account");
             }
 
             // If we got this far, something failed, redisplay form

@@ -24,19 +24,19 @@ namespace EmployerModules.Controllers
 
         public ActionResult Feedbacks()
         {
-            return View(db.Feedbacks.ToList());
+            return View(db.Feedbacks.OrderByDescending(f => f.DateCreated).ToList());
         }
         public ActionResult CompletedFeedbacks()
         {
-            return View(db.Feedbacks.Where(f => f.Status == "complete").ToList());
+            return View(db.Feedbacks.Where(f => f.Status == "complete").OrderByDescending(f => f.DateCreated).ToList());
         }
         public ActionResult InProgressFeedbacks()
         {
-            return View(db.Feedbacks.Where(f => f.Status == "in-progress").ToList());
+            return View(db.Feedbacks.Where(f => f.Status == "in-progress").OrderByDescending(f => f.DateCreated).ToList());
         }
         public ActionResult PendingFeedbacks()
         {
-            return View(db.Feedbacks.Where(f => f.Status == "pending").ToList());
+            return View(db.Feedbacks.Where(f => f.Status == "pending").OrderByDescending(f => f.DateCreated).ToList());
         }
 
         public ActionResult Reply(int Id)
@@ -58,8 +58,7 @@ namespace EmployerModules.Controllers
 
             var email = User.Identity.GetUserName();
             var getFeedBack = db.Feedbacks.Find(feeback.Id);
-            getFeedBack.Createdby = feeback.Createdby;
-            //getFeedBack.Remarks = feeback.Remarks;
+            getFeedBack.Remarks = Comment;
             getFeedBack.Modifiedby = email;
             getFeedBack.Status = feeback.Status;
             //string dtNow = DateTime.Now.ToShortDateString();
@@ -128,9 +127,12 @@ namespace EmployerModules.Controllers
                 //Add default User to Role Admin    
              if (chkUser.Succeeded)
              {
-                 var result1 = UserManager.AddToRole(user.Id, "Admin");
-                 UserManager.AddClaim(user.Id, new Claim(ClaimTypes.GivenName, Email));
+                var result1 = UserManager.AddToRole(user.Id, "Admin");
+                UserManager.AddClaim(user.Id, new Claim(ClaimTypes.GivenName, Email));
+                var newAdminUser = db.AspNetUsers.Find(user.Id);
 
+                newAdminUser.EmailConfirmed = true;
+                db.SaveChanges();
             }
 
             return RedirectToAction("Index");

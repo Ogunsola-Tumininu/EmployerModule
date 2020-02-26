@@ -21,7 +21,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
-                <div class="content">
+                <div class="content table-div">
                     <p> <b>Sent Feedback</b></p>
                     <p style="width: 100%">
                         @Html.DisplayFor(model => model.Message)
@@ -36,7 +36,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
-                <div class="content ">
+                <div class="content table-div ">
                     <p> <b>Remarks: </b> </p>
                     <p class="col-md-12">
                         @foreach (var remark in ViewBag.Remarks)
@@ -68,7 +68,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
-                <div class="content" style="min-height: 190px">
+                <div class="content table-div" style="min-height: 190px">
                     @using (Html.BeginForm("ViewMessage", "Employer", new { Id = Model.Id }, FormMethod.Post, new { enctype = "multipart/form-data" }))
                     {
 
