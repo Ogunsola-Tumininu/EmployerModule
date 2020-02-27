@@ -19,5 +19,8 @@ namespace EmployerModules.DAL
         public string Comment { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }
         public Nullable<bool> IsAdminRemark { get; set; }
+        public Nullable<bool> Viewed { get; set; }
+        public string EmployerCode { get; set; }
+        public string FeedbackType { get; set; }
     }
 }

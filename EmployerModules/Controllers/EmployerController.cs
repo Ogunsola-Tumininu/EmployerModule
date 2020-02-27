@@ -180,9 +180,15 @@ namespace EmployerModules.Controllers
             var feedbacks = db.Feedbacks.Where(f =>f.FeedbackType == "feedback"  && f.EmployerCode == employerCode).ToList();
             var complaints = db.Feedbacks.Where(f => f.FeedbackType == "complaints" && f.EmployerCode == employerCode).ToList();
             var enquiries = db.Feedbacks.Where(f => f.FeedbackType == "enquiry" && f.EmployerCode == employerCode).ToList();
+            var feedbacksNotification = db.Remarks.Where(f => f.FeedbackType == "feedback" && f.EmployerCode == employerCode && (f.Viewed == null || f.Viewed == false)).Count();
+            var complaintsNotification = db.Remarks.Where(f => f.FeedbackType == "complaints" && f.EmployerCode == employerCode && (f.Viewed == null || f.Viewed == false)).Count();
+            var enquiriesNotification = db.Remarks.Where(f => f.FeedbackType == "enquiry" && f.EmployerCode == employerCode && (f.Viewed == null || f.Viewed == false)).Count();
             ViewBag.Feedbacks = feedbacks.Count;
             ViewBag.Complaints = complaints.Count;
             ViewBag.Enquiries = enquiries.Count;
+            ViewBag.FeedbacksNotification = feedbacksNotification;
+            ViewBag.ComplaintsNotification = complaintsNotification;
+            ViewBag.EnquiriesNotification = enquiriesNotification;
             return View();
         }
 
@@ -368,7 +374,15 @@ namespace EmployerModules.Controllers
         public ActionResult ViewMessage(int Id)
         {
             var feedbackDetails = db.Feedbacks.Find(Id);
-            var remarks = db.Remarks.Where(r => r.FeedbackId == Id).OrderByDescending(r => r.Id).ToList();
+            var remarks = db.Remarks.Where(r => r.FeedbackId == Id && r.IsAdminRemark == true).OrderByDescending(r => r.Id).ToList();
+            if(remarks.Count > 0)
+            {
+                foreach (var remark in remarks)
+                {
+                    remark.Viewed = true;
+                }
+            }           
+            db.SaveChanges();
             ViewBag.Remarks = remarks;
             return View(feedbackDetails);
         }
@@ -390,10 +404,15 @@ namespace EmployerModules.Controllers
             remark.Comment = Comment;
             remark.CreatedDate = DateTime.Now;
             remark.IsAdminRemark = false;
+            remark.Viewed = false;
+            remark.FeedbackType = getFeedback.FeedbackType;
             db.Remarks.Add(remark);
 
             db.SaveChanges();
-            return RedirectToAction("ViewMessage");
+            var feedbackDetails = db.Feedbacks.Find(Id);
+            var remarks = db.Remarks.Where(r => r.FeedbackId == Id).OrderByDescending(r => r.Id).ToList();
+            ViewBag.Remarks = remarks;
+            return View(feedbackDetails);
         }
 
         public ActionResult UploadSchedule()

@@ -148,6 +148,9 @@
           <Property Name="Comment" Type="varchar" MaxLength="1000" />
           <Property Name="CreatedDate" Type="datetime" />
           <Property Name="IsAdminRemark" Type="bit" />
+          <Property Name="Viewed" Type="bit" />
+          <Property Name="EmployerCode" Type="varchar" MaxLength="20" />
+          <Property Name="FeedbackType" Type="varchar" MaxLength="20" />
         </EntityType>
         <EntityType Name="ScheduleHeader">
           <Key>
@@ -727,6 +730,9 @@ warning 6002: The table/view 'PALSiteDB.dbo.SCHEDULES' does not have a primary k
           <Property Name="Comment" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
           <Property Name="CreatedDate" Type="DateTime" Precision="3" />
           <Property Name="IsAdminRemark" Type="Boolean" />
+          <Property Name="Viewed" Type="Boolean" />
+          <Property Name="EmployerCode" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="FeedbackType" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -1001,6 +1007,9 @@ warning 6002: The table/view 'PALSiteDB.dbo.SCHEDULES' does not have a primary k
           <EntitySetMapping Name="Remarks">
             <EntityTypeMapping TypeName="PALSiteDBModel.Remark">
               <MappingFragment StoreEntitySet="Remark">
+                <ScalarProperty Name="FeedbackType" ColumnName="FeedbackType" />
+                <ScalarProperty Name="EmployerCode" ColumnName="EmployerCode" />
+                <ScalarProperty Name="Viewed" ColumnName="Viewed" />
                 <ScalarProperty Name="IsAdminRemark" ColumnName="IsAdminRemark" />
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="Comment" ColumnName="Comment" />

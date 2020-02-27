@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using EmployerModules.DAL;
+@using Microsoft.AspNet.Identity;
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -12,7 +14,7 @@
 </head>
 <body style="position: relative">
     <div id="loading">
-        <img src="~/Content/please-wait-gif.gif"  />
+        <img src="~/Content/please-wait-gif.gif" />
     </div>
 
     <aside class="side-nav" id="show-side-navigation1">
@@ -80,9 +82,23 @@
                         <i class="fa fa-clock-o "></i> <a style="color: white" href="@Url.Action("Index", "admin")"> Schedule</a>
                     </li>
                     <li>
+                        @{
+
+                            PALSiteDBEntities db1 = new PALSiteDBEntities();
+                            var userId1 = User.Identity.GetUserId();
+                            var remarks1 = db1.Remarks.Where(r => r.IsAdminRemark == false && (r.Viewed == null || r.Viewed == false)).Count();
+
+                        }
                         <i class="fa fa-envelope-o "></i> <a style="color: white" href="#"> Feedbacks</a>
                         <ul class="side-nav-dropdown">
-                            <li><a href="@Url.Action("Feedbacks", "Admin")">All Feedbacks</a></li>
+                            <li>
+                                <a href="@Url.Action("Feedbacks", "Admin")">All Feedbacks
+                                @if(remarks1 > 0)
+                                {
+                                    <span class="label label-danger">@remarks1 new </span>
+                                }
+                                </a>
+                            </li>
                             <li><a href="@Url.Action("PendingFeedbacks", "Admin")">Pending Feedbacks</a></li>
                             <li><a href="@Url.Action("InProgressFeedbacks", "Admin")">In Progress FeedBacks</a></li>
                             <li><a href="@Url.Action("CompletedFeedbacks", "Admin")">Completed feedbacks</a></li>
@@ -109,7 +125,7 @@
                         <li>
                             @Html.Partial("_LoginPartial")
                         </li>
-                       
+
                     </ul>
                 </div>
                 <div class="collapse navbar-collapse navbar-right" id="bs-example-navbar-collapse-1">
@@ -128,8 +144,28 @@
                                     <li><a href="#"><i class="fa fa-sign-out"></i> Log out</a></li>
                                 </ul>
                             </li>*@
-                        @*<li><a href="#"><i class="fa fa-comments"></i><span>23</span></a></li>
-                        <li><a href="#"><i class="fa fa-bell-o"></i><span>98</span></a></li>*@
+                        @{
+                            PALSiteDBEntities db = new PALSiteDBEntities();
+                            var userId = User.Identity.GetUserId();
+                            string employerCode = db.AspNetUsers.Find(userId).EmployerCode;
+                            var remarks = db.Remarks.Where(r => r.EmployerCode == employerCode && (r.Viewed == null || r.Viewed == false)).Count();
+
+                        }
+
+                        <li>
+                            <a href="#">
+                                <i class="fa fa-comments"></i>
+                                @if (remarks > 0)
+                                {
+                                    <span>
+                                        @remarks
+                                    </span>
+                                }
+
+                            </a>
+                        </li>
+
+                        @*<li><a href="#"><i class="fa fa-bell-o"></i><span>98</span></a></li>*@
                         <li><a href="#"><i data-show="show-side-navigation1" class="fa fa-bars show-side-btn"></i></a></li>
                     </ul>
                 </div>
@@ -157,7 +193,7 @@
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
-  
+
     @RenderSection("scripts", required: false)
     <script>
         $(document).ready(function () {

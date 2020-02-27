@@ -1,4 +1,6 @@
 ﻿@model IEnumerable<EmployerModules.DAL.Feedback>
+@using EmployerModules.DAL;
+@using Microsoft.AspNet.Identity;
 @{
     ViewBag.Title = "CompletedFeedbacks";
 }
@@ -38,40 +40,50 @@
                             <tbody>
                                 @foreach (var item in Model)
                                 {
-                                <tr>
-                                    <td>
-                                        @if (item.Message.Length > 60)
-        {
-                                <span>@item.Message.Substring(0, 60) ...</span>
-}
-else
-{
-                                @item.Message
-}
+                                    <tr>
+                                        <td>
+                                            @if (item.Message.Length > 60)
+                                            {
+                                                <span>@item.Message.Substring(0, 60) ...</span>
+                                            }
+                                            else
+                                            {
+                                                @item.Message
+                                            }
 
-                                    </td>
-                                    <td>@item.Createdby</td>
+                                        </td>
+                                        <td>@item.Createdby</td>
 
-                                    <td>
-                                        @if (item.Status == "pending")
-        {
-                                <span class="label label-primary">Pending</span>
-}
-                                        @if (item.Status == "in-progress")
-        {
-                                <span class="label label-warning">In Progress</span>
-}
-                                        @if (item.Status == "complete")
-        {
-                                <span class="label label-success">Complete</span>
-}
-                                    </td>
+                                        <td>
+                                            @if (item.Status == "pending")
+                                            {
+                                                <span class="label label-primary">Pending</span>
+                                            }
+                                            @if (item.Status == "in-progress")
+                                            {
+                                                <span class="label label-warning">In Progress</span>
+                                            }
+                                            @if (item.Status == "complete")
+                                            {
+                                                <span class="label label-success">Complete</span>
+                                            }
+                                        </td>
 
-                                    <td>
-                                        <a href="@Url.Action("Reply", "Admin", new { Id = item.Id})">Add  Comment</a>
-                                    </td>
+                                        <td>
+                                            @{
+                                                PALSiteDBEntities db = new PALSiteDBEntities();
+                                                var userId = User.Identity.GetUserId();
+                                                string employerCode = db.AspNetUsers.Find(userId).EmployerCode;
+                                                var remarks = db.Remarks.Where(r => r.FeedbackId == item.Id && r.IsAdminRemark == false && (r.Viewed == null || r.Viewed == false)).Count();
+                                                <a href="@Url.Action("Reply", "Admin", new { Id = item.Id})">Add  Comment</a>
+                                                if (remarks > 0)
+                                                {
+                                                    <span class="label label-danger"> new </span>
+                                                }
+                                            }
+                                        </td>
 
-                                </tr>
+                                    </tr>
                                 }
                             </tbody>
 

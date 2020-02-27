@@ -1,4 +1,6 @@
 ﻿@model IEnumerable<EmployerModules.DAL.Feedback>
+@using EmployerModules.DAL;
+@using Microsoft.AspNet.Identity;
 @{
     ViewBag.Title = "InProgressFeedbacks";
 }
@@ -68,7 +70,17 @@
                                         </td>
 
                                         <td>
-                                            <a href="@Url.Action("Reply", "Admin", new { Id = item.Id})">Add  Comment</a>
+                                            @{
+                                                PALSiteDBEntities db = new PALSiteDBEntities();
+                                                var userId = User.Identity.GetUserId();
+                                                string employerCode = db.AspNetUsers.Find(userId).EmployerCode;
+                                                var remarks = db.Remarks.Where(r => r.FeedbackId == item.Id && IsAdminRemark == false && (r.Viewed == null || r.Viewed == false)).Count();
+                                                <a href="@Url.Action("Reply", "Admin", new { Id = item.Id})">Add  Comment</a>
+                                                if (remarks > 0)
+                                                {
+                                                    <span class="label label-danger"> new </span>
+                                                }
+                                            }
                                         </td>
 
                                     </tr>

@@ -40,6 +40,9 @@
                             </a>
                             <a href="@Url.Action("FeedbacksList")">
                                 <p>@ViewBag.Feedbacks Feedbacks</p>
+                                @if (ViewBag.FeedbacksNotification > 0) { 
+                                <span class="label label-danger">@ViewBag.FeedbacksNotification new message</span>
+                                }
                             </a>
                         </div>
                     </div>
@@ -54,6 +57,10 @@
                             </a>
                             <a href="@Url.Action("ComplaintsList")">
                                 <p>@ViewBag.Complaints Complaints</p>
+                                @if (ViewBag.ComplaintsNotification > 0)
+                                {
+                                <span class="label label-danger">@ViewBag.ComplaintsNotification new message</span>
+                                }
                             </a>
                         </div>
                     </div>
@@ -68,6 +75,10 @@
                             </a>
                             <a href="@Url.Action("EnquiryList")">
                                 <p>@ViewBag.Enquiries Enquiries</p>
+                                @if (ViewBag.EnquiriesNotification > 0)
+                                {
+                                <span class="label label-danger">@ViewBag.EnquiriesNotification new message</span>
+                                }
                             </a>
                         </div>
                     </div>

@@ -42,7 +42,15 @@ namespace EmployerModules.Controllers
         public ActionResult Reply(int Id)
         {
             var feedback = db.Feedbacks.Find(Id);
-            var remarks = db.Remarks.Where(r => r.FeedbackId == Id).OrderByDescending(r => r.Id).ToList();
+            var remarks = db.Remarks.Where(r => r.FeedbackId == Id && r.IsAdminRemark == false).OrderByDescending(r => r.Id).ToList();
+            if (remarks.Count > 0)
+            {
+                foreach (var remark in remarks)
+                {
+                    remark.Viewed = true;
+                }
+            }
+            db.SaveChanges();
             ViewBag.Remarks = remarks;
             return View(feedback);
         }
@@ -70,6 +78,8 @@ namespace EmployerModules.Controllers
             remark.Comment = Comment;
             remark.CreatedDate = DateTime.Now;
             remark.IsAdminRemark = true;
+            remark.Viewed = false;
+            remark.FeedbackType = getFeedBack.FeedbackType;
             db.Remarks.Add(remark);
             
             db.SaveChanges();

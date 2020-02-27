@@ -1,4 +1,6 @@
 ﻿@model IEnumerable<EmployerModules.DAL.Feedback>
+@using EmployerModules.DAL;
+@using Microsoft.AspNet.Identity;
 
 <div class="welcome">
     <div class="container-fluid">
@@ -50,7 +52,16 @@
                                         <td>
                                             @if (item.Remarks != null)
                                             {
+                                                PALSiteDBEntities db = new PALSiteDBEntities();
+                                                var userId = User.Identity.GetUserId();
+                                                string employerCode = db.AspNetUsers.Find(userId).EmployerCode;
+                                                var remarks = db.Remarks.Where(r => r.FeedbackId == item.Id && r.IsAdminRemark == true && (r.Viewed == null || r.Viewed == false)).Count();
+
                                                 <a href="@Url.Action("ViewMessage", "Employer", new { Id = item.Id})">View Remark</a>
+                                                if (remarks > 0)
+                                                {
+                                                    <span class="label label-danger"> new </span>
+                                                }
                                             }
                                         </td>
                                         <td>
