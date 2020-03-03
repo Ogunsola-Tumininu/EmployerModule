@@ -20,15 +20,29 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="content table-div">
+                    <p> <b>Sent Feedback</b></p>
+                    <p style="width: 100%">
+                        @Html.DisplayFor(model => model.Message) <br />
+                        <small style="color: gray">Sent by @Model.Createdby</small>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="welcome">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="content table-div">
+                    <h2>Remarks: </h2>
                     @if (ViewBag.ErrorMessage != null)
                     {
                         <p class="alert alert-danger">@ViewBag.ErrorMessage</p>
                     }
 
-                        <div class="comment" style="color: black">
-                            @Html.DisplayFor(model => model.Message) <br />
-                            <small style="color: gray">Sent by @Model.Createdby</small>
-                        </div>
+
 
                     @foreach (var remark in ViewBag.Remarks)
                     {
@@ -43,7 +57,7 @@
                         {
                             <div class="comment" style="color: black">
                                 @remark.Comment <br />
-                                                <small style="color: gray">Sent by @Model.Createdby @Model.Email  </small>
+                                <small style="color: gray">Sent by @Model.Createdby @Model.Email  </small>
                             </div>
                         }
 
@@ -60,29 +74,35 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="content table-div">
-                    @using (Html.BeginForm("Reply", "Admin", new { Id = Model.Id }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    @if (Model.Status != "complete")
                     {
+                        using (Html.BeginForm("Reply", "Admin", new { Id = Model.Id }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+                        {
 
-                        <label for="Remarks">Remarks</label>
-                        @*@Html.TextAreaFor(m => m.Remarks, new { @class = "form-control", @rows = "5", @placeholder = "Enter Remark  Here ..." })*@
-                        <textarea class="form-control" placeholder="Enter Comments here.." rows="5" name="Comment" id="Comment"></textarea>
-                        <br /><br />
-                        <fieldset class="well the-fieldset">
-                            <legend class="the-legend" style="background-color: #03b2ac; color: white">Status:</legend>
-                            <div style="color: black">
-                                <div class="col-md-3">
-                                    <span>Pending:  @Html.RadioButtonFor(m => m.Status, "pending")</span>
+                            <label for="Remarks">Remarks</label>
+                            @*@Html.TextAreaFor(m => m.Remarks, new { @class = "form-control", @rows = "5", @placeholder = "Enter Remark  Here ..." })*@
+                            <textarea class="form-control" placeholder="Enter Comments here.." rows="5" name="Comment" id="Comment"></textarea>
+                            <br /><br />
+                            <fieldset class="well the-fieldset">
+                                <legend class="the-legend" style="background-color: #03b2ac; color: white">Status:</legend>
+                                <div style="color: black">
+                                    <div class="col-md-3">
+                                        <span>Pending:  @Html.RadioButtonFor(m => m.Status, "pending")</span>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <span>In Progress: @Html.RadioButtonFor(m => m.Status, "in-progress") </span>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <span>Complete: @Html.RadioButtonFor(m => m.Status, "complete")</span>
+                                    </div>
                                 </div>
-                                <div class="col-md-3">
-                                    <span>In Progress: @Html.RadioButtonFor(m => m.Status, "in-progress") </span>
-                                </div>
-                                <div class="col-md-3">
-                                    <span>Complete: @Html.RadioButtonFor(m => m.Status, "complete")</span>
-                                </div>
-                            </div>
-                        </fieldset>
-                        <br />
-                        <input type="submit" class="btn btn-primary pull-left" value="Send" />
+                            </fieldset>
+                            <input type="submit" class="btn btn-primary" value="Send" />
+                        }
+                    }
+                    else
+                    {
+                        <h4>This @Model.FeedbackType status is complete</h4>
                     }
                 </div>
             </div>

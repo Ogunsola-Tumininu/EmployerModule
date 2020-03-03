@@ -178,7 +178,7 @@ namespace EmployerModules.Controllers
         public ActionResult Register(string employerCode)
         {
             var emp = db.EmployerDetails.Where(c => c.Recno == employerCode).FirstOrDefault();
-            ViewBag.EmployerCode = emp.Recno;
+            ViewBag.Employer = emp;
             ViewBag.EmployerName = emp.EmployerName;
             return View();
         }
@@ -192,11 +192,18 @@ namespace EmployerModules.Controllers
         {
             if (ModelState.IsValid)
             {
+                var db = new PALSiteDBEntities();
+                var oldUser = db.AspNetUsers.Where(u => u.EmployerCode == model.UserName).FirstOrDefault();
+                if(oldUser != null)
+                {
+                    db.AspNetUsers.Remove(oldUser);
+                }
+
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    var db = new PALSiteDBEntities();
+                   
                     var newUser = db.AspNetUsers.Find(user.Id);
                     newUser.EmployerCode = model.UserName;
                     newUser.PhoneNumber = model.PhoneNo;
@@ -241,7 +248,7 @@ namespace EmployerModules.Controllers
                         Get<ApplicationDbContext>());
                     service.CreateEmployer(model.EmployerName, model.Address, user.Id);
 
-                    return RedirectToAction("Index", "Employer");
+                    return RedirectToAction("Index", "Admin");
                 }
                 AddErrors(result);
             }

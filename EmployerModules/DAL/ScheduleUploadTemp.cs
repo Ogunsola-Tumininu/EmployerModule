@@ -31,5 +31,6 @@ namespace EmployerModules.DAL
         public Nullable<System.DateTime> CreatedOn { get; set; }
         public string CreatedBy { get; set; }
         public string PFACode { get; set; }
+        public string EmployeeName { get; set; }
     }
 }

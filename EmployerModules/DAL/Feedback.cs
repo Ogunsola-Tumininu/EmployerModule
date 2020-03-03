@@ -27,5 +27,7 @@ namespace EmployerModules.DAL
         public System.DateTime DateUpdated { get; set; }
         public string Createdby { get; set; }
         public string Modifiedby { get; set; }
+        public Nullable<bool> Viewed { get; set; }
+        public Nullable<bool> NewRemark { get; set; }
     }
 }

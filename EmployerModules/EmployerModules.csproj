@@ -486,6 +486,9 @@
     <Content Include="Views\Employer\AskQuestion.cshtml" />
     <Content Include="Views\Employer\UpdateMember.cshtml" />
     <Content Include="Views\Employer\InvalidPALEmployeeList.cshtml" />
+    <Content Include="Views\Employer\PaymentSuccessful.cshtml" />
+    <Content Include="Views\Employer\PaymentError.cshtml" />
+    <Content Include="Views\Admin\NotificationsList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

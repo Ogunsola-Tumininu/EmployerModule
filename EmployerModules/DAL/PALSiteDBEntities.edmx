@@ -130,6 +130,8 @@
           <Property Name="DateUpdated" Type="datetime" Nullable="false" />
           <Property Name="Createdby" Type="varchar" MaxLength="100" />
           <Property Name="Modifiedby" Type="varchar" MaxLength="100" />
+          <Property Name="Viewed" Type="bit" />
+          <Property Name="NewRemark" Type="bit" />
         </EntityType>
         <EntityType Name="Pfa">
           <Key>
@@ -240,6 +242,7 @@ warning 6002: The table/view 'PALSiteDB.dbo.SCHEDULES' does not have a primary k
           <Property Name="EmployerCode" Type="varchar" MaxLength="50" />
           <Property Name="Period" Type="date" />
           <Property Name="Pin" Type="varchar" MaxLength="20" />
+          <Property Name="EmployeeName" Type="varchar" MaxLength="200" />
           <Property Name="Surname" Type="varchar" MaxLength="50" />
           <Property Name="FirstName" Type="varchar" MaxLength="50" />
           <Property Name="OtherName" Type="varchar" MaxLength="50" />
@@ -263,6 +266,7 @@ warning 6002: The table/view 'PALSiteDB.dbo.SCHEDULES' does not have a primary k
           <Property Name="EmployerCode" Type="varchar" MaxLength="50" />
           <Property Name="Period" Type="date" />
           <Property Name="Pin" Type="varchar" MaxLength="20" />
+          <Property Name="EmployeeName" Type="varchar" MaxLength="200" />
           <Property Name="Surname" Type="varchar" MaxLength="50" />
           <Property Name="FirstName" Type="varchar" MaxLength="50" />
           <Property Name="OtherName" Type="varchar" MaxLength="50" />
@@ -529,6 +533,8 @@ warning 6002: The table/view 'PALSiteDB.dbo.SCHEDULES' does not have a primary k
           <Property Name="DateUpdated" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Createdby" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="Modifiedby" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Viewed" Type="Boolean" />
+          <Property Name="NewRemark" Type="Boolean" />
         </EntityType>
         <EntityType Name="Pfa">
           <Key>
@@ -596,6 +602,7 @@ warning 6002: The table/view 'PALSiteDB.dbo.SCHEDULES' does not have a primary k
           <Property Name="CreatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="PaymentId" Type="Int64" />
           <Property Name="PFACode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="EmployeeName" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="ScheduleUploadTemp">
           <Key>
@@ -618,6 +625,7 @@ warning 6002: The table/view 'PALSiteDB.dbo.SCHEDULES' does not have a primary k
           <Property Name="CreatedOn" Type="DateTime" Precision="3" />
           <Property Name="CreatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="PFACode" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="EmployeeName" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="SCHEDULE">
           <Key>
@@ -847,6 +855,8 @@ warning 6002: The table/view 'PALSiteDB.dbo.SCHEDULES' does not have a primary k
           <EntitySetMapping Name="Feedbacks">
             <EntityTypeMapping TypeName="PALSiteDBModel.Feedback">
               <MappingFragment StoreEntitySet="Feedback">
+                <ScalarProperty Name="NewRemark" ColumnName="NewRemark" />
+                <ScalarProperty Name="Viewed" ColumnName="Viewed" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
@@ -913,6 +923,7 @@ warning 6002: The table/view 'PALSiteDB.dbo.SCHEDULES' does not have a primary k
           <EntitySetMapping Name="ScheduleUploads">
             <EntityTypeMapping TypeName="PALSiteDBModel.ScheduleUpload">
               <MappingFragment StoreEntitySet="ScheduleUpload">
+                <ScalarProperty Name="EmployeeName" ColumnName="EmployeeName" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="EmployerCode" ColumnName="EmployerCode" />
                 <ScalarProperty Name="Period" ColumnName="Period" />
@@ -937,6 +948,7 @@ warning 6002: The table/view 'PALSiteDB.dbo.SCHEDULES' does not have a primary k
           <EntitySetMapping Name="ScheduleUploadTemps">
             <EntityTypeMapping TypeName="PALSiteDBModel.ScheduleUploadTemp">
               <MappingFragment StoreEntitySet="ScheduleUploadTemp">
+                <ScalarProperty Name="EmployeeName" ColumnName="EmployeeName" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="EmployerCode" ColumnName="EmployerCode" />
                 <ScalarProperty Name="Period" ColumnName="Period" />

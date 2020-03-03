@@ -92,16 +92,16 @@
                             <span class="label label-success">@Html.DisplayFor(modelItem => item.PaymentState)</span>
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.SchedulePeriod)
+                            @String.Format("{0: MMMM yyyy}", item.SchedulePeriod)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.ExpiryDate)
+                            @String.Format("{0:MM/dd/yyyy}", item.ExpiryDate)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.PaymentDate)
+                            @String.Format("{0:MM/dd/yyyy}", item.PaymentDate)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.UploadAdded)
+                            @String.Format("{0:MM/dd/yyyy}", item.UploadAdded)
                         </td>
                         <td>
                             <a href="@Url.Action("Export", "Employer", new { pfa = item.PFACode })" class="text-success">

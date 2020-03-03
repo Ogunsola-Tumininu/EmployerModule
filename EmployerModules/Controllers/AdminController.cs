@@ -8,6 +8,9 @@ using System.Web.Mvc;
 using EmployerModules.Models;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System.Security.Claims;
+using System.Data;
+using ClosedXML.Excel;
+using System.IO;
 
 namespace EmployerModules.Controllers
 {
@@ -22,30 +25,77 @@ namespace EmployerModules.Controllers
             return View(db.ScheduleHeaders.ToList());
         }
 
+        public FileResult Export(string employerCode)
+        {
+            var employerName = db.EmployerDetails.Where(s => s.Recno == employerCode).FirstOrDefault().EmployerName;
+            var period = db.ScheduleUploads.Where(s => s.EmployerCode == employerCode && s.PFACode == "25").OrderByDescending(s => s.Period).FirstOrDefault().Period;
+            var employeeList = db.ScheduleUploads.Where(s => s.EmployerCode == employerCode && s.PFACode == "25" && s.Period == period).ToList();
+            var cashId= db.ScheduleHeaders.Where(s => s.EmployerId == employerCode && s.PFACode == "25" && s.SchedulePeriod==period).First().TransactionId;
+            string PFAName = db.Pfas.Where(p => p.PFACode == "25").FirstOrDefault().Description;
+
+            DataTable dt = new DataTable("Grid");
+            dt.Columns.AddRange(new DataColumn[11] {
+                                            new DataColumn("PIN"),
+                                            new DataColumn("surname"),
+                                            new DataColumn("firstname"),
+                                            new DataColumn("othername"),
+                                            new DataColumn("employer code"),
+                                            new DataColumn("ee"),
+                                            new DataColumn("er"),
+                                            new DataColumn("vc"),
+                                            new DataColumn("cont. Period"),
+                                            new DataColumn("cash ID"),
+                                            new DataColumn("Description"),
+                                           
+                                             });
+
+
+            
+            foreach (var employee in employeeList)
+            {
+                dt.Rows.Add(employee.Pin, employee.Surname, employee.FirstName,
+                    employee.OtherName, employee.EmployerCode, employee.EmployeeContribution, employee.EmployerContribution,
+                    employee.VoluntaryContribution, String.Format("{0:MM/dd/yyyy}", employee.Period), cashId, employerName + " " + String.Format("{0: MMMM yyyy}", employee.Period));
+                
+             }
+
+            using (XLWorkbook wb = new XLWorkbook())
+            {
+                wb.Worksheets.Add(dt);
+                using (MemoryStream stream = new MemoryStream())
+                {
+                    wb.SaveAs(stream);
+                    return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", PFAName + "_EmployeeList.xlsx");
+                }
+            }
+        }
+
         public ActionResult Feedbacks()
         {
-            return View(db.Feedbacks.OrderByDescending(f => f.DateCreated).ToList());
+            return View(db.Feedbacks.OrderByDescending(f => f.DateUpdated).ToList());
         }
         public ActionResult CompletedFeedbacks()
         {
-            return View(db.Feedbacks.Where(f => f.Status == "complete").OrderByDescending(f => f.DateCreated).ToList());
+            return View(db.Feedbacks.Where(f => f.Status == "complete").OrderByDescending(f => f.DateUpdated).ToList());
         }
         public ActionResult InProgressFeedbacks()
         {
-            return View(db.Feedbacks.Where(f => f.Status == "in-progress").OrderByDescending(f => f.DateCreated).ToList());
+            return View(db.Feedbacks.Where(f => f.Status == "in-progress").OrderByDescending(f => f.DateUpdated).ToList());
         }
         public ActionResult PendingFeedbacks()
         {
-            return View(db.Feedbacks.Where(f => f.Status == "pending").OrderByDescending(f => f.DateCreated).ToList());
+            return View(db.Feedbacks.Where(f => f.Status == "pending").OrderByDescending(f => f.DateUpdated).ToList());
         }
 
         public ActionResult Reply(int Id)
         {
             var feedback = db.Feedbacks.Find(Id);
-            var remarks = db.Remarks.Where(r => r.FeedbackId == Id && r.IsAdminRemark == false).OrderByDescending(r => r.Id).ToList();
-            if (remarks.Count > 0)
+            feedback.Viewed = true;
+            var checkRemarks = db.Remarks.Where(r => r.FeedbackId == Id && r.IsAdminRemark == false).OrderByDescending(r => r.Id).ToList();
+            var remarks = db.Remarks.Where(r => r.FeedbackId == Id).OrderByDescending(r => r.Id).ToList();
+            if (checkRemarks.Count > 0)
             {
-                foreach (var remark in remarks)
+                foreach (var remark in checkRemarks)
                 {
                     remark.Viewed = true;
                 }
@@ -68,6 +118,7 @@ namespace EmployerModules.Controllers
             var getFeedBack = db.Feedbacks.Find(feeback.Id);
             getFeedBack.Remarks = Comment;
             getFeedBack.Modifiedby = email;
+            getFeedBack.NewRemark = false;
             getFeedBack.Status = feeback.Status;
             //string dtNow = DateTime.Now.ToShortDateString();
             getFeedBack.DateUpdated = DateTime.Now;
@@ -78,6 +129,7 @@ namespace EmployerModules.Controllers
             remark.Comment = Comment;
             remark.CreatedDate = DateTime.Now;
             remark.IsAdminRemark = true;
+            remark.EmployerCode = getFeedBack.EmployerCode;
             remark.Viewed = false;
             remark.FeedbackType = getFeedBack.FeedbackType;
             db.Remarks.Add(remark);
@@ -146,6 +198,20 @@ namespace EmployerModules.Controllers
             }
 
             return RedirectToAction("Index");
+        }
+
+        public ActionResult Notifications()
+        {
+            var feedbacks = db.Feedbacks.Where(f =>( f.Viewed == false || f.Viewed == null|| f.NewRemark == true) ).OrderByDescending(f => f.DateUpdated).Count();
+          
+            return Json( feedbacks , JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult NotificationsList()
+        {
+            var feedbacks = db.Feedbacks.Where(f => f.Viewed == false || f.Viewed == null || f.NewRemark==true).OrderByDescending(f => f.DateUpdated).ToList();
+           
+            return View(feedbacks);
         }
     }
 }

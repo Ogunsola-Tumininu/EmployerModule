@@ -54,16 +54,16 @@
                                 <th>
                                     @Html.DisplayNameFor(model => model.SchedulePeriod)
                                 </th>
-                                <th>
+                                @*<th>
                                     @Html.DisplayNameFor(model => model.ExpiryDate)
-                                </th>
+                                </th>*@
                                 <th>
                                     @Html.DisplayNameFor(model => model.PaymentDate)
                                 </th>
                                 <th>
                                     @Html.DisplayNameFor(model => model.UploadAdded)
                                 </th>
-                                <th></th>
+                                <th>Action</th>
                             </tr>
                         </thead>
 
@@ -99,19 +99,22 @@
                                         <span class="label label-success">@Html.DisplayFor(modelItem => item.PaymentState)</span>
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.SchedulePeriod)
+                                        @*@Html.DisplayFor(modelItem => item.SchedulePeriod)*@
+                                        @String.Format("{0: MMMM yyyy}", item.SchedulePeriod)
                                     </td>
-                                    <td>
+                                    @*<td>
                                         @Html.DisplayFor(modelItem => item.ExpiryDate)
+                                    </td>*@
+                                    <td>
+                                        @*@Html.DisplayFor(modelItem => item.PaymentDate)*@
+                                        @String.Format("{0:MM/dd/yyyy}", item.PaymentDate)
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.PaymentDate)
+                                        @*@Html.DisplayFor(modelItem => item.UploadAdded)*@
+                                        @String.Format("{0:MM/dd/yyyy}", item.UploadAdded)
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.UploadAdded)
-                                    </td>
-                                    <td>
-                                        <a href="@Url.Action("Export", "Employer", new { pfa = item.PFACode })" class="text-success">
+                                        <a href="@Url.Action("Export", "Admin", new { employerCode = item.EmployerId })" class="text-success">
                                             <i class="fa fa-download"></i>
                                         </a>
 
@@ -132,7 +135,7 @@
     <script>
         $(document).ready(function () {
             $('#table_id').DataTable({
-                "scrollX": true,
+               "scrollX": true, 
                 "ordering": false
             });
         });

@@ -32,5 +32,6 @@ namespace EmployerModules.DAL
         public string CreatedBy { get; set; }
         public Nullable<long> PaymentId { get; set; }
         public string PFACode { get; set; }
+        public string EmployeeName { get; set; }
     }
 }

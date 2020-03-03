@@ -39,6 +39,9 @@
                                     @Html.DisplayNameFor(model => model.PinValid)
                                 </th>
                                 <th>
+                                    @Html.DisplayNameFor(model => model.EmployeeName)
+                                </th>
+                                @*<th>
                                     @Html.DisplayNameFor(model => model.Surname)
                                 </th>
                                 <th>
@@ -46,7 +49,7 @@
                                 </th>
                                 <th>
                                     @Html.DisplayNameFor(model => model.OtherName)
-                                </th>
+                                </th>*@
                                 <th>
                                     @Html.DisplayNameFor(model => model.PFACode)
                                 </th>
@@ -73,66 +76,67 @@
                             @foreach (var item in Model)
                             {
 
-                                <tr>
-                                    @*<td>
-                                            @item.EmployerCode
-                                            @Html.DisplayFor(modelItem => item.EmployerCode)
-                                        </td>*@
+                            <tr>
+                                @*<td>
+            @item.EmployerCode
+            @Html.DisplayFor(modelItem => item.EmployerCode)
+        </td>*@
 
-                                    <td>
+                                <td>
 
-                                        @Html.DisplayFor(modelItem => item.Period)
-                                    </td>
-                                    <td>
-                                        @item.Pin
-                                        @*@Html.DisplayFor(modelItem => item.Pin)*@
-                                    </td>
-                                    <td>
+                                    @Html.DisplayFor(modelItem => item.Period)
+                                </td>
+                                <td>
+                                    @item.Pin
+                                    @*@Html.DisplayFor(modelItem => item.Pin)*@
+                                </td>
+                                <td>
 
-                                        @Html.DisplayFor(modelItem => item.PinValid)
-                                    </td>
-                                    <td>
-                                        @item.Surname
-                                        @*@Html.DisplayFor(modelItem => item.Surname)*@
-                                    </td>
-                                    <td>
-                                        @item.FirstName
-                                        @*@Html.DisplayFor(modelItem => item.FirstName)*@
-                                    </td>
-                                    <td>
-                                        @item.OtherName
-                                        @*@Html.DisplayFor(modelItem => item.OtherName)*@
-                                    </td>
-                                    <td>
-                                        @item.PFACode
-                                        @*@Html.DisplayFor(modelItem => item.OtherName)*@
-                                    </td>
-                                    <td>
-                                        @item.EmployeeContribution
-                                        @*@Html.DisplayFor(modelItem => item.EmployeeContribution)*@
-                                    </td>
-                                    <td>
-                                        @item.EmployerContribution
-                                        @*@Html.DisplayFor(modelItem => item.EmployerContribution)*@
-                                    </td>
-                                    <td>
-                                        @item.VoluntaryContribution
-                                        @*@Html.DisplayFor(modelItem => item.VoluntaryContribution)*@
-                                    </td>
-                                    <td>
-                                        @item.TotalContribution
-                                        @*@Html.DisplayFor(modelItem => item.TotalContribution)*@
-                                    </td>
-                                    
-                                    <td>
-                                        @if (item.PFACode == "25")
-                                        {
-                                        <a href="@Url.Action("UpdateMember", "Employer", new { Pin = item.Pin })"><span class="glyphicon glyphicon-edit"></span></a> 
-                                        <a href="@Url.Action("AskQuestion", "Employer", new { Pin = item.Pin, Code = item.PFACode })"><span class="glyphicon glyphicon-trash"></span></a>
-                                        
-                                        }
-                                    </td>
-                                </tr>
+                                    @Html.DisplayFor(modelItem => item.PinValid)
+                                </td>
+                                <td>
+                                    @item.EmployeeName
+                                    @*@Html.DisplayFor(modelItem => item.Surname)*@
+                                </td>
+                                @*<td>
+                                    @item.Surname
+                                </td>
+                                <td>
+                                    @item.FirstName
+                                </td>
+                                <td>
+                                    @item.OtherName
+                                </td>*@
+                                <td>
+                                    @item.PFACode
+                                    @*@Html.DisplayFor(modelItem => item.OtherName)*@
+                                </td>
+                                <td>
+                                    @item.EmployeeContribution
+                                    @*@Html.DisplayFor(modelItem => item.EmployeeContribution)*@
+                                </td>
+                                <td>
+                                    @item.EmployerContribution
+                                    @*@Html.DisplayFor(modelItem => item.EmployerContribution)*@
+                                </td>
+                                <td>
+                                    @item.VoluntaryContribution
+                                    @*@Html.DisplayFor(modelItem => item.VoluntaryContribution)*@
+                                </td>
+                                <td>
+                                    @item.TotalContribution
+                                    @*@Html.DisplayFor(modelItem => item.TotalContribution)*@
+                                </td>
+
+                                <td>
+                                    @if (item.PFACode == "25")
+        {
+                            <a href="@Url.Action("UpdateMember", "Employer", new { Pin = item.Pin })"><span class="glyphicon glyphicon-edit"></span></a>
+                            <a href="@Url.Action("AskQuestion", "Employer", new { Pin = item.Pin, Code = item.PFACode })"><span class="glyphicon glyphicon-trash"></span></a>
+
+}
+                                </td>
+                            </tr>
                             }
                         </tbody>
 

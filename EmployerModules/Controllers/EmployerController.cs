@@ -34,7 +34,7 @@ namespace EmployerModules.Controllers
         
 
         // GET: Employers
-        public ActionResult Index()
+        public ActionResult Index(string startperiod =null, string endperiod = null)
         {
             var userId = User.Identity.GetUserId();
             var employer = db.AspNetUsers.Find(userId);
@@ -48,8 +48,18 @@ namespace EmployerModules.Controllers
             string employerCode = employer.EmployerCode;
             var emp = db.EmployerDetails.Where(c => c.Recno == employerCode).FirstOrDefault();
             var members = db.Employees.Where(e => e.Employer_Recno == employerCode).ToList().Count();
-            var transactions = db.ScheduleHeaders.Where(e => e.EmployerId == employerCode).ToList();
-            ViewBag.Transactions = transactions;
+            if (startperiod != null && endperiod != null)
+            {
+                DateTime start = Convert.ToDateTime(startperiod);
+                DateTime end = Convert.ToDateTime(endperiod);
+                var monthTotal = end.Subtract(start).Days / (365.25 / 12);
+                var transactionsTotal = db.ScheduleHeaders.Where(e => e.EmployerId == employerCode).Sum(e => e.TotalAmount);
+                var transactionsPeriodTotal = db.ScheduleHeaders.Where(e => e.EmployerId == employerCode && e.SchedulePeriod >= start && e.SchedulePeriod <= end).Sum(e => e.TotalAmount);
+                ViewBag.TransactionsTotal = transactionsTotal;
+                ViewBag.TransactionsPeriodTotal= transactionsPeriodTotal;
+                ViewBag.MonthTotal = Math.Round(monthTotal, 0);
+            }
+            
             ViewBag.Members = members;
             return View(emp);
         }
@@ -172,6 +182,14 @@ namespace EmployerModules.Controllers
             return View(pin);
         }
 
+        public ActionResult Notification()
+        {
+            var userId = User.Identity.GetUserId();
+            string employerCode = db.AspNetUsers.Find(userId).EmployerCode;
+            var remarks = db.Remarks.Where(r => r.EmployerCode == employerCode && (r.Viewed == null || r.Viewed == false) && r.IsAdminRemark == true).Count();
+            return Json(remarks, JsonRequestBehavior.AllowGet);
+        }
+
         // GET: Employers/Feedback
         public ActionResult Feedback()
         {
@@ -180,9 +198,9 @@ namespace EmployerModules.Controllers
             var feedbacks = db.Feedbacks.Where(f =>f.FeedbackType == "feedback"  && f.EmployerCode == employerCode).ToList();
             var complaints = db.Feedbacks.Where(f => f.FeedbackType == "complaints" && f.EmployerCode == employerCode).ToList();
             var enquiries = db.Feedbacks.Where(f => f.FeedbackType == "enquiry" && f.EmployerCode == employerCode).ToList();
-            var feedbacksNotification = db.Remarks.Where(f => f.FeedbackType == "feedback" && f.EmployerCode == employerCode && (f.Viewed == null || f.Viewed == false)).Count();
-            var complaintsNotification = db.Remarks.Where(f => f.FeedbackType == "complaints" && f.EmployerCode == employerCode && (f.Viewed == null || f.Viewed == false)).Count();
-            var enquiriesNotification = db.Remarks.Where(f => f.FeedbackType == "enquiry" && f.EmployerCode == employerCode && (f.Viewed == null || f.Viewed == false)).Count();
+            var feedbacksNotification = db.Remarks.Where(f => f.FeedbackType == "feedback" && f.EmployerCode == employerCode && (f.Viewed == null || f.Viewed == false) && f.IsAdminRemark==true).Count();
+            var complaintsNotification = db.Remarks.Where(f => f.FeedbackType == "complaints" && f.EmployerCode == employerCode && (f.Viewed == null || f.Viewed == false) && f.IsAdminRemark == true).Count();
+            var enquiriesNotification = db.Remarks.Where(f => f.FeedbackType == "enquiry" && f.EmployerCode == employerCode && (f.Viewed == null || f.Viewed == false) && f.IsAdminRemark == true).Count();
             ViewBag.Feedbacks = feedbacks.Count;
             ViewBag.Complaints = complaints.Count;
             ViewBag.Enquiries = enquiries.Count;
@@ -374,14 +392,15 @@ namespace EmployerModules.Controllers
         public ActionResult ViewMessage(int Id)
         {
             var feedbackDetails = db.Feedbacks.Find(Id);
-            var remarks = db.Remarks.Where(r => r.FeedbackId == Id && r.IsAdminRemark == true).OrderByDescending(r => r.Id).ToList();
-            if(remarks.Count > 0)
+            var checkRemarks = db.Remarks.Where(r => r.FeedbackId == Id && r.IsAdminRemark == true).OrderByDescending(r => r.Id).ToList();
+            var remarks = db.Remarks.Where(r => r.FeedbackId == Id).OrderByDescending(r => r.Id).ToList();
+            if (checkRemarks.Count > 0)
             {
-                foreach (var remark in remarks)
+                foreach (var remark in checkRemarks)
                 {
                     remark.Viewed = true;
                 }
-            }           
+            }
             db.SaveChanges();
             ViewBag.Remarks = remarks;
             return View(feedbackDetails);
@@ -390,6 +409,8 @@ namespace EmployerModules.Controllers
         [HttpPost]
         public ActionResult ViewMessage(int Id, string Comment)
         {
+            var userId = User.Identity.GetUserId();
+            string employerCode = db.AspNetUsers.Find(userId).EmployerCode;
             if (Comment == null)
             {
                 ViewBag.ErrorMessage = "Oops, Error sending message. Please enter your Remark.";
@@ -397,6 +418,7 @@ namespace EmployerModules.Controllers
             }
 
             var getFeedback  = db.Feedbacks.Find(Id);
+            getFeedback.NewRemark = true;
 
             var remark = new Remark();
 
@@ -404,6 +426,7 @@ namespace EmployerModules.Controllers
             remark.Comment = Comment;
             remark.CreatedDate = DateTime.Now;
             remark.IsAdminRemark = false;
+            remark.EmployerCode = employerCode;
             remark.Viewed = false;
             remark.FeedbackType = getFeedback.FeedbackType;
             db.Remarks.Add(remark);
@@ -453,7 +476,7 @@ namespace EmployerModules.Controllers
             }
 
             HttpPostedFileBase file = Request.Files["UploadedFile"];
-            if ((file == null) || (file.ContentLength == 0))
+                if ((file == null) || (file.ContentLength == 0))
                 {
                     ViewBag.ErrorMessage = "Please select an Excel file in order to upload." ;
                     return View(schedules);
@@ -463,8 +486,9 @@ namespace EmployerModules.Controllers
                 {
                     if (file.FileName.EndsWith("xls") || file.FileName.EndsWith("xlsx"))
                     {
-                        
-                        var members = db.Employees.Where(e => e.Employer_Recno == employerCode && e.Pin.Contains("PEN")).ToList();
+                    try
+                    {
+                        //var members = db.Employees.Where(e => e.Employer_Recno == employerCode || e.Pin.Contains("PEN")).ToList();
 
                         string fileName = file.FileName;
                         string fileContentType = file.ContentType;
@@ -480,9 +504,9 @@ namespace EmployerModules.Controllers
                             var noOfRow = workSheet.Dimension.End.Row;
                             for (int rowIterator = 1; rowIterator <= noOfRow; rowIterator++)
                             {
-                                if(rowIterator == 1)
+                                if (rowIterator == 1)
                                 {
-                                    employerCode = (string)workSheet.Cells[rowIterator, 7].Value;
+                                    employerCode = (string)workSheet.Cells[rowIterator, 5].Value;
                                 }
                                 if (rowIterator == 2)
                                 {
@@ -492,7 +516,7 @@ namespace EmployerModules.Controllers
                                 if (rowIterator == 4)
                                 {
                                     string periodMonth = workSheet.Cells[rowIterator, 2].Value.ToString().ToLower();
-                                    string periodYear = workSheet.Cells[rowIterator, 7].Value.ToString();
+                                    string periodYear = workSheet.Cells[rowIterator, 5].Value.ToString();
                                     string monthNumber = "";
                                     switch (periodMonth)
                                     {
@@ -548,64 +572,85 @@ namespace EmployerModules.Controllers
                                             monthNumber = "12";
                                             break;
                                         default:
-                                        break;
+                                            break;
                                     }
-                                    
+
                                     // Check if the uploaded period is equal to inputted period
                                     if (u_period.Substring(u_period.Length - 2) != monthNumber || u_period.Substring(0, 4) != periodYear)
                                     {
                                         ViewBag.ErrorMessage = "The uploaded period is not equal to the entered period. Please check again.";
                                         return View(schedules);
                                     }
-                                    
+
                                 }
 
-                            if (rowIterator == 3 )
-                            {
-                                //7035796.88
-                                string uploadedValuedate = workSheet.Cells[rowIterator, 2].Value.ToString();
-                                expirydate =workSheet.Cells[rowIterator, 2].Value.ToString();
-                            }
-
-                            if ( rowIterator == 5 || rowIterator == 6)
-                            {
-                                continue;
-                            }
-
-                            if(rowIterator >=7 )
-                            {
-                                if (workSheet.Cells[rowIterator, 2].Value == null && workSheet.Cells[rowIterator, 3].Value == null && workSheet.Cells[rowIterator, 4].Value == null)
+                                if (rowIterator == 3)
                                 {
-                                    break;
+                                    //7035796.88
+                                    string uploadedValuedate = workSheet.Cells[rowIterator, 2].Value.ToString();
+                                    expirydate = workSheet.Cells[rowIterator, 2].Value.ToString();
                                 }
-                            
-                                var schedule = new ScheduleUploadTemp();
+
+                                if (rowIterator == 5 || rowIterator == 6)
+                                {
+                                    continue;
+                                }
+
+                                if (rowIterator >= 7)
+                                {
+                                    if (workSheet.Cells[rowIterator, 2].Value == null && workSheet.Cells[rowIterator, 3].Value == null && workSheet.Cells[rowIterator, 4].Value == null)
+                                    {
+                                        break;
+                                    }
+
+                                    var schedule = new ScheduleUploadTemp();
                                     schedule.EmployerCode = employerCode;
                                     DateTime dateValue;
                                     //string period = (string) workSheet.Cells[rowIterator, 1].Value;
                                     DateTime.TryParse(period, out dateValue);
                                     schedule.Period = dateValue;
-                                    schedule.Pin = (string) workSheet.Cells[rowIterator, 2].Value;
-                                    schedule.Surname = (string) workSheet.Cells[rowIterator, 3].Value;
-                                    schedule.FirstName = (string) workSheet.Cells[rowIterator, 4].Value;
-                                    schedule.OtherName = (string) workSheet.Cells[rowIterator, 5].Value;
-                                    
-                                    schedule.EmployeeContribution = Convert.ToDecimal( workSheet.Cells[rowIterator, 6].Value.ToString());
-                                    schedule.EmployerContribution = Convert.ToDecimal( workSheet.Cells[rowIterator, 7].Value.ToString());
-                                    schedule.VoluntaryContribution = Convert.ToDecimal(workSheet.Cells[rowIterator, 8].Value.ToString()) + Convert.ToDecimal(workSheet.Cells[rowIterator, 9].Value.ToString());
-                                    schedule.TotalContribution = Convert.ToDecimal(workSheet.Cells[rowIterator, 10].Value.ToString());
-                                    schedule.PFACode = (string) workSheet.Cells[rowIterator, 11].Value.ToString();
+                                    schedule.Pin = (string)workSheet.Cells[rowIterator, 2].Value;
+                                    schedule.EmployeeName = (string)workSheet.Cells[rowIterator, 3].Value;
+                                    string[] names = schedule.EmployeeName.ToString().Trim().Split(new char[] { ' ' }, 3);
+                                    if (names.Length == 1)
+                                    {
+                                        schedule.Surname = names[0];
+                                        schedule.FirstName = "";
+                                        schedule.OtherName = "";
+                                        
+                                    }
+                                    else if (names.Length == 2)
+                                    {
+                                        schedule.Surname = names[0];
+                                        schedule.FirstName = names[1];
+                                        schedule.OtherName = "";
+                                    }
+                                    else
+                                    {
+                                        schedule.Surname = names[0];
+                                        schedule.FirstName = names[1];
+                                        schedule.OtherName = names[2];
+                                    }
+                                    //schedule.FirstName = (string)workSheet.Cells[rowIterator, 4].Value;
+                                    //schedule.OtherName = (string)workSheet.Cells[rowIterator, 5].Value;
+
+                                    schedule.EmployeeContribution = Convert.ToDecimal(workSheet.Cells[rowIterator, 4].Value.ToString());
+                                    schedule.EmployerContribution = Convert.ToDecimal(workSheet.Cells[rowIterator, 5].Value.ToString());
+                                    schedule.VoluntaryContribution = Convert.ToDecimal(workSheet.Cells[rowIterator, 6].Value.ToString()) + Convert.ToDecimal(workSheet.Cells[rowIterator, 7].Value.ToString());
+                                    schedule.TotalContribution = Convert.ToDecimal(workSheet.Cells[rowIterator, 8].Value.ToString());
+                                    schedule.PFACode = (string)workSheet.Cells[rowIterator, 9].Value.ToString();
                                     schedule.CreatedBy = employerCode;
                                     string dtNow = DateTime.Now.ToShortDateString();
                                     schedule.CreatedOn = Convert.ToDateTime(dtNow);
                                     schedule.PinValid = false;
-                                    if (members.Any(m => m.Pin == schedule.Pin))
+                                    var checkPin = db.Employees.Where(e => e.Pin.Contains("PEN") && e.Pin == schedule.Pin && ((e.Surname ==  schedule.Surname || e.Surname == schedule.FirstName) || (e.FirstName == schedule.Surname || e.FirstName == schedule.FirstName))).FirstOrDefault();
+                                    if (checkPin != null)
                                     {
                                         schedule.PinValid = true;
                                     }
 
                                     uploadList.Add(schedule);
-                                    
+
                                 }
                             }
                         }
@@ -614,8 +659,8 @@ namespace EmployerModules.Controllers
 
                         if (submitedTotal != TotalPFATotalContribution)
                         {
-                        ViewBag.ErrorMessage = "Sum of the Total Contribution of the uploaded excel is not equal to the total entered." +
-                        "It has a difference of " + (TotalPFATotalContribution - submitedTotal).ToString() + "NGR. Please check again and resend.";
+                            ViewBag.ErrorMessage = "Sum of the Total Contribution of the uploaded excel is not equal to the total entered." +
+                            "It has a difference of " + (TotalPFATotalContribution - submitedTotal).ToString() + "NGR. Please check again and resend.";
                             return View(schedules);
                         }
                         else
@@ -631,16 +676,16 @@ namespace EmployerModules.Controllers
                             //var PFAList =totalSchedules.GroupBy(p => p.PFACode).Select(p => p.First());
                             var PFAList = db.Pfas.ToList();
 
-                        
+
                             foreach (var PFA in PFAList)
                             {
 
                                 var groupSchedules = latestSchedule.Where(s => s.EmployerCode == employerCode && s.PFACode == PFA.PFACode).ToList();
-        
+
                                 if (groupSchedules.Count > 0)
                                 {
                                     var scheduleSummary = new ScheduleHeaderTemp();
-                                    scheduleSummary.TotalAmount = (decimal) groupSchedules.Sum(x => x.TotalContribution);
+                                    scheduleSummary.TotalAmount = (decimal)groupSchedules.Sum(x => x.TotalContribution);
                                     scheduleSummary.TotalEmployee = groupSchedules.Count;
                                     scheduleSummary.PFA = PFA.Description;
                                     scheduleSummary.PFACode = PFA.PFACode;
@@ -656,12 +701,12 @@ namespace EmployerModules.Controllers
                                     scheduleSummary.EmployerId = employerCode;
                                     db.ScheduleHeaderTemps.Add(scheduleSummary);
                                     db.SaveChanges();
-                                 
+
                                 }
                             }
 
                             db.SaveChanges();
-                        
+
                             var latestSummary = db.ScheduleHeaderTemps.Where(s => s.EmployerId == employerCode).ToList();
                             var invalidPinMember = db.ScheduleUploadTemps.Where(s => s.EmployerCode == employerCode && s.PFACode == "25" && s.PinValid == false).Count();
 
@@ -670,6 +715,14 @@ namespace EmployerModules.Controllers
                             ViewBag.Invalid = invalidPinMember;
                             return View(latestSummary);
                         }
+
+                    }
+                    catch (Exception ex)
+                    {
+                        ViewBag.ErrorMessage = ex.ToString();
+                        return View(schedules);
+                    }
+                        
                         
                     }
                     else
@@ -842,12 +895,15 @@ namespace EmployerModules.Controllers
             return View(employeeList);
         }
 
-        [AllowAnonymous]
         public FileResult Export(string pfa)
         {
             var userId = User.Identity.GetUserId();
             string employerCode = db.AspNetUsers.Find(userId).EmployerCode;
             var employeeList = db.ScheduleUploadTemps.Where(s => s.EmployerCode == employerCode && s.PFACode == pfa).ToList();
+            if(employeeList.Count == 0)
+            {
+                employeeList = db.ScheduleUploadTemps.Where(s => s.EmployerCode == employerCode && s.PFACode == pfa).ToList();
+            }
             string PFAName = db.Pfas.Where(p => p.PFACode == pfa).FirstOrDefault().Description;
 
             DataTable dt = new DataTable("Grid");
@@ -910,97 +966,24 @@ namespace EmployerModules.Controllers
             ViewBag.PhoneNo = emp.PhoneNumber;
             return View();
         }
-        
+        public ActionResult PaymentSuccessful()
+        {
+            return View();
+        }
+        public ActionResult PaymentError()
+        {
+            return View();
+        }
+
         public ActionResult PaymentConfirmed(string paymentType)
         {
             var userId = User.Identity.GetUserId();
             string employerCode = db.AspNetUsers.Find(userId).EmployerCode;
             var employerDetail = db.EmployerDetails.Where(e => e.Recno == employerCode).FirstOrDefault();
-            var uploadedSchedules = db.ScheduleUploadTemps.Where(s => s.EmployerCode == employerCode).ToList();
-            var period = uploadedSchedules.FirstOrDefault().Period;
-            var TotalPaidAmount =uploadedSchedules.Sum(t => t.TotalContribution);
-            var scheduleHeader = db.ScheduleHeaderTemps.Where(s => s.EmployerId == employerCode).ToList();
-            
-
-            foreach (var schedule in uploadedSchedules)
-            {
-                var moveSchedule = new ScheduleUpload();
-                moveSchedule.EmployerCode = schedule.EmployerCode;
-                moveSchedule.Period = schedule.Period;
-                moveSchedule.Pin = schedule.Pin;
-                moveSchedule.Surname = schedule.Surname;
-                moveSchedule.FirstName = schedule.FirstName;
-                moveSchedule.OtherName = schedule.OtherName;
-                moveSchedule.EmployeeContribution = schedule.EmployeeContribution;
-                moveSchedule.EmployerContribution = schedule.EmployerContribution;
-                moveSchedule.VoluntaryContribution = schedule.VoluntaryContribution;
-                moveSchedule.TotalContribution = schedule.TotalContribution;
-                moveSchedule.FileName = schedule.FileName;
-                moveSchedule.PinValid = schedule.PinValid;
-                moveSchedule.PaymentType = paymentType;
-                moveSchedule.CreatedOn = schedule.CreatedOn;
-                moveSchedule.CreatedBy = schedule.CreatedBy;
-                //moveSchedule.PaymentId = 67;  // Payment Id to be generated
-                moveSchedule.PFACode = schedule.PFACode;
-                db.ScheduleUploads.Add(moveSchedule);
-                db.ScheduleUploadTemps.Remove(schedule);
-            }
-
-            Random random = new Random();
-            foreach (var header in scheduleHeader)
-            {
-                int randNum = random.Next(100000, 999999);
-
-                var moveHeader = new ScheduleHeader();
-                moveHeader.PFA = header.PFA;
-                moveHeader.TotalAmount = header.TotalAmount;
-                moveHeader.TotalEmployee = header.TotalEmployee;               
-                moveHeader.TransactionId = "TR" + DateTime.Now.ToString("ddMMyyyy") + randNum.ToString();
-                moveHeader.PaymentStatus = "paid";
-                moveHeader.PaymentState = "closed";
-                moveHeader.SchedulePeriod = header.SchedulePeriod;
-                string dtNow = DateTime.Now.ToShortDateString();
-                moveHeader.PaymentDate = DateTime.Now;
-                dtNow = DateTime.Now.AddDays(30).ToShortDateString();
-                moveHeader.ExpiryDate = Convert.ToDateTime(dtNow);
-                moveHeader.UploadAdded = header.UploadAdded;
-                moveHeader.EmployerId = header.EmployerId;
-                moveHeader.PFACode = header.PFACode;
-                db.ScheduleHeaders.Add(moveHeader);
-                db.ScheduleHeaderTemps.Remove(header);
-            }
-            db.SaveChanges();
-
-            var msg = PalLibrary.Messaging.SendEmail("info@palpensions.com", "helpdesk@palpensions.com", $"A payment of N{TotalPaidAmount.ToString()} was made by {employerDetail.EmployerName} - {employerCode}", $@"
-
-                    <p>Hello Info,
- 
-                    <p>Your client {employerDetail.EmployerName} with Employer Code {employerCode} made payment of N{TotalPaidAmount.ToString()} 
-                        on {DateTime.Now.ToString("MMM dd yyyy hh:mm:ss tt")}: <br />
-                    <strong>Period:</strong> {period.ToString()}<br/>
-                    
-                  
-                <hr />   
-                     
-                <p>For a list of feedback,request or complaints, please visit https://pallite.palpensions.com/Staff/SupportLogs </p> 
-   
-            <p>         Regards<br/>
- 
-                    PAL Pensions</p>");
-
-           // return Redirect("RecentTransaction");
-            return Json(true, JsonRequestBehavior.AllowGet);
-        }
-
-        public ActionResult PaymentServerConfirmed(string paymentType)
-        {
-            var userId = User.Identity.GetUserId();
-            string employerCode = db.AspNetUsers.Find(userId).EmployerCode;
-            var employerDetail = db.EmployerDetails.Where(e => e.Recno == employerCode).FirstOrDefault();
-            var uploadedSchedules = db.ScheduleUploadTemps.Where(s => s.EmployerCode == employerCode).ToList();
+            var uploadedSchedules = db.ScheduleUploadTemps.Where(s => s.EmployerCode == employerCode && s.PFACode == "25").ToList();
             var period = uploadedSchedules.FirstOrDefault().Period;
             var TotalPaidAmount = uploadedSchedules.Sum(t => t.TotalContribution);
-            var scheduleHeader = db.ScheduleHeaderTemps.Where(s => s.EmployerId == employerCode).ToList();
+            var scheduleHeader = db.ScheduleHeaderTemps.Where(s => s.EmployerId == employerCode && s.PFACode == "25").ToList();
 
 
             foreach (var schedule in uploadedSchedules)
@@ -1048,12 +1031,16 @@ namespace EmployerModules.Controllers
                 moveHeader.EmployerId = header.EmployerId;
                 moveHeader.PFACode = header.PFACode;
                 db.ScheduleHeaders.Add(moveHeader);
-                db.ScheduleHeaderTemps.Remove(header);
+            }
+            var scheduleSummary = db.ScheduleHeaderTemps.Where(s => s.EmployerId == employerCode).ToList();
+
+            foreach (var schedule in scheduleSummary)
+            {
+                db.ScheduleHeaderTemps.Remove(schedule);
             }
             db.SaveChanges();
 
             var msg = PalLibrary.Messaging.SendEmail("info@palpensions.com", "helpdesk@palpensions.com", $"A payment of N{TotalPaidAmount.ToString()} was made by {employerDetail.EmployerName} - {employerCode}", $@"
-
                     <p>Hello Info,
  
                     <p>Your client {employerDetail.EmployerName} with Employer Code {employerCode} made payment of N{TotalPaidAmount.ToString()} 
@@ -1069,7 +1056,92 @@ namespace EmployerModules.Controllers
  
                     PAL Pensions</p>");
 
-            return Redirect("RecentTransaction");
+            // return Redirect("RecentTransaction");
+            return Json(true, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult PaymentServerConfirmed(string paymentType)
+        {
+            var userId = User.Identity.GetUserId();
+            string employerCode = db.AspNetUsers.Find(userId).EmployerCode;
+            var employerDetail = db.EmployerDetails.Where(e => e.Recno == employerCode).FirstOrDefault();
+            var uploadedSchedules = db.ScheduleUploadTemps.Where(s => s.EmployerCode == employerCode && s.PFACode == "25").ToList();
+            var period = uploadedSchedules.FirstOrDefault().Period;
+            var TotalPaidAmount = uploadedSchedules.Sum(t => t.TotalContribution);
+            var scheduleHeader = db.ScheduleHeaderTemps.Where(s => s.EmployerId == employerCode && s.PFACode == "25").ToList();
+
+
+            foreach (var schedule in uploadedSchedules)
+            {
+                var moveSchedule = new ScheduleUpload();
+                moveSchedule.EmployerCode = schedule.EmployerCode;
+                moveSchedule.Period = schedule.Period;
+                moveSchedule.Pin = schedule.Pin;
+                moveSchedule.Surname = schedule.Surname;
+                moveSchedule.FirstName = schedule.FirstName;
+                moveSchedule.OtherName = schedule.OtherName;
+                moveSchedule.EmployeeContribution = schedule.EmployeeContribution;
+                moveSchedule.EmployerContribution = schedule.EmployerContribution;
+                moveSchedule.VoluntaryContribution = schedule.VoluntaryContribution;
+                moveSchedule.TotalContribution = schedule.TotalContribution;
+                moveSchedule.FileName = schedule.FileName;
+                moveSchedule.PinValid = schedule.PinValid;
+                moveSchedule.PaymentType = paymentType;
+                moveSchedule.CreatedOn = schedule.CreatedOn;
+                moveSchedule.CreatedBy = schedule.CreatedBy;
+                //moveSchedule.PaymentId = 67;  // Payment Id to be generated
+                moveSchedule.PFACode = schedule.PFACode;
+                db.ScheduleUploads.Add(moveSchedule);
+                db.ScheduleUploadTemps.Remove(schedule);
+            }
+
+            Random random = new Random();
+            foreach (var header in scheduleHeader)
+            {
+                int randNum = random.Next(100000, 999999);
+
+                var moveHeader = new ScheduleHeader();
+                moveHeader.PFA = header.PFA;
+                moveHeader.TotalAmount = header.TotalAmount;
+                moveHeader.TotalEmployee = header.TotalEmployee;
+                moveHeader.TransactionId = "TR" + DateTime.Now.ToString("ddMMyyyy") + randNum.ToString();
+                moveHeader.PaymentStatus = "paid";
+                moveHeader.PaymentState = "closed";
+                moveHeader.SchedulePeriod = header.SchedulePeriod;
+                string dtNow = DateTime.Now.ToShortDateString();
+                moveHeader.PaymentDate = DateTime.Now;
+                dtNow = DateTime.Now.AddDays(30).ToShortDateString();
+                moveHeader.ExpiryDate = Convert.ToDateTime(dtNow);
+                moveHeader.UploadAdded = header.UploadAdded;
+                moveHeader.EmployerId = header.EmployerId;
+                moveHeader.PFACode = header.PFACode;
+                db.ScheduleHeaders.Add(moveHeader);
+            }
+            var scheduleSummary = db.ScheduleHeaderTemps.Where(s => s.EmployerId == employerCode).ToList();
+
+            foreach (var schedule in scheduleSummary)
+            {
+                db.ScheduleHeaderTemps.Remove(schedule);
+            }
+            db.SaveChanges();
+
+            var msg = PalLibrary.Messaging.SendEmail("info@palpensions.com", "helpdesk@palpensions.com", $"A payment of N{TotalPaidAmount.ToString()} was made by {employerDetail.EmployerName} - {employerCode}", $@"
+                    <p>Hello Info,
+ 
+                    <p>Your client {employerDetail.EmployerName} with Employer Code {employerCode} made payment of N{TotalPaidAmount.ToString()} 
+                        on {DateTime.Now.ToString("MMM dd yyyy hh:mm:ss tt")}: <br />
+                    <strong>Period:</strong> {period.ToString()}<br/>
+                    
+                  
+                <hr />   
+                     
+                <p>For a list of feedback,request or complaints, please visit https://pallite.palpensions.com/Staff/SupportLogs </p> 
+   
+            <p>         Regards<br/>
+ 
+                    PAL Pensions</p>");
+
+            return RedirectToAction("PaymentSuccessful", "Employer");
             //return Json(true, JsonRequestBehavior.AllowGet);
         }
 

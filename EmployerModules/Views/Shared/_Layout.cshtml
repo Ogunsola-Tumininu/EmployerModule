@@ -144,25 +144,22 @@
                                     <li><a href="#"><i class="fa fa-sign-out"></i> Log out</a></li>
                                 </ul>
                             </li>*@
-                        @{
-                            PALSiteDBEntities db = new PALSiteDBEntities();
-                            var userId = User.Identity.GetUserId();
-                            string employerCode = db.AspNetUsers.Find(userId).EmployerCode;
-                            var remarks = db.Remarks.Where(r => r.EmployerCode == employerCode && (r.Viewed == null || r.Viewed == false)).Count();
-
-                        }
-
+ 
                         <li>
-                            <a href="#">
+                            @if (ViewContext.HttpContext.User.IsInRole("Admin"))
+                            {
+                            <a class="notif-link" href="@Url.Action("Feedbacks", "Admin")">
                                 <i class="fa fa-comments"></i>
-                                @if (remarks > 0)
-                                {
-                                    <span>
-                                        @remarks
-                                    </span>
-                                }
-
+                                <span id="admin_notification"> </span>
                             </a>
+                            }
+                            else
+                            {
+                            <a class="notif-link" href="@Url.Action("Feedback", "Employer")">
+                                <i class="fa fa-comments"></i>
+                                <span id="notification"> </span>
+                            </a>
+                            }
                         </li>
 
                         @*<li><a href="#"><i class="fa fa-bell-o"></i><span>98</span></a></li>*@
@@ -176,14 +173,14 @@
             @RenderBody()
         </div>
 
-
-        <hr />
-        <footer class="footer-div">
+         
+        <footer class="footer-div ">
             <p style="text-align: center">
-                &copy; @DateTime.Now.Year - PAL Pensions &nbsp;&nbsp;&nbsp; <i class="fa fa-twitter top-icon"></i>
-                <i class="fa fa-facebook top-icon"></i>
-                <i class="fa fa-linkedin top-icon"></i>
-                <i class="fa fa-instagram top-icon"></i>
+                &copy; @DateTime.Now.Year - PAL Pensions &nbsp;&nbsp;&nbsp;
+                <a href="https://www.twitter.com/palpensions"><i class="fa fa-twitter top-icon"></i></a>
+                <a href="https://www.facebook.com/palpensions"><i class="fa fa-facebook top-icon"></i></a>
+                <a href="https://www.linkedin.com/company/3265910"><i class="fa fa-linkedin top-icon"></i></a>
+                <a href="https://www.instagram.com/palpensions"><i class="fa fa-instagram top-icon"></i></a>
             </p>
 
         </footer>
@@ -197,11 +194,81 @@
     @RenderSection("scripts", required: false)
     <script>
         $(document).ready(function () {
+            const check = checkNotification();
+            const adminCheck = AdminNotifications();
+            if (check === 0 || adminCheck === 0) {
+                $("#notification").hide();
+                $("#admin_notification").hide();
+            }
+
+            $("#notification, #admin_notification, .notif-link ").on("click", function () {
+                checkNotification();
+                AdminNotifications()
+            })
+ 
+            setInterval(function () {
+                checkNotification();
+                AdminNotifications()
+            }, 20000);
+
             $("#alert").ready(function () {
                 setTimeout(function () {
                     $(".alert").hide();
                 }, 20000);
             })
+
+            function checkNotification() {
+                $.ajax({
+                    url: '@Url.Action("Notification", "Employer")',
+                    //url: '/Employer/PaymentConfirmed?paymentType="paystack"',
+                    type: 'GET',
+                    dataType: 'json',
+                    cache: false,
+                    success: function (res) {
+                        console.log(res);
+                        if (res > 0) {
+                            $("#notification").show();
+                            $("#notification").html(res);
+                            console.log(res);
+                        }
+                        else {
+                            $("#notification").hide();
+                        }
+
+                    },
+                    error: function (err) {
+                        //alert('Error occured while fetch notification');
+                        console.log(err)
+                    }
+                });
+            }
+
+
+            function AdminNotifications() {
+                $.ajax({
+                    url: '@Url.Action("Notifications", "Admin")',
+                    //url: '/Employer/PaymentConfirmed?paymentType="paystack"',
+                    type: 'GET',
+                    dataType: 'json',
+                    cache: false,
+                    success: function (res) {
+                        console.log(res);
+                        if (res > 0) {
+                            $("#admin_notification").show();
+                            $("#admin_notification").html(res);
+                            console.log(res);
+                        }
+                        else {
+                            $("#admin_notification").hide();
+                        }
+
+                    },
+                    error: function (err) {
+                        //alert('Error occured while fetch notification');
+                        console.log(err)
+                    }
+                });
+            }
         })
 
         $(function () {
@@ -232,7 +299,7 @@
                 $(window).on('resize', function () {
 
                     if ($(window).width() > 767) {
-
+                        $(".footer-div").addClass("increase-width")
                         aside.removeClass('show-side-nav');
 
                     }
