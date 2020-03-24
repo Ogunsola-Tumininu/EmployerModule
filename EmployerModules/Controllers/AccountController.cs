@@ -9,7 +9,6 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using EmployerModules.Models;
-using EmployerModules.Services;
 using EmployerModules.DAL;
 using System.Web.Security;
 
@@ -244,10 +243,6 @@ namespace EmployerModules.Controllers
  
                     PAL Pensions</p>");
 
-                    var service = new EmployerService(HttpContext.GetOwinContext().
-                        Get<ApplicationDbContext>());
-                    service.CreateEmployer(model.EmployerName, model.Address, user.Id);
-
                     return RedirectToAction("Index", "Admin");
                 }
                 AddErrors(result);
@@ -320,9 +315,6 @@ namespace EmployerModules.Controllers
                     <p>Regards<br/>
  
                     PAL Pensions</p>");
-                    //var service = new EmployerService(HttpContext.GetOwinContext().
-                    //    Get<ApplicationDbContext>());
-                    //service.CreateEmployer(model.EmployerName, model.Address, user.Id);
 
                     return RedirectToAction("AllEmployerUsers", "Employer");
                 }

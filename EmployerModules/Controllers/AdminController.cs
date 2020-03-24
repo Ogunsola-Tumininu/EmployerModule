@@ -24,7 +24,6 @@ namespace EmployerModules.Controllers
         {
             return View(db.ScheduleHeaders.ToList());
         }
-
         public FileResult Export(string employerCode)
         {
             var employerName = db.EmployerDetails.Where(s => s.Recno == employerCode).FirstOrDefault().EmployerName;
@@ -69,7 +68,6 @@ namespace EmployerModules.Controllers
                 }
             }
         }
-
         public ActionResult Feedbacks()
         {
             return View(db.Feedbacks.OrderByDescending(f => f.DateUpdated).ToList());
@@ -104,7 +102,6 @@ namespace EmployerModules.Controllers
             ViewBag.Remarks = remarks;
             return View(feedback);
         }
-
         [HttpPost]
         public ActionResult Reply(Feedback feeback, String Comment)
         {
@@ -212,6 +209,34 @@ namespace EmployerModules.Controllers
             var feedbacks = db.Feedbacks.Where(f => f.Viewed == false || f.Viewed == null || f.NewRemark==true).OrderByDescending(f => f.DateUpdated).ToList();
            
             return View(feedbacks);
+        }
+
+        public ActionResult EmployeeList(string pfa, string employerCode)
+        {
+            var employeeList = db.ScheduleUploads.Where(s => s.EmployerCode == employerCode && s.PFACode == pfa).ToList();
+            return View(employeeList);
+        }
+
+        public ActionResult ValidateSchedule(int Id)
+        {
+            var recentSchedule = db.ScheduleHeaders.Find(Id);
+            return View(recentSchedule);
+        }
+
+        [HttpPost]
+        public ActionResult ValidateSchedule(int Id, string State)
+        {
+            var recentSchedule = db.ScheduleHeaders.Find(Id);
+            recentSchedule.PaymentState = "closed";
+            db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public ActionResult DownloadFile(string filePath, string fileName)
+        {
+            byte[] filebyte = System.IO.File.ReadAllBytes(filePath);
+            return File(filebyte, System.Net.Mime.MediaTypeNames.Application.Octet, fileName);
         }
     }
 }

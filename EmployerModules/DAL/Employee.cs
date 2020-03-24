@@ -14,6 +14,12 @@ namespace EmployerModules.DAL
     
     public partial class Employee
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Employee()
+        {
+            this.Contributions = new HashSet<Contribution>();
+        }
+    
         public string Pin { get; set; }
         public string RegistrationCode { get; set; }
         public string FirstName { get; set; }
@@ -45,5 +51,8 @@ namespace EmployerModules.DAL
         public string LGACode { get; set; }
         public string StateCode { get; set; }
         public string CountryCode { get; set; }
+    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Contribution> Contributions { get; set; }
     }
 }

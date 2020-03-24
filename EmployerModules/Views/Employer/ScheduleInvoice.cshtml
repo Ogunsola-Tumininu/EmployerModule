@@ -1,0 +1,62 @@
+﻿@model EmployerModules.DAL.ScheduleHeader
+@{
+    Layout = null;
+
+}
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ScheduleInvoice</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <div style="padding-top: 40px" class="pull-right col-md-3">
+                <img style="width: 150px" src="~/Content/images/PALLogo.png" /><br /><br />
+                <p>Plot 289<br /> Ajose Adeogun Street <br /> Victoria Island<br /> Lagos.</p>
+                <br />
+            </div>
+            <table class="table table-striped table-bordered">
+
+                <tbody>
+                    <tr>
+                        <th>Employer Name</th>
+                        <td>@ViewBag.EmployerName</td>
+                    </tr>
+                    <tr>
+                        <th>@Html.DisplayNameFor(model => model.PFA)</th>
+                        <td>@Html.DisplayFor(model => model.PFA)</td>
+                    </tr>
+                    <tr>
+                        <th>@Html.DisplayNameFor(model => model.PFACode)</th>
+                        <td>@Html.DisplayFor(model => model.PFACode)</td>
+                    </tr>
+                    <tr>
+                        <th>@Html.DisplayNameFor(model => model.SchedulePeriod)</th>
+                        <td>@String.Format("{0: MMMM yyyy}", Model.SchedulePeriod)</td>
+                    </tr>
+                    <tr>
+                        <th>@Html.DisplayNameFor(model => model.TotalAmount)</th>
+                        <td>&#8358;@Html.DisplayFor(model => model.TotalAmount)</td>
+                    </tr>
+                    <tr>
+                        <th>@Html.DisplayNameFor(model => model.PaymentDate)</th>
+                        <td>@String.Format("{0: dd MMMM, yyyy}", Model.PaymentDate)</td>
+                    </tr>
+
+                    <tr>
+                        <th>@Html.DisplayNameFor(model => model.TotalEmployee)</th>
+                        <td>@Html.DisplayFor(model => model.TotalEmployee)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

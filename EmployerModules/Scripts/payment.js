@@ -12,9 +12,8 @@
         var handler = PaystackPop.setup({
         key: $("#ps_pk").val(),
             email: employerEmail,
-            //amount: Number(total_payment) * 100,
-            amount: parseInt(500000) * 100,
-            //plan: "PLN_code",
+            amount: Number(total_payment) * 100,
+            //amount: parseInt(500000) * 100,
             //ref: "UNIQUE TRANSACTION REFERENCE HERE",
           metadata: {
             custom_fields: [
@@ -124,11 +123,11 @@
                     $.when(InitTransaction(data)).then(function (response) {
                         console.log(response)
                         if (response.error === false) {
-                window.location.href = response.result.data.authorization_url;
-                console.log(response.result.data.authorization_url);
+                            window.location.href = response.result.data.authorization_url;
+                            console.log(response.result.data.authorization_url);
                         } else {
-                $(".redirect-message").hide();
-            }
+                             $(".redirect-message").hide();
+                        }
                     }).fail(function () {
                 $(".redirect-message").hide()
             });

@@ -91,6 +91,9 @@
       <HintPath>..\packages\Paystack.Net.SDK.1.3.7\lib\net46\Paystack.Net.SDK.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
+    <Reference Include="Rotativa, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Rotativa.1.7.3\lib\net461\Rotativa.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -277,6 +280,9 @@
     <Compile Include="DAL\AspNetUserLogin.cs">
       <DependentUpon>PALSiteDBEntities.tt</DependentUpon>
     </Compile>
+    <Compile Include="DAL\Contribution.cs">
+      <DependentUpon>PALSiteDBEntities.tt</DependentUpon>
+    </Compile>
     <Compile Include="DAL\Employee.cs">
       <DependentUpon>PALSiteDBEntities.tt</DependentUpon>
     </Compile>
@@ -284,6 +290,9 @@
       <DependentUpon>PALSiteDBEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="DAL\Feedback.cs">
+      <DependentUpon>PALSiteDBEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\MasterSchedule.cs">
       <DependentUpon>PALSiteDBEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="DAL\PALSiteDBEntities.Context.cs">
@@ -300,6 +309,9 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>PALSiteDBEntities.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\PaymentProve.cs">
+      <DependentUpon>PALSiteDBEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="DAL\Pfa.cs">
       <DependentUpon>PALSiteDBEntities.tt</DependentUpon>
@@ -345,6 +357,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\EmployerService.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModel\MemberViewModel.cs" />
     <Compile Include="ViewModel\PFAList.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -367,6 +380,7 @@
     <Content Include="Content\images\quickteller.png" />
     <Content Include="Content\loading.GIF" />
     <Content Include="Content\PagedList.css" />
+    <Content Include="Content\PaymentProve\IMG_20200128_161439.jpg" />
     <Content Include="Content\please-wait-gif.gif" />
     <Content Include="DAL\PALSiteDBEntities.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
@@ -383,6 +397,10 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Rotativa\help-wkhtmltoimage.txt" />
+    <Content Include="Rotativa\help-wkhtmltopdf.txt" />
+    <Content Include="Rotativa\wkhtmltoimage.exe" />
+    <Content Include="Rotativa\wkhtmltopdf.exe" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="ApplicationInsights.config">
@@ -395,6 +413,8 @@
     <Content Include="fonts\fontawesome-webfont.ttf" />
     <Content Include="fonts\fontawesome-webfont.eot" />
     <Content Include="Content\template\schedules.xlsx" />
+    <Content Include="Content\template\schedulesTemplate.xlsx" />
+    <Content Include="Content\200.webp" />
     <EntityDeploy Include="DAL\PALSiteDBEntities.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>PALSiteDBEntities.Designer.cs</LastGenOutput>
@@ -402,8 +422,7 @@
     <Content Include="DAL\PALSiteDBEntities.edmx.diagram">
       <DependentUpon>PALSiteDBEntities.edmx</DependentUpon>
     </Content>
-    <Content Include="Content\template\schedulesTemplate.xlsx" />
-    <Content Include="Content\200.webp" />
+    <Content Include="App_Browsers\qt.browser" />
     <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
@@ -489,6 +508,13 @@
     <Content Include="Views\Employer\PaymentSuccessful.cshtml" />
     <Content Include="Views\Employer\PaymentError.cshtml" />
     <Content Include="Views\Admin\NotificationsList.cshtml" />
+    <Content Include="Views\Employer\Report.cshtml" />
+    <Content Include="Views\Admin\EmployeeList.cshtml" />
+    <Content Include="Views\Employer\ScheduleInvoice.cshtml" />
+    <Content Include="Views\Employer\MasterSchedule.cshtml" />
+    <Content Include="Views\Employer\UpdateMasterMember.cshtml" />
+    <Content Include="Views\Employer\MasterSchedulePayment.cshtml" />
+    <Content Include="Views\Admin\ValidateSchedule.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -507,15 +533,15 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
     <EmbeddedResource Include="Migrations\202001211541234_InitialCreate.resx">
       <DependentUpon>202001211541234_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202001221555340_MemberChange.resx">
       <DependentUpon>202001221555340_MemberChange.cs</DependentUpon>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

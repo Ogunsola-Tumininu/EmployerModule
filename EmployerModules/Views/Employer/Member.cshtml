@@ -12,8 +12,17 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="content">
-                    <h2>MemberList <span class="badge" style="background-color: darkred">@Model.Count()</span></h2>
-                    @*<p>@Model.EmployerName  <small>@Model.Recno</small></p>*@
+                    <h2>MemberList <span class="badge" style="background-color: darkorange">@Model.Count()</span></h2>
+                    <p style="display: inline-block">
+                        <a href="@Url.Action("Member","Employer", new { memberType = "fundedMembers" } )" style="color: white">
+                            Funded Member <span class="badge" style="background-color: darkgreen; margin-right:20px">@ViewBag.FundedEmployee</span>
+                        </a>
+                    </p>
+                    <p style="display: inline-block">
+                        <a href="@Url.Action("Member","Employer", new { memberType = "unfundedMembers" } )" style="color: white">
+                            Unfunded Member <span class="badge" style="background-color: darkred">@ViewBag.UnfundedEmployee</span>
+                        </a>
+                    </p>
                 </div>
             </div>
         </div>
@@ -25,6 +34,14 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="content table-div">
+                    @if (ViewBag.Unfunded != null)
+                    {
+                        <h4>@ViewBag.Unfunded</h4>
+                    }
+                    @if (ViewBag.Funded != null)
+                    {
+                        <h4>@ViewBag.Funded</h4>
+                    }
                     <table class="table table-hover" id="table_id">
                         <thead>
                             <tr>

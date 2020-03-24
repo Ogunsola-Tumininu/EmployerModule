@@ -22,7 +22,7 @@
         <div class="heading">
             <img src="~/Content/images/pal-logo.PNG" alt="PAL Pension Logo" />
             <div class="info">
-                <p><i class="fa fa-phone"></i> 01- 2776900, 0800 PALPENSIONS</p>
+                <p><i class="fa fa-phone"></i> 01- 2776900, 0800 PAL PENSIONS</p>
                 <p><i class="fa fa-envelope-o"></i> info@palpensions.com</p>
             </div>
         </div>
@@ -30,88 +30,99 @@
 
         <ul class="categories">
             @if (Request.IsAuthenticated)
-            {
-                if (ViewContext.HttpContext.User.IsInRole("EmpAdmin") || ViewContext.HttpContext.User.IsInRole("Employer"))
-                {
-                    <li>
-                        <i class="fa fa-dashboard "></i> <a href="@Url.Action("Index", "Employer")"> Dashboard</a>
-                    </li>
-                    if (ViewContext.HttpContext.User.IsInRole("EmpAdmin"))
-                    {
-                        <li>
-                            <i class="fa fa-user "></i> <a href="#"> User</a>
-                            <ul class="side-nav-dropdown">
-                                <li><a href="@Url.Action("RegisterEmployer", "Account")">Add User</a></li>
-                                <li><a href="@Url.Action("AllEmployerUsers", "Employer")">All User</a></li>
-                            </ul>
-                        </li>
-                    }
-                    <li>
-                        <i class="fa fa-group "></i> <a style="color: white" href="@Url.Action("Member", "Employer")"> Members</a>
-                    </li>
-                    <li>
-                        <i class="fa fa-money "></i> <a href="@Url.Action("Transaction", "Employer")"> Transactions History</a>
-                    </li>
-                    <li>
-                        <i class="fa fa-money "></i> <a href="@Url.Action("RecentTransaction", "Employer")"> Recent Schedule</a>
-                    </li>
-                    <li>
-                        <i class="fa fa-clock-o "></i> <a href="@Url.Action("UploadSchedule", "Employer")"> Upload Schedule</a>
-                    </li>
-                    <li>
-                        <i class="fa fa-check-square"></i><a href="@Url.Action("Verifypin", "Employer")"> Verify PINs</a>
-                    </li>
-                    <li>
-                        <i class="fa fa-envelope-o "> </i> <a href="@Url.Action("Feedback", "Employer")"> Feedback</a>
-                    </li>
-                    @*<li>
-                            <i class="fa fa-support fa-fw"></i><a href="#"> Subscribe us</a>
-                            <ul class="side-nav-dropdown">
-                                <li><a href="#">Lorem ipsum</a></li>
-                                <li><a href="#">ipsum dolor</a></li>
-                                <li><a href="#">dolor ipsum</a></li>
-                                <li><a href="#">amet consectetur</a></li>
-                                <li><a href="#">ipsum dolor sit</a></li>
-                            </ul>
-                        </li>*@
-                }
+    {
+        if (ViewContext.HttpContext.User.IsInRole("EmpAdmin") || ViewContext.HttpContext.User.IsInRole("Employer"))
+        {
+            <li>
+                <i class="fa fa-dashboard "></i> <a href="@Url.Action("Index", "Employer")"> Dashboard</a>
+            </li>
+    if (ViewContext.HttpContext.User.IsInRole("EmpAdmin"))
+    {
+        <li>
+            <i class="fa fa-user "></i> <a href="#"> User</a>
+            <ul class="side-nav-dropdown">
+                <li><a href="@Url.Action("RegisterEmployer", "Account")">Add User</a></li>
+                <li><a href="@Url.Action("AllEmployerUsers", "Employer")">All User</a></li>
+            </ul>
+        </li>
+}
+        <li>
+            <i class="fa fa-group "></i> <a style="color: white" href="@Url.Action("Member", "Employer")"> Members</a>
+        </li>
+        <li>
+            <i class="fa fa-money "></i> <a href="@Url.Action("Transaction", "Employer")"> Transactions History</a>
+        </li>
+        <li>
+            <i class="fa fa-money "></i> <a> Recent Schedule</a>
+            <ul class="side-nav-dropdown">
+                <li><a href="@Url.Action("RecentTransaction", "Employer")"> Recent Schedule</a></li>
+                <li><a href="@Url.Action("MasterSchedule", "Employer")"> Master Schedule</a></li>
+                <li><a href="@Url.Action("UploadSchedule", "Employer")"> Upload Schedule</a></li>
+                <li><a href="#">amet consectetur</a></li>
+                <li><a href="#">ipsum dolor sit</a></li>
+            </ul>
+        </li>
+        <li>
+            <i class="fa fa-clock-o "></i> <a href="@Url.Action("UploadSchedule", "Employer")"> Upload Schedule</a>
+        </li>
+        <li>
+            <i class="fa fa-check-square"></i><a href="@Url.Action("Verifypin", "Employer")"> Verify PINs</a>
+        </li>
+        <li>
+            <i class="fa fa-envelope-o "> </i> <a href="@Url.Action("Feedback", "Employer")"> Feedback</a>
+        </li>
+        <li>
+            <i class="fa fa-mail-reply "> </i> <a href="@Url.Action("Report", "Employer")"> Report</a>
+        </li>
+        @*<li>
+        <i class="fa fa-support fa-fw"></i><a href="#"> Subscribe us</a>
+        <ul class="side-nav-dropdown">
+            <li><a href="#">Lorem ipsum</a></li>
+            <li><a href="#">ipsum dolor</a></li>
+            <li><a href="#">dolor ipsum</a></li>
+            <li><a href="#">amet consectetur</a></li>
+            <li><a href="#">ipsum dolor sit</a></li>
+        </ul>
+    </li>*@
+}
 
-                else
-                {
-                    <li>
-                        <i class="fa fa-clock-o "></i> <a style="color: white" href="@Url.Action("Index", "admin")"> Schedule</a>
-                    </li>
-                    <li>
-                        @{
+else
+{
+        <li>
+            <i class="fa fa-clock-o "></i> <a style="color: white" href="@Url.Action("Index", "admin")"> Schedule</a>
+        </li>
+        <li>
+            @{
 
-                            PALSiteDBEntities db1 = new PALSiteDBEntities();
-                            var userId1 = User.Identity.GetUserId();
-                            var remarks1 = db1.Remarks.Where(r => r.IsAdminRemark == false && (r.Viewed == null || r.Viewed == false)).Count();
+        PALSiteDBEntities db1 = new PALSiteDBEntities();
+        var userId1 = User.Identity.GetUserId();
+        var remarks1 = db1.Remarks.Where(r => r.IsAdminRemark == false && (r.Viewed == null || r.Viewed == false)).Count();
 
-                        }
-                        <i class="fa fa-envelope-o "></i> <a style="color: white" href="#"> Feedbacks</a>
-                        <ul class="side-nav-dropdown">
-                            <li>
-                                <a href="@Url.Action("Feedbacks", "Admin")">All Feedbacks
-                                @if(remarks1 > 0)
-                                {
-                                    <span class="label label-danger">@remarks1 new </span>
-                                }
-                                </a>
-                            </li>
-                            <li><a href="@Url.Action("PendingFeedbacks", "Admin")">Pending Feedbacks</a></li>
-                            <li><a href="@Url.Action("InProgressFeedbacks", "Admin")">In Progress FeedBacks</a></li>
-                            <li><a href="@Url.Action("CompletedFeedbacks", "Admin")">Completed feedbacks</a></li>
-                        </ul>
-                    </li>
-                    <li>
-                        <i class="fa fa-group "></i> <a style="color: white" href="@Url.Action("AddAdmin", "Admin")"> Add Admin</a>
-                    </li>
-                    <li>
-                        <i class="fa fa-user "></i> <a style="color: white" href="@Url.Action("SearchEmployer", "admin")"> Add employer</a>
-                    </li>
-                }
             }
+            <i class="fa fa-envelope-o "></i> <a style="color: white" href="#"> Feedbacks</a>
+            <ul class="side-nav-dropdown">
+                <li>
+                    <a href="@Url.Action("Feedbacks", "Admin")">
+                        All Feedbacks
+                        @if (remarks1 > 0)
+                {
+                    <span class="label label-danger">@remarks1 new </span>
+        }
+                    </a>
+                </li>
+                <li><a href="@Url.Action("PendingFeedbacks", "Admin")">Pending Feedbacks</a></li>
+                <li><a href="@Url.Action("InProgressFeedbacks", "Admin")">In Progress FeedBacks</a></li>
+                <li><a href="@Url.Action("CompletedFeedbacks", "Admin")">Completed feedbacks</a></li>
+            </ul>
+        </li>
+        <li>
+            <i class="fa fa-group "></i> <a style="color: white" href="@Url.Action("AddAdmin", "Admin")"> Add Admin</a>
+        </li>
+        <li>
+            <i class="fa fa-user "></i> <a style="color: white" href="@Url.Action("SearchEmployer", "admin")"> Add employer</a>
+        </li>
+}
+}
         </ul>
     </aside>
 
@@ -225,11 +236,11 @@
                     dataType: 'json',
                     cache: false,
                     success: function (res) {
-                        console.log(res);
+                        //console.log(res);
                         if (res > 0) {
                             $("#notification").show();
                             $("#notification").html(res);
-                            console.log(res);
+                            //console.log(res);
                         }
                         else {
                             $("#notification").hide();
@@ -256,7 +267,7 @@
                         if (res > 0) {
                             $("#admin_notification").show();
                             $("#admin_notification").html(res);
-                            console.log(res);
+                            //console.log(res);
                         }
                         else {
                             $("#admin_notification").hide();

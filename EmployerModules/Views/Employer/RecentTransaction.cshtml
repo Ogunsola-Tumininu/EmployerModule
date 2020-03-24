@@ -11,9 +11,11 @@
                 <div class="content">
                     <h2>
                         Recently Paid Schedule
-                        <a href="@Url.Action("UploadSchedule", "Employer")" class="btn btn-success pull-right">Upload New Schedule</a>
-                    </h2> 
-                   
+                        <a href="@Url.Action("UploadSchedule", "Employer")" class="btn hidden-xs btn-success pull-right">Upload New Schedule</a>
+                        <a href="@Url.Action("MasterSchedulePayment", "Employer")" style="margin-right: 10px" class=" hidden-xs btn btn-primary pull-right">Remit with MasterSchedule</a>
+                    </h2>
+                    <a href="@Url.Action("UploadSchedule", "Employer")" style="margin-bottom: 10px"  class="btn btn-success visible-xs">Upload New Schedule</a>
+                    <a href="@Url.Action("MasterSchedulePayment", "Employer")" class="visible-xs btn btn-primary "> Remit with MasterSchedule</a>
                 </div>
             </div>
         </div>
@@ -59,7 +61,8 @@
                                 <th>
                                     @Html.DisplayNameFor(model => model.UploadAdded)
                                 </th>
-                                <th></th>
+                                <th>Actions</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
 
@@ -69,47 +72,58 @@
                             @foreach (var item in Model)
         {
 
-                    <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.PFA)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.TotalAmount)
-                        </td>
-                        <td>
-                            <a href="@Url.Action("PaidEmployeeList", "Employer", new { pfa = item.PFACode})">
-                                @Html.DisplayFor(modelItem => item.TotalEmployee)
-                            </a>
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.PFA)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.TotalAmount)
+                                </td>
+                                <td>
+                                    <a href="@Url.Action("PaidEmployeeList", "Employer", new { pfa = item.PFACode})">
+                                        @Html.DisplayFor(modelItem => item.TotalEmployee)
+                                    </a>
 
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.TransactionId)
-                        </td>
-                        <td>
-                            <span class="label label-success">@Html.DisplayFor(modelItem => item.PaymentStatus)</span>
-                        </td>
-                        <td>
-                            <span class="label label-success">@Html.DisplayFor(modelItem => item.PaymentState)</span>
-                        </td>
-                        <td>
-                            @String.Format("{0: MMMM yyyy}", item.SchedulePeriod)
-                        </td>
-                        <td>
-                            @String.Format("{0:MM/dd/yyyy}", item.ExpiryDate)
-                        </td>
-                        <td>
-                            @String.Format("{0:MM/dd/yyyy}", item.PaymentDate)
-                        </td>
-                        <td>
-                            @String.Format("{0:MM/dd/yyyy}", item.UploadAdded)
-                        </td>
-                        <td>
-                            <a href="@Url.Action("Export", "Employer", new { pfa = item.PFACode })" class="text-success">
-                                <i class="fa fa-download"></i>
-                            </a>
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.TransactionId)
+                                </td>
+                                <td>
+                                    <span class="label label-success">@Html.DisplayFor(modelItem => item.PaymentStatus)</span>
+                                </td>
+                                <td>
+                                   @if (item.PaymentState == "pending")
+                                   {
+                                       <span class="label label-primary">@Html.DisplayFor(modelItem => item.PaymentState)</span>
+                                   }
+                                   else {
+                                       <span class="label label-success">@Html.DisplayFor(modelItem => item.PaymentState)</span>
+                                   }
+                                </td>
+                                <td>
+                                    @String.Format("{0: MMMM yyyy}", item.SchedulePeriod)
+                                </td>
+                                <td>
+                                    @String.Format("{0:MM/dd/yyyy}", item.ExpiryDate)
+                                </td>
+                                <td>
+                                    @String.Format("{0:MM/dd/yyyy}", item.PaymentDate)
+                                </td>
+                                <td>
+                                    @String.Format("{0:MM/dd/yyyy}", item.UploadAdded)
+                                </td>
+                                <td>
+                                    <a href="@Url.Action("Export", "Employer", new { pfa = item.PFACode })" class="text-success">
+                                        DownloadSchedule<i class="fa fa-download"></i>
+                                    </a>
 
-                        </td>
-                    </tr>
+                                </td>
+                                <td>
+                                    <a href="@Url.Action("PrintInvoice", "Employer", new { scheduleId = item.Id })" class="text-success">
+                                        Print Invoice
+                                    </a>
+                                </td>
+                            </tr>
 }
                         </tbody>
                     </table>

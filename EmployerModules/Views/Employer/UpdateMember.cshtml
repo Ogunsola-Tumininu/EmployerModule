@@ -97,7 +97,7 @@
                             <div class="form-group">
                                 @Html.LabelFor(model => model.TotalContribution, htmlAttributes: new { @class = "control-label col-md-2 col-md-offset-2" })
                                 <div class="col-md-5">
-                                    @Html.EditorFor(model => model.TotalContribution, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.EditorFor(model => model.TotalContribution, new { htmlAttributes = new { @class = "form-control", @readonly="readonly" } })
                                     @Html.ValidationMessageFor(model => model.TotalContribution, "", new { @class = "text-danger" })
                                 </div>
                             </div>
@@ -123,4 +123,27 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+<script>
+    $("#EmployeeContribution").blur(function () {
+        let EmployeeContr = Number($("#EmployeeContribution").val());
+        let EmployerContr= Number($("#EmployerContribution").val());
+        let VoluntaryContr = Number($("#VoluntaryContribution").val());
+        console.log(EmployeeContr + EmployerContr + VoluntaryContr)
+        $("#TotalContribution").val(EmployeeContr + EmployerContr + VoluntaryContr);
+    })
+    $("#EmployerContribution").blur(function () {
+        let EmployeeContr = Number($("#EmployeeContribution").val());
+        let EmployerContr = Number($("#EmployerContribution").val());
+        let VoluntaryContr = Number($("#VoluntaryContribution").val());
+        console.log(EmployeeContr + EmployerContr + VoluntaryContr)
+        $("#TotalContribution").val(EmployeeContr + EmployerContr + VoluntaryContr);
+    })
+    $("#VoluntaryContribution").blur(function () {
+        let EmployeeContr = Number($("#EmployeeContribution").val());
+        let EmployerContr = Number($("#EmployerContribution").val());
+        let VoluntaryContr = Number($("#VoluntaryContribution").val());
+        console.log(EmployeeContr + EmployerContr + VoluntaryContr)
+        $("#TotalContribution").val(EmployeeContr + EmployerContr + VoluntaryContr);
+    })
+</script>
 }

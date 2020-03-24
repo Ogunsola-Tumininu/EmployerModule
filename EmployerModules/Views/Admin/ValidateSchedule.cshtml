@@ -1,0 +1,117 @@
+﻿@model EmployerModules.DAL.ScheduleHeader
+@using EmployerModules.DAL;
+@using Microsoft.AspNet.Identity;
+
+
+@{
+    ViewBag.Title = "ValidateSchedule";
+}
+
+<div class="welcome">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="content">
+                    <h2>Validate Schedule</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="welcome">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="content table-div">
+                    <dl class="dl-horizontal">
+                        <dt>
+                            Employer Name
+                        </dt>
+                        @{
+                            PALSiteDBEntities db = new PALSiteDBEntities();
+                            var employerName = db.EmployerDetails.Where(e => e.Recno == Model.EmployerId).FirstOrDefault().EmployerName;
+                        }
+                        <dd>
+                            @employerName
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayNameFor(model => model.EmployerId)
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.EmployerId)
+                        </dd>
+
+
+                        <dt>
+                            @Html.DisplayNameFor(model => model.TotalAmount)
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.TotalAmount)
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayNameFor(model => model.TotalEmployee)
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.TotalEmployee)
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayNameFor(model => model.TransactionId)
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.TransactionId)
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayNameFor(model => model.PaymentStatus)
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.PaymentStatus)
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayNameFor(model => model.PaymentState)
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.PaymentState)
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayNameFor(model => model.SchedulePeriod)
+                        </dt>
+
+                        <dd>
+                            @String.Format("{0: MMMM yyyy}", Model.SchedulePeriod)
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayNameFor(model => model.PaymentDate)
+                        </dt>
+
+                        <dd>
+                            @String.Format("{0:dd MMMM, yyyy}", Model.PaymentDate)
+                        </dd>
+
+                    </dl>
+                    @using (Html.BeginForm("ValidateSchedule", "Admin", new { id = Model.Id, State = "closed" }, FormMethod.Post))
+                    {
+                        <input type="submit" value="Validate" class="btn btn-success pull-right" />
+                    }<br />
+                    <p>
+                        @Html.ActionLink("Back to List", "Index")
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

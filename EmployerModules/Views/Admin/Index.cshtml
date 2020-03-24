@@ -1,6 +1,7 @@
 ﻿@model IEnumerable<EmployerModules.DAL.ScheduleHeader>
 @using System;
 @using System.Globalization;
+@using EmployerModules.DAL;
 
 @{
     ViewBag.Title = "Index";
@@ -55,15 +56,17 @@
                                     @Html.DisplayNameFor(model => model.SchedulePeriod)
                                 </th>
                                 @*<th>
-                                    @Html.DisplayNameFor(model => model.ExpiryDate)
-                                </th>*@
+                                        @Html.DisplayNameFor(model => model.ExpiryDate)
+                                    </th>*@
                                 <th>
                                     @Html.DisplayNameFor(model => model.PaymentDate)
                                 </th>
                                 <th>
                                     @Html.DisplayNameFor(model => model.UploadAdded)
                                 </th>
-                                <th>Action</th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
                             </tr>
                         </thead>
 
@@ -72,6 +75,11 @@
 
                             @foreach (var item in Model)
                             {
+                                PALSiteDBEntities db = new PALSiteDBEntities();
+
+                                var payment = db.PaymentProves.Where(p => p.SchedulerHeaderId == item.Id).FirstOrDefault();
+                                var employerCode = db.ScheduleHeaders.Find(item.Id).EmployerId;
+                                var employerName = db.EmployerDetails.Where(e => e.Recno == employerCode).FirstOrDefault().EmployerName;
 
                                 <tr>
                                     <td>
@@ -84,7 +92,7 @@
                                         @Html.DisplayFor(modelItem => item.EmployerId)
                                     </td>
                                     <td>
-                                        <a href="@Url.Action("PaidEmployeeList", "Employer", new { pfa = item.PFACode})">
+                                        <a href="@Url.Action("EmployeeList", "Admin", new { pfa = item.PFACode, employerCode = item.EmployerId})">
                                             @Html.DisplayFor(modelItem => item.TotalEmployee)
                                         </a>
 
@@ -96,15 +104,22 @@
                                         <span class="label label-success">@Html.DisplayFor(modelItem => item.PaymentStatus)</span>
                                     </td>
                                     <td>
-                                        <span class="label label-success">@Html.DisplayFor(modelItem => item.PaymentState)</span>
+                                        @if (item.PaymentState == "pending")
+                                        {
+                                            <span class="label label-primary">@Html.DisplayFor(modelItem => item.PaymentState)</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="label label-success">@Html.DisplayFor(modelItem => item.PaymentState)</span>
+                                        }
                                     </td>
                                     <td>
                                         @*@Html.DisplayFor(modelItem => item.SchedulePeriod)*@
                                         @String.Format("{0: MMMM yyyy}", item.SchedulePeriod)
                                     </td>
                                     @*<td>
-                                        @Html.DisplayFor(modelItem => item.ExpiryDate)
-                                    </td>*@
+                                            @Html.DisplayFor(modelItem => item.ExpiryDate)
+                                        </td>*@
                                     <td>
                                         @*@Html.DisplayFor(modelItem => item.PaymentDate)*@
                                         @String.Format("{0:MM/dd/yyyy}", item.PaymentDate)
@@ -118,6 +133,26 @@
                                             <i class="fa fa-download"></i>
                                         </a>
 
+                                    </td>
+                                    <td>
+                                        @if (item.PaymentState == "pending")
+                                        {
+                                            <a href="@Url.Action("ValidateSchedule", "Admin", new { Id = item.Id })" class="btn btn-success">Validate</a>
+                                        }
+                                    </td>
+
+                                    <td>
+                                         @if (item.PaymentState == "pending")
+                                         {
+                                             using (Html.BeginForm("DownloadFile", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                                             {
+                                                 var fileName = employerName + payment.FileExt;
+                                                 <input type="hidden" id="filePath" name="filePath" value="@payment.FilePath" />
+                                                 <input type="hidden" id="fileName" name="fileName" value="@fileName" />
+                                                 <input type="submit" value="Download Prove" class="btn btn-primary"/>
+                                             }
+                                        
+                                         }
                                     </td>
                                 </tr>
                             }
@@ -135,7 +170,7 @@
     <script>
         $(document).ready(function () {
             $('#table_id').DataTable({
-               "scrollX": true, 
+                "scrollX": true,
                 "ordering": false
             });
         });

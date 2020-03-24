@@ -1,0 +1,177 @@
+﻿@model IEnumerable<EmployerModules.DAL.MasterSchedule>
+
+@{
+    ViewBag.Title = "MasterSchedule";
+}
+
+<div class="welcome">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="content">
+                    <h2>Upload Master Schedule </h2>
+                    @*<p>@Model.EmployerName  <small>@Model.Recno</small></p>*@
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="welcome">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="content">
+                    @if (ViewBag.ErrorMessage != null)
+                    {
+                        <p class="alert alert-danger" style="color: black">@ViewBag.ErrorMessage</p>
+                    }
+                    @if (ViewBag.Success != null)
+                    {
+                        <p class="alert alert-success" style="color: black">@ViewBag.Success</p>
+                    }
+                    <span>  <a href="@Url.Action( "DownloadFile", "Employer")" style="color:white">Click here to download Excel template</a></span>
+
+                    @using (Html.BeginForm("MasterSchedule", "Employer", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-inline" }))
+                    {
+                        <div class="form-group">
+                            <label for="file">Total:</label>
+                            <input class="form-control" type="file" name="UploadedFile" id="file" />
+                        </div>
+                        <div class="form-group">
+                            <label for="total">Total:</label>
+                            <input name="total" class="form-control" type="number" id="total" step=".01" placeholder="Total" />
+                        </div>
+
+                        <button type="submit" id="upload" class="btn btn-primary" name="Submit" style="margin-bottom: -20px">Upload Excel</button>
+
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="welcome">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="content table-div">
+                    <table class="table table-hover" id="table_id">
+                        <thead>
+                            <tr>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Pin)
+                                </th>
+                                <th>
+
+                                    @Html.DisplayNameFor(model => model.PinValid)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.EmployeeName)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.PFACode)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.EmployeeContribution)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.EmployerContribution)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.VoluntaryContribution)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.TotalContribution)
+                                </th>
+
+                                <th>Action</th>
+                                <th>Action</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+
+                                <tr>
+                                    <td>
+                                        @item.Pin
+                                        @*@Html.DisplayFor(modelItem => item.Pin)*@
+                                    </td>
+                                    <td>
+
+                                        @Html.DisplayFor(modelItem => item.PinValid)
+                                    </td>
+                                    <td>
+                                        @item.EmployeeName
+                                        @*@Html.DisplayFor(modelItem => item.Surname)*@
+                                    </td>
+                                    <td>
+                                        @item.PFACode
+                                        @*@Html.DisplayFor(modelItem => item.OtherName)*@
+                                    </td>
+                                    <td>
+                                        @item.EmployeeContribution
+                                        @*@Html.DisplayFor(modelItem => item.EmployeeContribution)*@
+                                    </td>
+                                    <td>
+                                        @item.EmployerContribution
+                                        @*@Html.DisplayFor(modelItem => item.EmployerContribution)*@
+                                    </td>
+                                    <td>
+                                        @item.VoluntaryContribution
+                                        @*@Html.DisplayFor(modelItem => item.VoluntaryContribution)*@
+                                    </td>
+                                    <td>
+                                        @item.TotalContribution
+                                        @*@Html.DisplayFor(modelItem => item.TotalContribution)*@
+                                    </td>
+
+                                    <td>
+                                        @if (item.PFACode == "25")
+                                        {
+                                            <a href="@Url.Action("UpdateMasterMember", "Employer", new { Pin = item.Pin })"><span class="glyphicon glyphicon-edit"></span>Edit</a>
+
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (item.PFACode == "25")
+                                        {
+                                            <a href="@Url.Action("AskQuestion", "Employer", new { Pin = item.Pin, Code = item.PFACode, ScheduleType="MasterSchedule" })"><span class="glyphicon glyphicon-trash"></span>Delete</a>
+
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+
+                    </table>
+
+                    @*delete modal*@
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<link href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
+@section Scripts{
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#table_id').DataTable({
+                "scrollX": true
+            });
+
+            $("#upload").click(function () {
+                $("#loading").show();
+            })
+        });
+    </script>
+}

@@ -29,6 +29,7 @@
                                 <th>
 
                                     @Html.DisplayNameFor(model => model.Period)
+                                   
                                 </th>
                                 <th>
                                     @Html.DisplayNameFor(model => model.Pin)
@@ -80,7 +81,8 @@
 
                                     <td>
 
-                                        @Html.DisplayFor(modelItem => item.Period)
+                                        @*@Html.DisplayFor(modelItem => item.Period)*@
+                                        @String.Format("{0: MMMM yyyy}", item.Period)
                                     </td>
                                     <td>
                                         @item.Pin

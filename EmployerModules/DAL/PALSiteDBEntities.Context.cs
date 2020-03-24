@@ -32,12 +32,15 @@ namespace EmployerModules.DAL
         public virtual DbSet<Employee> Employees { get; set; }
         public virtual DbSet<EmployerDetail> EmployerDetails { get; set; }
         public virtual DbSet<Feedback> Feedbacks { get; set; }
-        public virtual DbSet<Pfa> Pfas { get; set; }
+        public virtual DbSet<Remark> Remarks { get; set; }
         public virtual DbSet<ScheduleHeader> ScheduleHeaders { get; set; }
         public virtual DbSet<ScheduleHeaderTemp> ScheduleHeaderTemps { get; set; }
         public virtual DbSet<ScheduleUpload> ScheduleUploads { get; set; }
         public virtual DbSet<ScheduleUploadTemp> ScheduleUploadTemps { get; set; }
         public virtual DbSet<SCHEDULE> SCHEDULES { get; set; }
-        public virtual DbSet<Remark> Remarks { get; set; }
+        public virtual DbSet<Pfa> Pfas { get; set; }
+        public virtual DbSet<MasterSchedule> MasterSchedules { get; set; }
+        public virtual DbSet<PaymentProve> PaymentProves { get; set; }
+        public virtual DbSet<Contribution> Contributions { get; set; }
     }
 }

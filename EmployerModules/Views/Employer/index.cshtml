@@ -52,58 +52,16 @@
     </div>
 </div>
 
-<div class="welcome">
+<section class="statistics" sty>
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12">
-                <div class="content table-div">
-                    @if (ViewBag.ErrorMessage != null)
-                    {
-                        <p class="alert alert-danger" style="color: black">@ViewBag.ErrorMessage</p>
-                    }
-                    @using (Html.BeginForm("Index", "Employer", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-inline" }))
-                    {
-                        <div class="form-group">
-                            <label for="period">Start Period:</label>
-                            <input name="startperiod" id="endperiod" class="form-control" type="month" required />
-                        </div>
-
-                        <div class="form-group">
-                            <label for="period">End Period:</label>
-                            <input name="endperiod" id="endperiod" class="form-control" type="month" required />
-                        </div>
-
-                        <button type="submit" id="upload" class="btn btn-primary" name="Submit" style="margin-bottom: -20px">Transaction Summary</button>
-
-                    }              
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-@if (ViewBag.TransactionsPeriodTotal != null)
-{
-    <div class="welcome">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="content table-div">
-                        <h3>Transaction History</h3>
+            <div class="col-md-4">
+                <div class="box table-div">
+                    <h3 class="text-center">Transaction History</h3>
+                    <div class="info">
                         <dl class="dl-horizontal">
-
                             <dt>
-                                Amount Credited
-                            </dt>
-
-
-                            <dd>
-                                &#8358;@ViewBag.TransactionsPeriodTotal
-                            </dd>
-
-                            <dt>
-                                Transaction Balance
+                                Transaction Remmited
                             </dt>
 
 
@@ -124,9 +82,71 @@
                     </div>
                 </div>
             </div>
+            <div class="col-md-4">
+                <div class="box table-div">
+                    <h3 class="text-center">Transaction Year to date</h3>
+                    <div class="info">
+                        <dl class="dl-horizontal">
+                            <dt>
+                                Transaction Remmited
+                            </dt>
+
+
+                            <dd>
+                                &#8358;@ViewBag.ThisYearTransactionTotal
+
+                            <dt>
+                                Total Month
+                            </dt>
+
+
+                            <dd>
+                                @ViewBag.ThisYearTransaction.Count
+
+                            </dd>
+
+                        </dl>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="box table-div">
+                    <h3 class="text-center">Recent Transaction</h3>
+                    <div class="info">
+                        <dl class="dl-horizontal">
+                            <dt>
+                                Transaction  Remmited
+                            </dt>
+
+
+                            <dd>
+                                &#8358;@ViewBag.RecentTransaction.TotalAmount
+                            </dd>
+
+                            <dt>
+                                Schedule Period
+                            </dt>
+
+
+                            <dd>
+                                @String.Format("{0: MMMM yyyy}", ViewBag.RecentTransaction.SchedulePeriod)
+
+                            </dd>
+                            <dt>
+                                Total Employee No
+                            </dt>
+                            <dd>
+                                @ViewBag.RecentTransactionStaffNo
+
+                            </dd>
+
+                        </dl>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-}
+</section>
 
 @*<p>
         @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |

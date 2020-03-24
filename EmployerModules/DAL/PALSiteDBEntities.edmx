@@ -60,6 +60,41 @@
           <Property Name="Department" Type="varchar" MaxLength="100" />
           <Property Name="HasLoggedIn" Type="bit" />
         </EntityType>
+        <EntityType Name="Contributions">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Recno" Type="nvarchar" MaxLength="128" />
+          <Property Name="Pin" Type="nvarchar" MaxLength="128" />
+          <Property Name="EmployeeContribution" Type="float" />
+          <Property Name="EmployerContribution" Type="float" />
+          <Property Name="ContributionDate" Type="datetime" />
+          <Property Name="OtherContribution" Type="float" />
+          <Property Name="EmployeeFee" Type="float" />
+          <Property Name="EmployerFee" Type="float" />
+          <Property Name="OtherFee" Type="float" />
+          <Property Name="TotalUnits" Type="float" />
+          <Property Name="TotalContribution" Type="float" />
+          <Property Name="TotalFee" Type="float" />
+          <Property Name="EmployeeBf" Type="float" />
+          <Property Name="EmployerBf" Type="float" />
+          <Property Name="PaymentDate" Type="datetime" />
+          <Property Name="TransDate" Type="datetime" />
+          <Property Name="SchemeId" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="Price" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="TransUnitsR" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="TransUnitsV" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="ValueDate" Type="datetime" />
+          <Property Name="TransId" Type="nvarchar" MaxLength="50" />
+          <Property Name="VatFee" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="Flaguploaded" Type="tinyint" />
+          <Property Name="FundId" Type="int" />
+          <Property Name="ReconciliationTransid" Type="nvarchar" MaxLength="50" />
+          <Property Name="Withdrawal" Type="float" />
+          <Property Name="WithdrawalVc" Type="float" />
+          <Property Name="BATCH_ID" Type="varchar" MaxLength="15" />
+        </EntityType>
         <EntityType Name="Employees">
           <Key>
             <PropertyRef Name="Pin" />
@@ -132,6 +167,40 @@
           <Property Name="Modifiedby" Type="varchar" MaxLength="100" />
           <Property Name="Viewed" Type="bit" />
           <Property Name="NewRemark" Type="bit" />
+        </EntityType>
+        <EntityType Name="MasterSchedule">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="EmployerCode" Type="varchar" MaxLength="50" />
+          <Property Name="Period" Type="date" />
+          <Property Name="Pin" Type="varchar" MaxLength="20" />
+          <Property Name="EmployeeName" Type="varchar" MaxLength="200" />
+          <Property Name="Surname" Type="varchar" MaxLength="50" />
+          <Property Name="FirstName" Type="varchar" MaxLength="50" />
+          <Property Name="OtherName" Type="varchar" MaxLength="50" />
+          <Property Name="EmployeeContribution" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="EmployerContribution" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="VoluntaryContribution" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="TotalContribution" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="FileName" Type="varchar" MaxLength="200" />
+          <Property Name="PinValid" Type="bit" />
+          <Property Name="PaymentType" Type="varchar" MaxLength="50" />
+          <Property Name="CreatedOn" Type="datetime" />
+          <Property Name="CreatedBy" Type="varchar" MaxLength="50" />
+          <Property Name="PaymentId" Type="bigint" />
+          <Property Name="PFACode" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="PaymentProve">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SchedulerHeaderId" Type="int" />
+          <Property Name="FilePath" Type="varchar" MaxLength="200" />
+          <Property Name="FileExt" Type="varchar" MaxLength="5" />
+          <Property Name="UploadedDate" Type="datetime" />
         </EntityType>
         <EntityType Name="Pfa">
           <Key>
@@ -337,15 +406,30 @@ warning 6002: The table/view 'PALSiteDB.dbo.SCHEDULES' does not have a primary k
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_dbo_Contributions_dbo_Employees_Employee_Pin">
+          <End Role="Employees" Type="Self.Employees" Multiplicity="0..1" />
+          <End Role="Contributions" Type="Self.Contributions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employees">
+              <PropertyRef Name="Pin" />
+            </Principal>
+            <Dependent Role="Contributions">
+              <PropertyRef Name="Pin" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="PALSiteDBModelStoreContainer">
           <EntitySet Name="AspNetRoles" EntityType="Self.AspNetRoles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AspNetUserClaims" EntityType="Self.AspNetUserClaims" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AspNetUserLogins" EntityType="Self.AspNetUserLogins" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AspNetUserRoles" EntityType="Self.AspNetUserRoles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUsers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Contributions" EntityType="Self.Contributions" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Employees" EntityType="Self.Employees" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="EmployerDetails" EntityType="Self.EmployerDetails" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Feedback" EntityType="Self.Feedback" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MasterSchedule" EntityType="Self.MasterSchedule" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PaymentProve" EntityType="Self.PaymentProve" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Pfa" EntityType="Self.Pfa" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Remark" EntityType="Self.Remark" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ScheduleHeader" EntityType="Self.ScheduleHeader" Schema="dbo" store:Type="Tables" />
@@ -405,6 +489,10 @@ warning 6002: The table/view 'PALSiteDB.dbo.SCHEDULES' does not have a primary k
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="AspNetUserRoles" EntitySet="AspNetUserRoles" />
           </AssociationSet>
+          <AssociationSet Name="FK_dbo_Contributions_dbo_Employees_Employee_Pin" Association="Self.FK_dbo_Contributions_dbo_Employees_Employee_Pin">
+            <End Role="Employees" EntitySet="Employees" />
+            <End Role="Contributions" EntitySet="Contributions" />
+          </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -456,12 +544,12 @@ warning 6002: The table/view 'PALSiteDB.dbo.SCHEDULES' does not have a primary k
           <Property Name="AccessFailedCount" Type="Int32" Nullable="false" />
           <Property Name="UserName" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="EmployerCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="AspNetUserClaims" Relationship="Self.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" FromRole="AspNetUsers" ToRole="AspNetUserClaims" />
-          <NavigationProperty Name="AspNetUserLogins" Relationship="Self.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" FromRole="AspNetUsers" ToRole="AspNetUserLogins" />
-          <NavigationProperty Name="AspNetRoles" Relationship="Self.AspNetUserRoles" FromRole="AspNetUsers" ToRole="AspNetRoles" />
           <Property Name="Designation" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="Department" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="HasLoggedIn" Type="Boolean" />
+          <NavigationProperty Name="AspNetUserClaims" Relationship="Self.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" FromRole="AspNetUsers" ToRole="AspNetUserClaims" />
+          <NavigationProperty Name="AspNetUserLogins" Relationship="Self.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" FromRole="AspNetUsers" ToRole="AspNetUserLogins" />
+          <NavigationProperty Name="AspNetRoles" Relationship="Self.AspNetUserRoles" FromRole="AspNetUsers" ToRole="AspNetRoles" />
         </EntityType>
         <EntityType Name="Employee">
           <Key>
@@ -498,6 +586,7 @@ warning 6002: The table/view 'PALSiteDB.dbo.SCHEDULES' does not have a primary k
           <Property Name="LGACode" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
           <Property Name="StateCode" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="CountryCode" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Contributions" Relationship="PALSiteDBModel.FK_dbo_Contributions_dbo_Employees_Employee_Pin" FromRole="Employee" ToRole="Contribution" />
         </EntityType>
         <EntityType Name="EmployerDetail">
           <Key>
@@ -536,13 +625,18 @@ warning 6002: The table/view 'PALSiteDB.dbo.SCHEDULES' does not have a primary k
           <Property Name="Viewed" Type="Boolean" />
           <Property Name="NewRemark" Type="Boolean" />
         </EntityType>
-        <EntityType Name="Pfa">
+        <EntityType Name="Remark">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Description" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="PFACode" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FeedbackId" Type="Int32" />
+          <Property Name="Comment" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="IsAdminRemark" Type="Boolean" />
+          <Property Name="Viewed" Type="Boolean" />
+          <Property Name="EmployerCode" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="FeedbackType" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="ScheduleHeader">
           <Key>
@@ -588,6 +682,7 @@ warning 6002: The table/view 'PALSiteDB.dbo.SCHEDULES' does not have a primary k
           <Property Name="EmployerCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Period" Type="DateTime" Precision="0" />
           <Property Name="Pin" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="EmployeeName" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="Surname" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="OtherName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
@@ -602,7 +697,6 @@ warning 6002: The table/view 'PALSiteDB.dbo.SCHEDULES' does not have a primary k
           <Property Name="CreatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="PaymentId" Type="Int64" />
           <Property Name="PFACode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="EmployeeName" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="ScheduleUploadTemp">
           <Key>
@@ -612,6 +706,7 @@ warning 6002: The table/view 'PALSiteDB.dbo.SCHEDULES' does not have a primary k
           <Property Name="EmployerCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Period" Type="DateTime" Precision="0" />
           <Property Name="Pin" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="EmployeeName" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="Surname" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="OtherName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
@@ -625,7 +720,6 @@ warning 6002: The table/view 'PALSiteDB.dbo.SCHEDULES' does not have a primary k
           <Property Name="CreatedOn" Type="DateTime" Precision="3" />
           <Property Name="CreatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="PFACode" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="EmployeeName" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="SCHEDULE">
           <Key>
@@ -709,7 +803,7 @@ warning 6002: The table/view 'PALSiteDB.dbo.SCHEDULES' does not have a primary k
           <EntitySet Name="Employees" EntityType="Self.Employee" />
           <EntitySet Name="EmployerDetails" EntityType="Self.EmployerDetail" />
           <EntitySet Name="Feedbacks" EntityType="Self.Feedback" />
-          <EntitySet Name="Pfas" EntityType="Self.Pfa" />
+          <EntitySet Name="Remarks" EntityType="Self.Remark" />
           <EntitySet Name="ScheduleHeaders" EntityType="Self.ScheduleHeader" />
           <EntitySet Name="ScheduleHeaderTemps" EntityType="Self.ScheduleHeaderTemp" />
           <EntitySet Name="ScheduleUploads" EntityType="Self.ScheduleUpload" />
@@ -727,21 +821,105 @@ warning 6002: The table/view 'PALSiteDB.dbo.SCHEDULES' does not have a primary k
             <End Role="AspNetRoles" EntitySet="AspNetRoles" />
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
           </AssociationSet>
-          <EntitySet Name="Remarks" EntityType="PALSiteDBModel.Remark" />
+          <EntitySet Name="Pfas" EntityType="PALSiteDBModel.Pfa" />
+          <EntitySet Name="MasterSchedules" EntityType="PALSiteDBModel.MasterSchedule" />
+          <EntitySet Name="PaymentProves" EntityType="PALSiteDBModel.PaymentProve" />
+          <EntitySet Name="Contributions" EntityType="PALSiteDBModel.Contribution" />
+          <AssociationSet Name="FK_dbo_Contributions_dbo_Employees_Employee_Pin" Association="PALSiteDBModel.FK_dbo_Contributions_dbo_Employees_Employee_Pin">
+            <End Role="Employee" EntitySet="Employees" />
+            <End Role="Contribution" EntitySet="Contributions" />
+          </AssociationSet>
         </EntityContainer>
-        <EntityType Name="Remark">
+        <EntityType Name="Pfa">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Description" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="PFACode" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="MasterSchedule">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="FeedbackId" Type="Int32" />
-          <Property Name="Comment" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
-          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
-          <Property Name="IsAdminRemark" Type="Boolean" />
-          <Property Name="Viewed" Type="Boolean" />
-          <Property Name="EmployerCode" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="FeedbackType" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="EmployerCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Period" Type="DateTime" Precision="0" />
+          <Property Name="Pin" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="EmployeeName" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="Surname" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="OtherName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="EmployeeContribution" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="EmployerContribution" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="VoluntaryContribution" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="TotalContribution" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="FileName" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="PinValid" Type="Boolean" />
+          <Property Name="PaymentType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedOn" Type="DateTime" Precision="3" />
+          <Property Name="CreatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="PaymentId" Type="Int64" />
+          <Property Name="PFACode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
+        <EntityType Name="PaymentProve">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SchedulerHeaderId" Type="Int32" />
+          <Property Name="FilePath" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="UploadedDate" Type="DateTime" Precision="3" />
+          <Property Name="FileExt" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="Contribution">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Recno" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="Pin" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="EmployeeContribution" Type="Double" />
+          <Property Name="EmployerContribution" Type="Double" />
+          <Property Name="ContributionDate" Type="DateTime" Precision="3" />
+          <Property Name="OtherContribution" Type="Double" />
+          <Property Name="EmployeeFee" Type="Double" />
+          <Property Name="EmployerFee" Type="Double" />
+          <Property Name="OtherFee" Type="Double" />
+          <Property Name="TotalUnits" Type="Double" />
+          <Property Name="TotalContribution" Type="Double" />
+          <Property Name="TotalFee" Type="Double" />
+          <Property Name="EmployeeBf" Type="Double" />
+          <Property Name="EmployerBf" Type="Double" />
+          <Property Name="PaymentDate" Type="DateTime" Precision="3" />
+          <Property Name="TransDate" Type="DateTime" Precision="3" />
+          <Property Name="SchemeId" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="Price" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="TransUnitsR" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="TransUnitsV" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="ValueDate" Type="DateTime" Precision="3" />
+          <Property Name="TransId" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="VatFee" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="Flaguploaded" Type="Byte" />
+          <Property Name="FundId" Type="Int32" />
+          <Property Name="ReconciliationTransid" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Withdrawal" Type="Double" />
+          <Property Name="WithdrawalVc" Type="Double" />
+          <Property Name="BATCH_ID" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Employee" Relationship="PALSiteDBModel.FK_dbo_Contributions_dbo_Employees_Employee_Pin" FromRole="Contribution" ToRole="Employee" />
+        </EntityType>
+        <Association Name="FK_dbo_Contributions_dbo_Employees_Employee_Pin">
+          <End Type="PALSiteDBModel.Employee" Role="Employee" Multiplicity="0..1" />
+          <End Type="PALSiteDBModel.Contribution" Role="Contribution" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employee">
+              <PropertyRef Name="Pin" />
+            </Principal>
+            <Dependent Role="Contribution">
+              <PropertyRef Name="Pin" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -778,9 +956,6 @@ warning 6002: The table/view 'PALSiteDB.dbo.SCHEDULES' does not have a primary k
           <EntitySetMapping Name="AspNetUsers">
             <EntityTypeMapping TypeName="PALSiteDBModel.AspNetUser">
               <MappingFragment StoreEntitySet="AspNetUsers">
-                <ScalarProperty Name="HasLoggedIn" ColumnName="HasLoggedIn" />
-                <ScalarProperty Name="Department" ColumnName="Department" />
-                <ScalarProperty Name="Designation" ColumnName="Designation" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
                 <ScalarProperty Name="EmailConfirmed" ColumnName="EmailConfirmed" />
@@ -794,6 +969,9 @@ warning 6002: The table/view 'PALSiteDB.dbo.SCHEDULES' does not have a primary k
                 <ScalarProperty Name="AccessFailedCount" ColumnName="AccessFailedCount" />
                 <ScalarProperty Name="UserName" ColumnName="UserName" />
                 <ScalarProperty Name="EmployerCode" ColumnName="EmployerCode" />
+                <ScalarProperty Name="Designation" ColumnName="Designation" />
+                <ScalarProperty Name="Department" ColumnName="Department" />
+                <ScalarProperty Name="HasLoggedIn" ColumnName="HasLoggedIn" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -855,8 +1033,6 @@ warning 6002: The table/view 'PALSiteDB.dbo.SCHEDULES' does not have a primary k
           <EntitySetMapping Name="Feedbacks">
             <EntityTypeMapping TypeName="PALSiteDBModel.Feedback">
               <MappingFragment StoreEntitySet="Feedback">
-                <ScalarProperty Name="NewRemark" ColumnName="NewRemark" />
-                <ScalarProperty Name="Viewed" ColumnName="Viewed" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
@@ -870,15 +1046,22 @@ warning 6002: The table/view 'PALSiteDB.dbo.SCHEDULES' does not have a primary k
                 <ScalarProperty Name="DateUpdated" ColumnName="DateUpdated" />
                 <ScalarProperty Name="Createdby" ColumnName="Createdby" />
                 <ScalarProperty Name="Modifiedby" ColumnName="Modifiedby" />
+                <ScalarProperty Name="Viewed" ColumnName="Viewed" />
+                <ScalarProperty Name="NewRemark" ColumnName="NewRemark" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Pfas">
-            <EntityTypeMapping TypeName="PALSiteDBModel.Pfa">
-              <MappingFragment StoreEntitySet="Pfa">
+          <EntitySetMapping Name="Remarks">
+            <EntityTypeMapping TypeName="PALSiteDBModel.Remark">
+              <MappingFragment StoreEntitySet="Remark">
                 <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="PFACode" ColumnName="PFACode" />
+                <ScalarProperty Name="FeedbackId" ColumnName="FeedbackId" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="IsAdminRemark" ColumnName="IsAdminRemark" />
+                <ScalarProperty Name="Viewed" ColumnName="Viewed" />
+                <ScalarProperty Name="EmployerCode" ColumnName="EmployerCode" />
+                <ScalarProperty Name="FeedbackType" ColumnName="FeedbackType" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -923,11 +1106,11 @@ warning 6002: The table/view 'PALSiteDB.dbo.SCHEDULES' does not have a primary k
           <EntitySetMapping Name="ScheduleUploads">
             <EntityTypeMapping TypeName="PALSiteDBModel.ScheduleUpload">
               <MappingFragment StoreEntitySet="ScheduleUpload">
-                <ScalarProperty Name="EmployeeName" ColumnName="EmployeeName" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="EmployerCode" ColumnName="EmployerCode" />
                 <ScalarProperty Name="Period" ColumnName="Period" />
                 <ScalarProperty Name="Pin" ColumnName="Pin" />
+                <ScalarProperty Name="EmployeeName" ColumnName="EmployeeName" />
                 <ScalarProperty Name="Surname" ColumnName="Surname" />
                 <ScalarProperty Name="FirstName" ColumnName="FirstName" />
                 <ScalarProperty Name="OtherName" ColumnName="OtherName" />
@@ -948,11 +1131,11 @@ warning 6002: The table/view 'PALSiteDB.dbo.SCHEDULES' does not have a primary k
           <EntitySetMapping Name="ScheduleUploadTemps">
             <EntityTypeMapping TypeName="PALSiteDBModel.ScheduleUploadTemp">
               <MappingFragment StoreEntitySet="ScheduleUploadTemp">
-                <ScalarProperty Name="EmployeeName" ColumnName="EmployeeName" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="EmployerCode" ColumnName="EmployerCode" />
                 <ScalarProperty Name="Period" ColumnName="Period" />
                 <ScalarProperty Name="Pin" ColumnName="Pin" />
+                <ScalarProperty Name="EmployeeName" ColumnName="EmployeeName" />
                 <ScalarProperty Name="Surname" ColumnName="Surname" />
                 <ScalarProperty Name="FirstName" ColumnName="FirstName" />
                 <ScalarProperty Name="OtherName" ColumnName="OtherName" />
@@ -1016,16 +1199,83 @@ warning 6002: The table/view 'PALSiteDB.dbo.SCHEDULES' does not have a primary k
               <ScalarProperty Name="Id" ColumnName="UserId" />
             </EndProperty>
           </AssociationSetMapping>
-          <EntitySetMapping Name="Remarks">
-            <EntityTypeMapping TypeName="PALSiteDBModel.Remark">
-              <MappingFragment StoreEntitySet="Remark">
-                <ScalarProperty Name="FeedbackType" ColumnName="FeedbackType" />
+          <EntitySetMapping Name="Pfas">
+            <EntityTypeMapping TypeName="PALSiteDBModel.Pfa">
+              <MappingFragment StoreEntitySet="Pfa">
+                <ScalarProperty Name="PFACode" ColumnName="PFACode" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MasterSchedules">
+            <EntityTypeMapping TypeName="PALSiteDBModel.MasterSchedule">
+              <MappingFragment StoreEntitySet="MasterSchedule">
+                <ScalarProperty Name="PFACode" ColumnName="PFACode" />
+                <ScalarProperty Name="PaymentId" ColumnName="PaymentId" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="PaymentType" ColumnName="PaymentType" />
+                <ScalarProperty Name="PinValid" ColumnName="PinValid" />
+                <ScalarProperty Name="FileName" ColumnName="FileName" />
+                <ScalarProperty Name="TotalContribution" ColumnName="TotalContribution" />
+                <ScalarProperty Name="VoluntaryContribution" ColumnName="VoluntaryContribution" />
+                <ScalarProperty Name="EmployerContribution" ColumnName="EmployerContribution" />
+                <ScalarProperty Name="EmployeeContribution" ColumnName="EmployeeContribution" />
+                <ScalarProperty Name="OtherName" ColumnName="OtherName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="Surname" ColumnName="Surname" />
+                <ScalarProperty Name="EmployeeName" ColumnName="EmployeeName" />
+                <ScalarProperty Name="Pin" ColumnName="Pin" />
+                <ScalarProperty Name="Period" ColumnName="Period" />
                 <ScalarProperty Name="EmployerCode" ColumnName="EmployerCode" />
-                <ScalarProperty Name="Viewed" ColumnName="Viewed" />
-                <ScalarProperty Name="IsAdminRemark" ColumnName="IsAdminRemark" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="Comment" ColumnName="Comment" />
-                <ScalarProperty Name="FeedbackId" ColumnName="FeedbackId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PaymentProves">
+            <EntityTypeMapping TypeName="PALSiteDBModel.PaymentProve">
+              <MappingFragment StoreEntitySet="PaymentProve">
+                <ScalarProperty Name="FileExt" ColumnName="FileExt" />
+                <ScalarProperty Name="UploadedDate" ColumnName="UploadedDate" />
+                <ScalarProperty Name="FilePath" ColumnName="FilePath" />
+                <ScalarProperty Name="SchedulerHeaderId" ColumnName="SchedulerHeaderId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Contributions">
+            <EntityTypeMapping TypeName="PALSiteDBModel.Contribution">
+              <MappingFragment StoreEntitySet="Contributions">
+                <ScalarProperty Name="BATCH_ID" ColumnName="BATCH_ID" />
+                <ScalarProperty Name="WithdrawalVc" ColumnName="WithdrawalVc" />
+                <ScalarProperty Name="Withdrawal" ColumnName="Withdrawal" />
+                <ScalarProperty Name="ReconciliationTransid" ColumnName="ReconciliationTransid" />
+                <ScalarProperty Name="FundId" ColumnName="FundId" />
+                <ScalarProperty Name="Flaguploaded" ColumnName="Flaguploaded" />
+                <ScalarProperty Name="VatFee" ColumnName="VatFee" />
+                <ScalarProperty Name="TransId" ColumnName="TransId" />
+                <ScalarProperty Name="ValueDate" ColumnName="ValueDate" />
+                <ScalarProperty Name="TransUnitsV" ColumnName="TransUnitsV" />
+                <ScalarProperty Name="TransUnitsR" ColumnName="TransUnitsR" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="SchemeId" ColumnName="SchemeId" />
+                <ScalarProperty Name="TransDate" ColumnName="TransDate" />
+                <ScalarProperty Name="PaymentDate" ColumnName="PaymentDate" />
+                <ScalarProperty Name="EmployerBf" ColumnName="EmployerBf" />
+                <ScalarProperty Name="EmployeeBf" ColumnName="EmployeeBf" />
+                <ScalarProperty Name="TotalFee" ColumnName="TotalFee" />
+                <ScalarProperty Name="TotalContribution" ColumnName="TotalContribution" />
+                <ScalarProperty Name="TotalUnits" ColumnName="TotalUnits" />
+                <ScalarProperty Name="OtherFee" ColumnName="OtherFee" />
+                <ScalarProperty Name="EmployerFee" ColumnName="EmployerFee" />
+                <ScalarProperty Name="EmployeeFee" ColumnName="EmployeeFee" />
+                <ScalarProperty Name="OtherContribution" ColumnName="OtherContribution" />
+                <ScalarProperty Name="ContributionDate" ColumnName="ContributionDate" />
+                <ScalarProperty Name="EmployerContribution" ColumnName="EmployerContribution" />
+                <ScalarProperty Name="EmployeeContribution" ColumnName="EmployeeContribution" />
+                <ScalarProperty Name="Pin" ColumnName="Pin" />
+                <ScalarProperty Name="Recno" ColumnName="Recno" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

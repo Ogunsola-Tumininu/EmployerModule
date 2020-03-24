@@ -18,6 +18,7 @@ namespace EmployerModules.DAL
         public string EmployerCode { get; set; }
         public Nullable<System.DateTime> Period { get; set; }
         public string Pin { get; set; }
+        public string EmployeeName { get; set; }
         public string Surname { get; set; }
         public string FirstName { get; set; }
         public string OtherName { get; set; }
@@ -32,6 +33,5 @@ namespace EmployerModules.DAL
         public string CreatedBy { get; set; }
         public Nullable<long> PaymentId { get; set; }
         public string PFACode { get; set; }
-        public string EmployeeName { get; set; }
     }
 }
