@@ -11,21 +11,33 @@ namespace EmployerModules.DAL
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+
     public partial class ScheduleHeaderTemp
     {
         public int Id { get; set; }
         public string PFA { get; set; }
+        [Display(Name = "Total Amount")]
         public Nullable<decimal> TotalAmount { get; set; }
+        [Display(Name = "Total Employee")]
         public Nullable<int> TotalEmployee { get; set; }
+        [Display(Name = "TransactionId")]
         public string TransactionId { get; set; }
+        [Display(Name = "Payment Status")]
         public string PaymentStatus { get; set; }
+        [Display(Name = "Payment State")]
         public string PaymentState { get; set; }
+        [Display(Name = "Schedule Period")]
         public Nullable<System.DateTime> SchedulePeriod { get; set; }
+        [Display(Name = "Expiry Date")]
         public Nullable<System.DateTime> ExpiryDate { get; set; }
-        public Nullable<System.DateTime> Paymentdate { get; set; }
+        [Display(Name = "Payment Date")]
+        public Nullable<System.DateTime> PaymentDate { get; set; }
+        [Display(Name = "Upload Added")]
         public Nullable<System.DateTime> UploadAdded { get; set; }
+        [Display(Name = "Employer Id")]
         public string EmployerId { get; set; }
+        [Display(Name = "PFACode")]
         public string PFACode { get; set; }
     }
 }

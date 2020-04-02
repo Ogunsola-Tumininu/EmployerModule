@@ -12,10 +12,10 @@
                     <h2>
                         Recently Paid Schedule
                         <a href="@Url.Action("UploadSchedule", "Employer")" class="btn hidden-xs btn-success pull-right">Upload New Schedule</a>
-                        <a href="@Url.Action("MasterSchedulePayment", "Employer")" style="margin-right: 10px" class=" hidden-xs btn btn-primary pull-right">Remit with MasterSchedule</a>
+                        <a href="@Url.Action("MasterSchedulePayment", "Employer")" style="margin-right: 10px" class="hidden-xs btn btn-primary pull-right">Remit with MasterSchedule</a>
                     </h2>
                     <a href="@Url.Action("UploadSchedule", "Employer")" style="margin-bottom: 10px"  class="btn btn-success visible-xs">Upload New Schedule</a>
-                    <a href="@Url.Action("MasterSchedulePayment", "Employer")" class="visible-xs btn btn-primary "> Remit with MasterSchedule</a>
+                    <a href="@Url.Action("MasterSchedulePayment", "Employer")" class="visible-xs btn btn-primary "> Pay with Master Schedule</a>
                 </div>
             </div>
         </div>
@@ -61,8 +61,8 @@
                                 <th>
                                     @Html.DisplayNameFor(model => model.UploadAdded)
                                 </th>
-                                <th>Actions</th>
-                                <th>Actions</th>
+                                <th>Action</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
 
@@ -113,9 +113,13 @@
                                     @String.Format("{0:MM/dd/yyyy}", item.UploadAdded)
                                 </td>
                                 <td>
-                                    <a href="@Url.Action("Export", "Employer", new { pfa = item.PFACode })" class="text-success">
-                                        DownloadSchedule<i class="fa fa-download"></i>
-                                    </a>
+                                    @using (Html.BeginForm("Export", "Employer", new { pfa = item.PFACode }, FormMethod.Post))
+                                    {
+                                       <input type="hidden" value="@item.SchedulePeriod" id="period" name="period" />
+                                       <button type="submit"class="text-success">DownloadSchedule<i class="fa fa-download" ></i></button>
+                                      
+                                    }
+                                  
 
                                 </td>
                                 <td>

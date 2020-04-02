@@ -170,9 +170,9 @@ namespace EmployerModules.Controllers
             ViewBag.Code = Code;
             return View();
         }
-        public ActionResult UpdateMember(string Pin)
+        public ActionResult UpdateMember(int id)
         {
-            var member = db.ScheduleUploadTemps.Where(m => m.Pin == Pin).FirstOrDefault();
+            var member = db.ScheduleUploadTemps.Find(id);
             if(member != null)
             {
                 return View(member);
@@ -190,7 +190,7 @@ namespace EmployerModules.Controllers
             }
             if (ModelState.IsValid)
             {
-                var member = db.ScheduleUploadTemps.Where(m => m.Pin == Member.Pin).FirstOrDefault();
+                var member = db.ScheduleUploadTemps.Find(Member.Id);
 
                 if(member.TotalContribution != Member.TotalContribution)
                 {
@@ -201,20 +201,12 @@ namespace EmployerModules.Controllers
                     decimal voluntaryDiff = (decimal)Member.VoluntaryContribution - (decimal)member.VoluntaryContribution;
                     if (totalDiff > 0)
                     {
-                        //member.TotalContribution = member.TotalContribution + totalDiff;
-                        //member.EmployerContribution = member.EmployerContribution + employerDiff;
-                        //member.EmployeeContribution = member.EmployeeContribution + employeeDiff;
-                        //member.VoluntaryContribution = member.VoluntaryContribution + voluntaryDiff;
 
                         pfaContribution.TotalAmount = pfaContribution.TotalAmount + totalDiff;
                         
                     }
                     else
                     {
-                        //member.TotalContribution = member.TotalContribution - totalDiff;
-                        //member.EmployerContribution = member.EmployerContribution - employerDiff;
-                        //member.EmployeeContribution = member.EmployeeContribution - employeeDiff;
-                        //member.VoluntaryContribution = member.VoluntaryContribution - voluntaryDiff;
                         pfaContribution.TotalAmount = pfaContribution.TotalAmount + totalDiff;
                     }
                 }
@@ -238,9 +230,9 @@ namespace EmployerModules.Controllers
             return View(Member);
         }
 
-        public ActionResult UpdateMasterMember(string Pin)
+        public ActionResult UpdateMasterMember(int id)
         {
-            var member = db.MasterSchedules.Where(m => m.Pin == Pin).FirstOrDefault();
+            var member = db.MasterSchedules.Find(id);
             if (member != null)
             {
                 return View(member);
@@ -252,7 +244,7 @@ namespace EmployerModules.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult UpdateMasterMember([Bind(Include = "Id,Period,Pin,Surname,FirstName,OtherName,EmployeeContribution,VoluntaryContribution,EmployerContribution,TotalContribution")] MasterSchedule Member)
         {
-            var member = db.MasterSchedules.Where(m => m.Pin == Member.Pin).FirstOrDefault();
+            var member = db.MasterSchedules.Find(Member.Id);
             if (ModelState.IsValid)
             {
                 member.Surname = Member.Surname;
@@ -263,6 +255,10 @@ namespace EmployerModules.Controllers
                 member.EmployerContribution = Member.EmployerContribution;
                 member.VoluntaryContribution = Member.VoluntaryContribution;
                 member.TotalContribution = Member.TotalContribution;
+                if (member.Pin == Member.Pin && member.Surname == Member.Surname && member.FirstName == Member.FirstName)
+                {
+                    member.PinValid = true;
+                }
                 db.SaveChanges();
                 return RedirectToAction("MasterSchedule", "Employer");
             }
@@ -302,6 +298,11 @@ namespace EmployerModules.Controllers
             var latestScheduleHeader = db.ScheduleHeaderTemps.Where(s => s.EmployerId == employerCode).ToList();
 
             var uploadedSchedules = masterSchedule.Where(s => s.EmployerCode == employerCode && s.PFACode == "25").ToList();
+            if(latestScheduleHeader.Count() > 0)
+            {
+                ViewBag.ErrorMessage = "You have a schedule that has not been paid for. Please clear the schedule or remit it.";
+                return View(latestScheduleHeader);
+            }
             if (period == "")
             {
                 ViewBag.ErrorMessage = "Please enter the period field";
@@ -335,6 +336,7 @@ namespace EmployerModules.Controllers
 
                     }
                 }
+
 
                 foreach (var schedule in uploadedSchedules)
                 {
@@ -386,6 +388,31 @@ namespace EmployerModules.Controllers
             var transactions = db.SCHEDULES.Where(s => s.EMPLOYER_CODE == employerCode).Take(12);
             return View(transactions);
         }
+
+        [AllowAnonymous]
+        public ActionResult TransactionInvoice(int id)
+        {
+            var schedule = db.SCHEDULES.Where(s => s.IDNO == id).FirstOrDefault();
+            string employerName = db.EmployerDetails.Where(e => e.Recno == schedule.EMPLOYER_CODE).FirstOrDefault().EmployerName;
+            ViewBag.EmployerName = employerName;
+            return View(schedule);
+        }
+
+
+        public ActionResult PrintTransactionInvoice(int transactionId)
+        {
+            var userId = User.Identity.GetUserId();
+            string employerCode = db.AspNetUsers.Find(userId).EmployerCode;
+            var employerName = db.EmployerDetails.Where(e => e.Recno == employerCode).FirstOrDefault().EmployerName;
+
+            var transaction = db.SCHEDULES.Where(s => s.IDNO == transactionId).FirstOrDefault();
+            var period = String.Format("{0: MMMM yyyy}", transaction.POSTED_DATE);
+            return new ActionAsPdf(
+                         "ScheduleInvoice",
+                         new { id = transactionId })
+            { FileName = employerName + period + ".pdf" };
+        }
+
 
         // GET: Employers/Verifypin?searchPin= PEN176383939
         public ActionResult Verifypin(string searchedPin)
@@ -656,11 +683,11 @@ namespace EmployerModules.Controllers
         {
             var userId = User.Identity.GetUserId();
             string employerCode = db.AspNetUsers.Find(userId).EmployerCode;
-            var masterSchedule = db.MasterSchedules.Where(s => s.EmployerCode == employerCode).ToList();
+            var masterSchedules = db.MasterSchedules.Where(s => s.EmployerCode == employerCode && s.PFACode == "25").ToList();
             var invalidPinMember = db.MasterSchedules.Where(s => s.EmployerCode == employerCode && s.PFACode == "25" && s.PinValid == false).Count();
 
             ViewBag.Invalid = invalidPinMember;
-            return View(masterSchedule);
+            return View(masterSchedules);
         }
 
         [HttpPost]
@@ -833,7 +860,11 @@ namespace EmployerModules.Controllers
             string employerCode = db.AspNetUsers.Find(userId).EmployerCode;
             var latestSchedule = db.ScheduleHeaderTemps.Where(s => s.EmployerId == employerCode).ToList();
             var invalidPinMember = db.ScheduleUploadTemps.Where(s => s.EmployerCode == employerCode && s.PFACode == "25" && s.PinValid == false).Count();
-            
+            if (latestSchedule.Count > 0)
+            {
+                ViewBag.PALScheduleHeaderTempId = db.ScheduleHeaderTemps.Where(s => s.EmployerId == employerCode && s.PFACode == "25").OrderByDescending(s => s.Id).FirstOrDefault().Id;
+            }
+
             ViewBag.Invalid = invalidPinMember;
 
             return View(latestSchedule);
@@ -857,8 +888,13 @@ namespace EmployerModules.Controllers
             var uploadList = new List<ScheduleUploadTemp>();
 
             var schedules = db.ScheduleHeaderTemps.Where(s => s.EmployerId == employerCode).Take(12);
+            if (schedules.Count() > 0)
+            {
+                ViewBag.ErrorMessage = "You have a schedule that has not been paid for. Please clear the schedule or remit it.";
+                return View(schedules);
+            }
 
-            if(u_period == "")
+            if (u_period == "")
             {
                 ViewBag.ErrorMessage = "Please enter the period field";
                 return View(schedules);
@@ -1307,15 +1343,15 @@ namespace EmployerModules.Controllers
             return View(employeeList);
         }
 
-        public FileResult Export(string pfa)
+        [HttpPost]
+        public FileResult Export(string pfa, DateTime period)
         {
             var userId = User.Identity.GetUserId();
             string employerCode = db.AspNetUsers.Find(userId).EmployerCode;
             var employeeList = db.ScheduleUploadTemps.Where(s => s.EmployerCode == employerCode && s.PFACode == pfa).ToList();
-            if(employeeList.Count == 0)
-            {
-                employeeList = db.ScheduleUploadTemps.Where(s => s.EmployerCode == employerCode && s.PFACode == pfa).ToList();
-            }
+
+            var paidEmployeeList = db.ScheduleUploads.Where(s => s.EmployerCode == employerCode && s.PFACode == pfa && s.Period == period).ToList();
+            
             string PFAName = db.Pfas.Where(p => p.PFACode == pfa).FirstOrDefault().Description;
 
             DataTable dt = new DataTable("Grid");
@@ -1336,14 +1372,29 @@ namespace EmployerModules.Controllers
 
 
             int i = 1;
-            foreach (var employee in employeeList)
+            if(employeeList.Count > 0)
             {
-                dt.Rows.Add(i,employee.Period, employee.Pin, employee.PinValid, 
-                    employee.Surname, employee.FirstName, employee.OtherName, employee.PFACode, 
-                    employee.EmployeeContribution, employee.EmployerContribution, employee.VoluntaryContribution,
-                    employee.TotalContribution);
-                i++;
+                foreach (var employee in employeeList)
+                {
+                    dt.Rows.Add(i, employee.Period, employee.Pin, employee.PinValid,
+                        employee.Surname, employee.FirstName, employee.OtherName, employee.PFACode,
+                        employee.EmployeeContribution, employee.EmployerContribution, employee.VoluntaryContribution,
+                        employee.TotalContribution);
+                    i++;
+                }
             }
+            else
+            {
+                foreach (var employee in paidEmployeeList)
+                {
+                    dt.Rows.Add(i, employee.Period, employee.Pin, employee.PinValid,
+                        employee.Surname, employee.FirstName, employee.OtherName, employee.PFACode,
+                        employee.EmployeeContribution, employee.EmployerContribution, employee.VoluntaryContribution,
+                        employee.TotalContribution);
+                    i++;
+                }
+            }
+            
 
             using (XLWorkbook wb = new XLWorkbook())
             {
@@ -1454,6 +1505,7 @@ namespace EmployerModules.Controllers
                     //moveSchedule.PaymentId = 67;  // Payment Id to be generated
                     moveSchedule.PFACode = schedule.PFACode;
                     db.ScheduleUploads.Add(moveSchedule);
+                    db.ScheduleUploadTemps.Remove(schedule);
                 }
 
                 Random random = new Random();
@@ -1567,7 +1619,7 @@ namespace EmployerModules.Controllers
                 moveHeader.TotalEmployee = header.TotalEmployee;
                 moveHeader.TransactionId = "TR" + DateTime.Now.ToString("ddMMyyyy") + randNum.ToString();
                 moveHeader.PaymentStatus = "paid";
-                moveHeader.PaymentState = "closed";
+                moveHeader.PaymentState = "complete";
                 moveHeader.SchedulePeriod = header.SchedulePeriod;
                 string dtNow = DateTime.Now.ToShortDateString();
                 moveHeader.PaymentDate = DateTime.Now;
@@ -1651,7 +1703,7 @@ namespace EmployerModules.Controllers
                 moveHeader.TotalEmployee = header.TotalEmployee;
                 moveHeader.TransactionId = "TR" + DateTime.Now.ToString("ddMMyyyy") + randNum.ToString();
                 moveHeader.PaymentStatus = "paid";
-                moveHeader.PaymentState = "closed";
+                moveHeader.PaymentState = "complete";
                 moveHeader.SchedulePeriod = header.SchedulePeriod;
                 string dtNow = DateTime.Now.ToShortDateString();
                 moveHeader.PaymentDate = DateTime.Now;

@@ -128,7 +128,7 @@
                                     <td>
                                         @if (item.PFACode == "25")
                                         {
-                                            <a href="@Url.Action("UpdateMember", "Employer", new { Pin = item.Pin })"><span class="glyphicon glyphicon-edit"></span></a>
+                                            <a href="@Url.Action("UpdateMember", "Employer", new { id = item.Id })"><span class="glyphicon glyphicon-edit"></span></a>
                                             <a href="@Url.Action("AskQuestion", "Employer", new { Pin = item.Pin, Code = item.PFACode })"><span class="glyphicon glyphicon-trash"></span></a>
 
                                         }

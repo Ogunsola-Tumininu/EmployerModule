@@ -11,15 +11,19 @@ namespace EmployerModules.DAL
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+
     public partial class EmployerDetail
     {
         public string Recno { get; set; }
+        [Display(Name = "Employer Name")]
         public string EmployerName { get; set; }
         public string Address { get; set; }
         public long ID { get; set; }
+        [Display(Name = "Contact Person")]
         public string ContactPerson { get; set; }
         public string Email { get; set; }
+        [Display(Name = "Mobile Phone")]
         public string MobilePhone { get; set; }
         public string OldEmployerCode { get; set; }
         public long TransId { get; set; }

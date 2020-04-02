@@ -25,9 +25,9 @@
                     <table class="table table-hover" id="table_id">
                         <thead>
                             <tr>
-                                @*<th>
-                                        EMPLOYER CODE
-                                    </th>*@
+                                <th>
+                                        EMPLOYER NAME
+                                </th>
                                 <th>
                                     @*@Html.DisplayNameFor(model => model.IDNO)*@
                                     SCHEDULE ID
@@ -35,7 +35,7 @@
 
                                 <th>
                                     @*@Html.DisplayNameFor(model => model.TRANS_DATE)*@
-                                    TRANSFER DATE
+                                    PERIOD
                                 </th>
                                 <th>
                                     @Html.DisplayNameFor(model => model.AMOUNT)
@@ -49,6 +49,7 @@
                                 <th>
                                     @Html.DisplayNameFor(model => model.COMMENT)
                                 </th>
+                                <th>Action</th>
                             </tr>
                         </thead>
 
@@ -57,9 +58,9 @@
                             @foreach (var item in Model)
                             {
                                 <tr>
-                                    @*<td>
-                                            @Html.DisplayFor(modelItem => item.EMPLOYER_CODE)
-                                        </td>*@
+                                    <td>
+                                         @ViewBag.EmployerName  
+                                    </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.IDNO)
                                        
@@ -69,7 +70,7 @@
                                         @Html.DisplayFor(modelItem => item.TRANS_DATE)
                                     </td>
                                     <td>
-                                        &#8358;@Html.DisplayFor(modelItem => item.AMOUNT)
+                                        &#8358;@Html.DisplayFor(modelItem => item.AMOUNT_PROCESSED )
                                     </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.FUND_ID)
@@ -80,7 +81,11 @@
                                     <td>
                                         @Html.DisplayFor(modelItem => item.COMMENT)
                                     </td>
-
+                                    <td>
+                                        <a href="@Url.Action("PrintTransactionInvoice", "Employer", new { transactionId = item.IDNO})" class="text-success">
+                                            Print Invoice
+                                        </a>
+                                    </td>
                                 </tr>
                             }
                         </tbody>

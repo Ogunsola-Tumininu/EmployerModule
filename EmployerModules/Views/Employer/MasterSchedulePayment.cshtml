@@ -137,10 +137,12 @@
                                             @String.Format("{0:MM/dd/yyyy}", item.UploadAdded)
                                         </td>
                                         <td>
-                                            <a href="@Url.Action("Export", "Employer", new { pfa = item.PFACode })" class="text-success">
-                                                <i class="fa fa-download"></i>
-                                            </a>
-
+                                            @using (Html.BeginForm("Export", "Employer", new { pfa = item.PFACode }, FormMethod.Post))
+                                            {
+                                               <input type="hidden" value="@item.SchedulePeriod" id="period" name="period" />
+                                               <button type="submit"class="text-success">DownloadSchedule<i class="fa fa-download" ></i></button>
+                                      
+                                            }
                                         </td>
                                     </tr>
                                 }

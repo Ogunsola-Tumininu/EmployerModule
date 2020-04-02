@@ -83,22 +83,20 @@
                                         @*@Html.DisplayFor(modelItem => item.Pin)*@
                                     </td>
                                     <td>
-
-                                        @Html.DisplayFor(modelItem => item.PinValid)
+                                        @if(item.PinValid == true)
+                                        {
+                                            <p>True</p>
+                                        }
+                                        else
+                                        {
+                                             <p>False</p>
+                                        }
                                     </td>
                                     <td>
                                         @item.EmployeeName
                                         @*@Html.DisplayFor(modelItem => item.Surname)*@
                                     </td>
-                                    @*<td>
-                                            @item.Surname
-                                        </td>
-                                        <td>
-                                            @item.FirstName
-                                        </td>
-                                        <td>
-                                            @item.OtherName
-                                        </td>*@
+
                                     <td>
                                         @item.PFACode
                                         @*@Html.DisplayFor(modelItem => item.OtherName)*@
@@ -123,7 +121,7 @@
                                     <td>
                                         @if (item.PFACode == "25")
                                         {
-                                            <a href="@Url.Action("UpdateMember", "Employer", new { Pin = item.Pin })"><span class="glyphicon glyphicon-edit"></span>Edit</a>
+                                            <a href="@Url.Action("UpdateMember", "Employer", new { id = item.Id })"><span class="glyphicon glyphicon-edit"></span>Edit</a>
                                             
                                         }
                                     </td>

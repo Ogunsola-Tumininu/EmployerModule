@@ -149,10 +149,12 @@
                                         @String.Format("{0:MM/dd/yyyy}", item.UploadAdded)
                                     </td>
                                     <td>
-                                        <a href="@Url.Action("Export", "Employer", new { pfa = item.PFACode })" class="text-success">
-                                            <i class="fa fa-download"></i>
-                                        </a>
-
+                                        @using (Html.BeginForm("Export", "Employer", new { pfa = item.PFACode }, FormMethod.Post))
+                                        {
+                                           <input type="hidden" value="@item.SchedulePeriod" id="period" name="period" />
+                                           <button type="submit"class="text-success">DownloadSchedule<i class="fa fa-download" ></i></button>
+                                      
+                                        }
                                     </td>
                                 </tr>
                                 }
@@ -161,6 +163,7 @@
 
                         @*<a href="@Url.Action("PaymentSummary", "Employer")" class="btn btn-primary ">Payment Summary</a>*@
                         <a href="@Url.Action("Payment", "Employer")" class="btn btn-primary">Make Payment for PAL</a>
+                        <button  data-toggle="modal" data-target="#myModal1" class="btn btn-success">Upload Payment Evidence</button>
                         <button type="button" data-toggle="modal" data-target="#myModal" class="btn btn-danger pull-right">Clear Table</button>
 
                         <div id="myModal" class="modal fade" role="dialog">
@@ -178,6 +181,41 @@
                                         <button class="btn btn-primary" type="button" data-dismiss="modal">No</button>
                                     </div>
 
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <!-- Upload Modal  -->
+                        <div id="myModal1" class="modal fade" role="dialog">
+                            <div class="modal-dialog">
+
+                                <!-- Modal content-->
+                                <div class="modal-content">
+                                    <div class="modal-header" style="background-color: #6091ba; color: white">
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                        <h4 class="modal-title">Upload Payment Evidence</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                      
+
+                                            <div class="form-horizontal col-md-12">
+                                                <div class="form-group">
+                                                    @*@Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })*@
+                                                    <label for="fileUpload" class="col-md-12">Select File</label>
+                                                    <div class="col-md-12">
+                                                        <input class="form-control" type="file" name="fileUpload" id="fileUpload" />
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="form-group">
+                                                    <div class="col-md-12">
+                                                        <input type="submit" value="Submit" id="uploadBtn" class="btn btn-primary pull-right" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                    </div>
                                 </div>
 
                             </div>
@@ -205,6 +243,46 @@
             $("#upload").click(function () {
                 $("#loading").show();
             })
+        });
+
+        // Upload file to the database
+        $("#uploadBtn").click(function () {
+            if ($("#fileUpload").val() == "") {
+                alert("Please select a file");
+                return;
+            }
+            $("#loading").show();
+            var fileUpload = $("#fileUpload").get(0);
+            var files = fileUpload.files;
+            var data = new FormData();
+            
+            data.append('scheduleHeaderTempId', @ViewBag.PALScheduleHeaderTempId);
+
+            for (var i = 0; i < files.length; i++) {
+                data.append(files[i].name, files[i]);
+            }
+            $.ajax({
+                type: "POST",
+                url: "/Employer/PaymentProof",
+                contentType: false,
+                processData: false,
+                data: data,
+                success: function (message) {
+                    $("#loading").hide();
+                    if (message.error == true) {
+                        alert(message.result);
+                    }
+                    else {
+                        $("#fileUpload").val("");
+                        window.location.replace("/Employer/RecentTransaction");
+                        //alert(message);
+                    }
+                },
+                error: function () {
+                    $("#loading").hide();
+                    alert("There was error uploading files!");
+                }
+            });
         });
     </script>
 }

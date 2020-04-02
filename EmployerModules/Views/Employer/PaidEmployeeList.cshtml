@@ -41,9 +41,6 @@
                                     @Html.DisplayNameFor(model => model.Surname)
                                 </th>
                                 <th>
-                                    @Html.DisplayNameFor(model => model.FirstName)
-                                </th>
-                                <th>
                                     @Html.DisplayNameFor(model => model.OtherName)
                                 </th>
                                 <th>
@@ -76,22 +73,24 @@
             {
 
                 <tr>
-                    @*<td>
-            @item.EmployerCode
-            @Html.DisplayFor(modelItem => item.EmployerCode)
-        </td>*@
 
                     <td>
-
-                        @Html.DisplayFor(modelItem => item.Period)
+                        @String.Format("{0: MMMM, yyyy}", item.Period)
+                        @*@Html.DisplayFor(modelItem => item.Period)*@
                     </td>
                     <td>
                         @item.Pin
                         @*@Html.DisplayFor(modelItem => item.Pin)*@
                     </td>
                     <td>
-
-                        @Html.DisplayFor(modelItem => item.PinValid)
+                        @if(item.PinValid == true)
+                        {
+                            <p>True</p>
+                        }
+                        else
+                        {
+                             <p>False</p>
+                        }
                     </td>
                     <td>
                         @item.Surname
@@ -101,10 +100,7 @@
                         @item.FirstName
                         @*@Html.DisplayFor(modelItem => item.FirstName)*@
                     </td>
-                    <td>
-                        @item.OtherName
-                        @*@Html.DisplayFor(modelItem => item.OtherName)*@
-                    </td>
+                    
                     <td>
                         @item.PFACode
                         @*@Html.DisplayFor(modelItem => item.OtherName)*@
