@@ -408,7 +408,7 @@ namespace EmployerModules.Controllers
             var transaction = db.SCHEDULES.Where(s => s.IDNO == transactionId).FirstOrDefault();
             var period = String.Format("{0: MMMM yyyy}", transaction.POSTED_DATE);
             return new ActionAsPdf(
-                         "ScheduleInvoice",
+                         "TransactionInvoice",
                          new { id = transactionId })
             { FileName = employerName + period + ".pdf" };
         }
